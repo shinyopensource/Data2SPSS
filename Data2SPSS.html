@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data2SPSS • Professional Data Conversion Tool</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Fira Code for monospace -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --r-blue: #2081C3;
+            --r-dark-blue: #0C4C8A;
+            --r-light-bg: #F7F9FB;
+            --r-border: #E5E9ED;
+            --r-text: #1A2C3E;
+            --r-text-light: #4A627A;
+            --r-code-bg: #F4F6F9;
+            --r-sidebar-bg: #FFFFFF;
+            --r-nav-active: #2081C3;
+            --r-hr: #DCE3E9;
+            --r-warning-bg: #FFF8E7;
+            --r-warning-border: #FFE0A3;
+            --r-success-bg: #E6F4EA;
+            --r-link: #2081C3;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e0;
+        }
+
+        body.dark {
+            --r-blue: #5A9FD4;
+            --r-dark-blue: #2C6A9E;
+            --r-light-bg: #1A1F2A;
+            --r-border: #2D3748;
+            --r-text: #E8EDF2;
+            --r-text-light: #B0C4DE;
+            --r-code-bg: #252B36;
+            --r-sidebar-bg: #1E2430;
+            --r-hr: #2D3748;
+            --r-warning-bg: #2D2A1F;
+            --r-warning-border: #8B6B2C;
+            --r-success-bg: #1E3A2A;
+            --r-link: #7AB3D9;
+            --copy-btn-bg: #2D3748;
+            --copy-btn-hover: #4A5568;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--r-light-bg);
+            color: var(--r-text);
+            line-height: 1.5;
+            font-size: 16px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .docs-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: var(--r-sidebar-bg);
+            border-right: 1px solid var(--r-border);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--r-border);
+        }
+
+        .pkg-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--r-blue);
+            letter-spacing: -0.3px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.3rem;
+        }
+
+        .sidebar-nav a {
+            text-decoration: none;
+            color: var(--r-text);
+            font-weight: 500;
+            display: block;
+            padding: 0.4rem 0.6rem;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--r-code-bg);
+            color: var(--r-blue);
+        }
+
+        .sidebar-nav .active {
+            color: var(--r-blue);
+            background: rgba(32, 129, 195, 0.08);
+            border-left: 3px solid var(--r-blue);
+            font-weight: 600;
+        }
+
+        .nav-section {
+            margin-top: 1.5rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--r-text-light);
+            margin-bottom: 0.6rem;
+            padding-left: 0.6rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: calc(100% - 320px);
+            overflow-x: auto;
+        }
+
+        .topic {
+            margin-bottom: 3rem;
+            scroll-margin-top: 1rem;
+        }
+
+        .topic h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid var(--r-border);
+            padding-bottom: 0.5rem;
+        }
+
+        .topic h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin: 1.8rem 0 1rem 0;
+            color: var(--r-blue);
+        }
+
+        .topic h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        .topic p {
+            margin-bottom: 1rem;
+            color: var(--r-text);
+        }
+
+        .code-block-wrapper {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .code-block-wrapper pre {
+            background: var(--r-code-bg);
+            padding: 1rem;
+            padding-right: 3rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--r-border);
+            margin: 0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: 1px solid var(--r-border);
+            border-radius: 6px;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--r-text);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+            transform: scale(1.02);
+        }
+
+        .copy-btn.copied {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: var(--r-code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .note-box {
+            background: var(--r-warning-bg);
+            border-left: 4px solid var(--r-warning-border);
+            padding: 1rem 1.2rem;
+            border-radius: 10px;
+            margin: 1.2rem 0;
+        }
+
+        .success-box {
+            background: var(--r-success-bg);
+            border-left: 4px solid #28a745;
+            padding: 1rem 1.2rem;
+            border-radius: 10px;
+            margin: 1.2rem 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .feature-card {
+            background: var(--r-code-bg);
+            border: 1px solid var(--r-border);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .feature-card i {
+            color: var(--r-blue);
+            margin-right: 8px;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--r-border);
+            font-size: 0.85rem;
+            color: var(--r-text-light);
+            text-align: center;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--r-blue);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 900px) {
+            .docs-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--r-border);
+            }
+            .main-content {
+                max-width: 100%;
+                padding: 1.5rem;
+            }
+        }
+
+        .package-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .package-item {
+            background: var(--r-code-bg);
+            border-radius: 8px;
+            padding: 0.5rem 0.8rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--r-border);
+        }
+
+        .example-path {
+            background: var(--r-code-bg);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .path-note {
+            font-size: 0.85rem;
+            color: var(--r-text-light);
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="docs-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="pkg-name">Data2SPSS</div>
+                <div class="pkg-version">Bidirectional Data Conversion Tool</div>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#overview" class="nav-link active" data-section="overview"><i class="fas fa-info-circle"></i> Overview</a></li>
+                <li><a href="#features" class="nav-link" data-section="features"><i class="fas fa-star"></i> Features</a></li>
+                <li><a href="#live-app" class="nav-link" data-section="live-app"><i class="fas fa-globe"></i> Live Application</a></li>
+                <li class="nav-section">Installation & Setup</li>
+                <li><a href="#installation" class="nav-link" data-section="installation"><i class="fas fa-download"></i> Local Installation</a></li>
+                <li><a href="#deployment" class="nav-link" data-section="deployment"><i class="fas fa-cloud-upload-alt"></i> Deployment</a></li>
+                <li class="nav-section">Usage Guide</li>
+                <li><a href="#basic-workflow" class="nav-link" data-section="basic-workflow"><i class="fas fa-play"></i> Basic Workflow</a></li>
+                <li><a href="#spss-steps" class="nav-link" data-section="spss-steps"><i class="fas fa-chart-bar"></i> Final Steps in SPSS</a></li>
+                <li><a href="#export-formats" class="nav-link" data-section="export-formats"><i class="fas fa-exchange-alt"></i> Export to Other Formats</a></li>
+                <li class="nav-section">How It Works</li>
+                <li><a href="#name-cleaning" class="nav-link" data-section="name-cleaning">Variable Name Cleaning</a></li>
+                <li><a href="#label-assignment" class="nav-link" data-section="label-assignment">Value Label Assignment</a></li>
+                <li class="nav-section">Technical Notes</li>
+                <li><a href="#limitations" class="nav-link" data-section="limitations">Limitations</a></li>
+                <li><a href="#performance" class="nav-link" data-section="performance">Performance</a></li>
+                <li><a href="#project-structure" class="nav-link" data-section="project-structure">Project Structure</a></li>
+                <li><a href="#citation" class="nav-link" data-section="citation">Citation</a></li>
+                <li><a href="#contact" class="nav-link" data-section="contact">Contact & Author</a></li>
+                <li><a href="#acknowledgments" class="nav-link" data-section="acknowledgments">Acknowledgments</a></li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="main-content" id="mainContent">
+            <!-- Overview -->
+            <section id="overview" class="topic">
+                <h1>Data2SPSS</h1>
+                <p><strong>An interactive R-Shiny web application for converting data files to SPSS and other formats</strong></p>
+                <p>Data2SPSS is a free, web-based R-Shiny application that automates the conversion of various data formats into SPSS-ready files and enables bidirectional conversion between multiple statistical software formats. The tool eliminates the need for manual data preparation, requires no software installation or programming skills, and is completely free to use.</p>
+                <div class="note-box">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Common research problems solved:</strong>
+                    <ul style="margin-top: 8px; margin-left: 1.5rem;">
+                        <li>Categorical variables not recognized correctly</li>
+                        <li>Value labels lost during transfer</li>
+                        <li>Variable names with special characters causing errors</li>
+                        <li>Character encoding issues</li>
+                    </ul>
+                </div>
+                <p>Data2SPSS solves these problems by automatically cleaning variable names, detecting variable types, generating value labels, and handling character encoding.</p>
+            </section>
+
+            <!-- Features -->
+            <section id="features" class="topic">
+                <h2>Features</h2>
+                <h3>Supported Input Formats</h3>
+                <div class="feature-grid">
+                    <div class="feature-card"><i class="fas fa-file-csv"></i> CSV</div>
+                    <div class="feature-card"><i class="fas fa-file-alt"></i> TSV, TXT</div>
+                    <div class="feature-card"><i class="fas fa-file-excel"></i> Excel (.xlsx, .xls)</div>
+                    <div class="feature-card"><i class="fas fa-chart-line"></i> Stata (.dta)</div>
+                    <div class="feature-card"><i class="fas fa-chart-bar"></i> SPSS (.sav, .por)</div>
+                    <div class="feature-card"><i class="fas fa-database"></i> SAS (.sas7bdat, .xpt)</div>
+                    <div class="feature-card"><i class="fab fa-r-project"></i> RData (.rdata)</div>
+                </div>
+                <h3>Supported Output Formats</h3>
+                <div class="feature-grid">
+                    <div class="feature-card"><i class="fas fa-chart-bar"></i> SPSS (.sav)</div>
+                    <div class="feature-card"><i class="fas fa-file-csv"></i> CSV</div>
+                    <div class="feature-card"><i class="fas fa-file-excel"></i> Excel (.xlsx)</div>
+                    <div class="feature-card"><i class="fas fa-chart-line"></i> Stata (.dta)</div>
+                    <div class="feature-card"><i class="fas fa-database"></i> SAS (.sas7bdat)</div>
+                    <div class="feature-card"><i class="fas fa-exchange-alt"></i> SAS Transport (.xpt - JMP compatible)</div>
+                    <div class="feature-card"><i class="fas fa-file-alt"></i> TSV, TXT</div>
+                    <div class="feature-card"><i class="fab fa-r-project"></i> RData (.rdata)</div>
+                </div>
+                <h3>Key Features</h3>
+                <ul>
+                    <li><strong>Intelligent variable type detection:</strong> Automatically distinguishes between continuous and categorical variables</li>
+                    <li><strong>Automatic value label preservation:</strong> Maintains existing labels from Stata and SPSS files</li>
+                    <li><strong>Variable name cleaning:</strong> Removes spaces, special characters, and ensures SPSS compatibility</li>
+                    <li><strong>Character encoding handling:</strong> Converts all text to UTF-8 to prevent corruption</li>
+                    <li><strong>Bidirectional conversion:</strong> Convert any loaded file to any supported format</li>
+                    <li><strong>Dark/Light theme toggle:</strong> User preference saved locally</li>
+                    <li><strong>Responsive design:</strong> Works on desktop, tablet, and mobile devices</li>
+                </ul>
+            </section>
+
+            <!-- Live Application -->
+            <section id="live-app" class="topic">
+                <h2>Live Application</h2>
+                <p>Access the live application at: <a href="https://newappstesting.shinyapps.io/Data2SPSS/" target="_blank">https://newappstesting.shinyapps.io/Data2SPSS/</a></p>
+                <div class="success-box">
+                    <i class="fas fa-infinity"></i> <strong>No file size limit:</strong> The application removes upload size restrictions. You can process datasets of any size (subject to system memory).
+                </div>
+            </section>
+
+            <!-- Installation -->
+            <section id="installation" class="topic">
+                <h2>Installation and Local Setup</h2>
+                <h3>Prerequisites</h3>
+                <ul>
+                    <li>R version 4.4 or higher</li>
+                    <li>RStudio (recommended) or any R environment</li>
+                </ul>
+                <h3>Steps to Run Locally</h3>
+                <p><strong>1. Download app.R from GitHub</strong><br>
+                Access the source code at: <a href="https://github.com/mudassiribrahim12/Data2SPSS/blob/main/app.R" target="_blank">https://github.com/mudassiribrahim12/Data2SPSS/blob/main/app.R</a></p>
+                <p><strong>2. Install required R packages</strong></p>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Install required packages
+install.packages(c(
+  "shiny",
+  "shinythemes",
+  "readxl",
+  "readr",
+  "haven",
+  "foreign",
+  "rio",
+  "DT",
+  "dplyr",
+  "labelled",
+  "purrr",
+  "shinyjs",
+  "writexl"
+))</code></pre>
+                </div>
+                <p><strong>3. Run the application in RStudio</strong></p>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Set your working directory to where you saved app.R
+# Example: if app.R is on your Desktop
+setwd("C:/Users/YourName/Desktop/")    # Windows example
+# or
+setwd("/home/yourname/Desktop/")       # Linux/Mac example
+
+# Load the shiny library
+library(shiny)
+
+# Run the application
+runApp("app.R")</code></pre>
+                </div>
+                <div class="path-note">
+                    <i class="fas fa-info-circle"></i> <strong>Note:</strong> Replace the path with the actual location where you saved the <code>app.R</code> file. The examples above show common locations - adjust the path to match your system.
+                </div>
+                <p>Alternatively, open the <code>app.R</code> file in RStudio and click the "Run App" button.</p>
+            </section>
+
+            <!-- Deployment -->
+            <section id="deployment" class="topic">
+                <h2>Deployment Options</h2>
+                <h3>ShinyApps.io (Free)</h3>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Install rsconnect
+install.packages("rsconnect")
+
+# Deploy (replace with the actual path to your app folder)
+rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
+                </div>
+                <div class="path-note">
+                    <i class="fas fa-info-circle"></i> <strong>Note:</strong> Replace <code>"path/to/Data2SPSS"</code> with the actual folder path containing your <code>app.R</code> file (e.g., <code>"C:/Users/YourName/Desktop/Data2SPSS"</code>).
+                </div>
+                <h3>Institutional Server</h3>
+                <p>For universities or organizations, deploy on your own server using:</p>
+                <ul>
+                    <li>Shiny Server (open source)</li>
+                    <li>RStudio Connect (commercial)</li>
+                    <li>Docker containerization</li>
+                </ul>
+            </section>
+
+            <!-- Basic Workflow -->
+            <section id="basic-workflow" class="topic">
+                <h2>Basic Workflow</h2>
+                <ol>
+                    <li><strong>Open the application</strong> in your web browser</li>
+                    <li><strong>Navigate to the Data Converter tab</strong></li>
+                    <li><strong>Click "Choose Data File"</strong> and select your data file</li>
+                    <li><strong>Review the preview panels</strong> to verify your data loaded correctly:
+                        <ul>
+                            <li>Data Preview: First several rows of the dataset</li>
+                            <li>Data Structure: Variable types and unique values</li>
+                            <li>Variable Analysis: How the tool will handle each variable</li>
+                        </ul>
+                    </li>
+                    <li><strong>Click "Convert to SPSS format"</strong></li>
+                    <li><strong>Review the SPSS Metadata panel</strong> to confirm variable names, labels, and value labels</li>
+                    <li><strong>Enter a filename</strong> and click "Download SPSS File"</li>
+                </ol>
+                <div class="note-box">
+                    <i class="fas fa-lightbulb"></i> <strong>Example dataset available for testing:</strong><br>
+                    <a href="https://archive.org/download/data-2-spss-example-dataset/Data2SPSS%20Example%20dataset.xlsx" target="_blank">https://archive.org/download/data-2-spss-example-dataset/Data2SPSS%20Example%20dataset.xlsx</a>
+                </div>
+            </section>
+
+            <!-- Final Steps in SPSS -->
+            <section id="spss-steps" class="topic">
+                <h2>Final Steps in SPSS Statistics</h2>
+                <p>After downloading and opening the file in SPSS Statistics:</p>
+                <ol>
+                    <li><strong>Navigate to Variable View</strong> (usually at the bottom of the SPSS window)</li>
+                    <li><strong>Locate the "Measure" column</strong></li>
+                    <li><strong>Change measure type for categorical variables:</strong>
+                        <ul>
+                            <li><strong>Nominal:</strong> Categories with no natural order (e.g., gender, treatment group)</li>
+                            <li><strong>Ordinal:</strong> Categories with meaningful order (e.g., education level, Likert scales)</li>
+                        </ul>
+                    </li>
+                </ol>
+                <div class="success-box">
+                    <i class="fas fa-exclamation-circle"></i> <strong>Important:</strong> If categorical variables are left as "Scale", SPSS may treat them as continuous numbers in statistical procedures, leading to incorrect results.
+                </div>
+            </section>
+
+            <!-- Export to Other Formats -->
+            <section id="export-formats" class="topic">
+                <h2>Exporting to Other Formats</h2>
+                <ol>
+                    <li><strong>Load your data</strong> in the Data Converter tab</li>
+                    <li><strong>Navigate to the Export to Other Formats tab</strong></li>
+                    <li><strong>Select your desired output format</strong> from the dropdown menu</li>
+                    <li><strong>Review the preview</strong> to verify the conversion</li>
+                    <li><strong>Click "Download Converted File"</strong></li>
+                </ol>
+                <p>Supported export formats: CSV, Excel, Stata, RData, SAS (.sas7bdat), SAS Transport (.xpt - JMP compatible), TSV, TXT.</p>
+            </section>
+
+            <!-- How It Works: Name Cleaning -->
+            <section id="name-cleaning" class="topic">
+                <h2>Variable Name Cleaning</h2>
+                <p>Variable names are automatically cleaned to meet SPSS requirements:</p>
+                <ul>
+                    <li>Spaces are removed</li>
+                    <li>Special characters are eliminated</li>
+                    <li>Names are truncated to 64 characters</li>
+                    <li>Names starting with numbers are prefixed with a letter</li>
+                    <li>Duplicate names are made unique by appending numbers</li>
+                </ul>
+            </section>
+
+            <section id="label-assignment" class="topic">
+                <h2>Value Label Assignment</h2>
+                <ul>
+                    <li><strong>Text categorical variables:</strong> Converted to numbers (1, 2, 3, ...) with corresponding value labels</li>
+                    <li><strong>Continuous variables:</strong> Each observation assigned both a value and a label mirroring that value (e.g., 26 → "26")</li>
+                    <li><strong>Pre-labeled variables:</strong> Existing labels from Stata or SPSS are preserved</li>
+                </ul>
+            </section>
+
+            <!-- Technical Notes -->
+            <section id="limitations" class="topic">
+                <h2>Current Limitations</h2>
+                <ul>
+                    <li><strong>Nominal vs. Ordinal:</strong> The tool does not distinguish between nominal and ordinal categorical variables. Users must make this distinction when adjusting measure types in SPSS.</li>
+                    <li><strong>Missing Values:</strong> User-defined missing value definitions from source files are not propagated. Use SPSS to set missing values after import.</li>
+                    <li><strong>File Size:</strong> Performance depends on system resources. Very large datasets may require longer processing times.</li>
+                    <li><strong>Internet Connection:</strong> The web version requires an internet connection. Run locally for offline use.</li>
+                </ul>
+            </section>
+
+            <section id="performance" class="topic">
+                <h2>Performance Considerations</h2>
+                <ul>
+                    <li>For typical research datasets (up to tens of thousands of rows), processing is nearly instantaneous</li>
+                    <li>Large datasets with hundreds of thousands of rows may require more time</li>
+                    <li>For optimal performance with large files, run the application locally</li>
+                </ul>
+            </section>
+
+            <section id="project-structure" class="topic">
+                <h2>Project Structure</h2>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>Data2SPSS/
+├── app.R              # Main application file
+├── README.md          # Documentation
+├── LICENSE            # MIT License
+└── .gitignore         # Git ignore file</code></pre>
+                </div>
+            </section>
+
+            <!-- Citation -->
+            <section id="citation" class="topic">
+                <h2>Citation</h2>
+                <p>If you use Data2SPSS in your research, please cite:</p>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>@software{Ibrahim_Data2SPSS_2025,
+  author = {Ibrahim, Mudasir Mohammed},
+  title = {Data2SPSS: An interactive R-Shiny web application for converting data files to SPSS and other formats},
+  year = {2026},
+  url = {https://github.com/mudassiribrahim12/Data2SPSS}
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- Contact -->
+            <section id="contact" class="topic">
+                <h2>Contact & Author</h2>
+                <p><strong>Author:</strong> Mudasir Mohammed Ibrahim<br>
+                <strong>Affiliation:</strong> Department of Internal Medicine (M3), Tamale Teaching Hospital, Tamale, Ghana<br>
+                <strong>Email:</strong> <a href="mailto:mudassiribrahim30@gmail.com">mudassiribrahim30@gmail.com</a></p>
+                <h3>Academic Profiles</h3>
+                <ul>
+                    <li><a href="https://www.researchgate.net/profile/Mudasir-Ibrahim" target="_blank">ResearchGate</a></li>
+                    <li><a href="https://scholar.google.com/citations?user=xEFzAvgAAAAJ&hl=en" target="_blank">Google Scholar</a></li>
+                    <li><a href="https://orcid.org/0000-0002-9049-8222" target="_blank">ORCID</a></li>
+                </ul>
+            </section>
+
+            <!-- Acknowledgments with complete package list -->
+            <section id="acknowledgments" class="topic">
+                <h2>Acknowledgments</h2>
+                <p>Data2SPSS was built using the following R packages:</p>
+                <div class="package-list">
+                    <div class="package-item">shiny</div>
+                    <div class="package-item">shinythemes</div>
+                    <div class="package-item">readxl</div>
+                    <div class="package-item">readr</div>
+                    <div class="package-item">haven</div>
+                    <div class="package-item">foreign</div>
+                    <div class="package-item">rio</div>
+                    <div class="package-item">DT</div>
+                    <div class="package-item">dplyr</div>
+                    <div class="package-item">labelled</div>
+                    <div class="package-item">purrr</div>
+                    <div class="package-item">shinyjs</div>
+                    <div class="package-item">writexl</div>
+                </div>
+                <p>Special thanks to the developers and maintainers of these packages for making data conversion in R robust and accessible.</p>
+                <div class="footer">
+                    <p>Data2SPSS: Making data preparation faster, easier, and more reliable for researchers worldwide.</p>
+                    <p>License: MIT — No rights reserved. Free to use, modify, distribute.</p>
+                    <p>Copyright © 2025-<span id="current-year"></span> Mudasir Mohammed Ibrahim</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Set current year dynamically
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Copy code functionality
+        function copyCode(button) {
+            const pre = button.parentElement.querySelector('pre');
+            const code = pre.innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                button.textContent = 'Error!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = localStorage.getItem('docsTheme') === 'dark';
+        if (prefersDark) {
+            document.body.classList.add('dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('docsTheme', isDark ? 'dark' : 'light');
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        // Smooth scroll and active link highlighting
+        const links = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.topic');
+        function setActiveLink() {
+            let current = '';
+            const scrollPos = window.scrollY + 120;
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+                    current = section.getAttribute('id');
+                }
+            });
+            links.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('data-section');
+                if (href === current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', setActiveLink);
+        window.addEventListener('load', setActiveLink);
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('data-section');
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    history.pushState(null, null, `#${targetId}`);
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+        if (window.location.hash) {
+            const hashId = window.location.hash.substring(1);
+            const target = document.getElementById(hashId);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
