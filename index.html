@@ -232,24 +232,24 @@
             transform: translateX(5px);
         }
 
-        /* Disclaimer Box - comprehensive with findings statement */
+        /* Disclaimer Box - positioned nicely */
         .disclaimer-box {
             position: fixed;
             bottom: 20px;
             right: 80px;
-            max-width: 360px;
+            max-width: 340px;
             background: var(--disclaimer-bg);
             border-left: 4px solid var(--loading-bar-color);
             padding: 12px 18px;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 0.72rem;
             line-height: 1.45;
             color: var(--disclaimer-text);
             z-index: 10;
             font-family: system-ui, -apple-system, 'Segoe UI', monospace;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(2px);
-            transition: all 0.2s ease;
+            transition: opacity 0.4s ease, transform 0.2s ease;
             cursor: pointer;
         }
         
@@ -263,16 +263,16 @@
             margin-right: 8px;
             font-weight: 600;
             font-size: 0.85rem;
-            vertical-align: top;
+            vertical-align: middle;
         }
         
         .disclaimer-text {
             display: inline;
+            vertical-align: middle;
         }
         
         .disclaimer-text strong {
             font-weight: 600;
-            letter-spacing: 0.2px;
         }
         
         /* Copyright at bottom left */
@@ -451,7 +451,7 @@
             }
             
             .disclaimer-box {
-                bottom: 70px;
+                bottom: 75px;
                 right: 15px;
                 left: 15px;
                 max-width: none;
@@ -520,11 +520,11 @@
         </ul>
     </div>
 
-    <!-- COMPREHENSIVE DISCLAIMER BOX - includes datasets AND findings/results statement -->
-    <div class="disclaimer-box" id="disclaimerBox" title="Click to dismiss (reappears on reload)">
-        <span class="disclaimer-icon">⚖️</span>
+    <!-- DISCLAIMER BOX - appears for 10 seconds then vanishes automatically -->
+    <div class="disclaimer-box" id="disclaimerBox">
+        <span class="disclaimer-icon">ℹ️</span>
         <span class="disclaimer-text">
-            <strong>Disclaimer:</strong> All example datasets, analyses, findings, results, and interpretations shown are for <strong>practice and demonstration purposes only</strong>. They do not represent real-world data, are not from any organization, and the statistical outputs, conclusions, or insights are <strong>not real</strong> — they are simulated for educational illustration. Do not use for actual research or decision-making.
+            <strong>Disclaimer:</strong> Example datasets provided are for practice and demonstration purposes only. They do not represent real-world data and are not from any organization or entity.
         </span>
     </div>
 
@@ -697,21 +697,44 @@
             });
         }
 
-        // Disclaimer box: dismiss on click with session storage
+        // DISCLAIMER: Show for 10 seconds, then fade out and vanish
         const disclaimerBox = document.getElementById('disclaimerBox');
         if (disclaimerBox) {
-            const dismissed = sessionStorage.getItem('disclaimerDismissed');
-            if (dismissed === 'true') {
+            // Check if disclaimer was already hidden in this session
+            const disclaimerHidden = sessionStorage.getItem('disclaimerAutoHidden');
+            if (disclaimerHidden === 'true') {
                 disclaimerBox.style.display = 'none';
+            } else {
+                // Display normally, then auto-hide after 10 seconds
+                disclaimerBox.style.opacity = '1';
+                disclaimerBox.style.display = 'block';
+                
+                // Set timeout to fade out and hide after 10 seconds
+                setTimeout(() => {
+                    if (disclaimerBox) {
+                        disclaimerBox.style.transition = 'opacity 0.5s ease';
+                        disclaimerBox.style.opacity = '0';
+                        setTimeout(() => {
+                            if (disclaimerBox) {
+                                disclaimerBox.style.display = 'none';
+                                // Store in sessionStorage so it doesn't reappear until page reload
+                                sessionStorage.setItem('disclaimerAutoHidden', 'true');
+                            }
+                        }, 500);
+                    }
+                }, 10000); // 10 seconds
             }
             
+            // Optional: Allow manual click to dismiss early (if user wants to close sooner)
             disclaimerBox.addEventListener('click', function() {
-                disclaimerBox.style.transition = 'opacity 0.25s ease';
-                disclaimerBox.style.opacity = '0';
-                setTimeout(() => {
-                    disclaimerBox.style.display = 'none';
-                    sessionStorage.setItem('disclaimerDismissed', 'true');
-                }, 250);
+                if (disclaimerBox.style.display !== 'none') {
+                    disclaimerBox.style.transition = 'opacity 0.3s ease';
+                    disclaimerBox.style.opacity = '0';
+                    setTimeout(() => {
+                        disclaimerBox.style.display = 'none';
+                        sessionStorage.setItem('disclaimerAutoHidden', 'true');
+                    }, 300);
+                }
             });
         }
 
@@ -734,8 +757,8 @@
         });
 
         console.log('Documentation Hub Ready');
-        console.log('✅ Comprehensive disclaimer active: datasets, findings, results, interpretations are simulated for demonstration only.');
-        console.log('Click disclaimer box to dismiss (reappears on page reload)');
+        console.log('Disclaimer appears for 10 seconds then vanishes automatically until page reload');
+        console.log('User can also click disclaimer to dismiss it earlier');
     </script>
 </body>
 </html>
