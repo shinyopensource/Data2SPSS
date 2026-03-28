@@ -32,6 +32,8 @@
             --r-link: #2081C3;
             --copy-btn-bg: #e2e8f0;
             --copy-btn-hover: #cbd5e0;
+            --step-bg: #F0F7FF;
+            --step-border: #2081C3;
         }
 
         body.dark {
@@ -50,6 +52,8 @@
             --r-link: #7AB3D9;
             --copy-btn-bg: #2D3748;
             --copy-btn-hover: #4A5568;
+            --step-bg: #1E2A3A;
+            --step-border: #5A9FD4;
         }
 
         body {
@@ -248,6 +252,59 @@
             margin: 1.2rem 0;
         }
 
+        .info-box {
+            background: var(--step-bg);
+            border-left: 4px solid var(--step-border);
+            padding: 1rem 1.2rem;
+            border-radius: 10px;
+            margin: 1.2rem 0;
+        }
+
+        .step-container {
+            margin: 1.5rem 0;
+        }
+
+        .step {
+            background: var(--r-code-bg);
+            border: 1px solid var(--r-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--r-blue);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-right: 12px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--r-blue);
+        }
+
+        .step-content {
+            margin-left: 40px;
+            color: var(--r-text);
+        }
+
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -330,15 +387,6 @@
             border: 1px solid var(--r-border);
         }
 
-        .example-path {
-            background: var(--r-code-bg);
-            padding: 0.2rem 0.5rem;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            display: inline-block;
-        }
-
         .path-note {
             font-size: 0.85rem;
             color: var(--r-text-light);
@@ -354,6 +402,12 @@
             font-size: 0.7rem;
             font-weight: 500;
             margin-right: 0.5rem;
+        }
+
+        hr {
+            margin: 1.5rem 0;
+            border: none;
+            border-top: 1px solid var(--r-border);
         }
     </style>
 </head>
@@ -378,19 +432,17 @@
                 <li><a href="#prerequisites" class="nav-link" data-section="prerequisites"><i class="fas fa-cogs"></i> Prerequisites</a></li>
                 <li><a href="#installation" class="nav-link" data-section="installation"><i class="fas fa-download"></i> Local Installation</a></li>
                 <li><a href="#deployment" class="nav-link" data-section="deployment"><i class="fas fa-cloud-upload-alt"></i> Deployment</a></li>
-                <li class="nav-section">Usage Guide</li>
-                <li><a href="#dual-interfaces" class="nav-link" data-section="dual-interfaces"><i class="fas fa-mouse-pointer"></i> Dual Interfaces</a></li>
-                <li><a href="#simple-mediation" class="nav-link" data-section="simple-mediation"><i class="fas fa-chart-line"></i> Simple Mediation</a></li>
-                <li><a href="#serial-mediation" class="nav-link" data-section="serial-mediation"><i class="fas fa-layer-group"></i> Serial Mediation</a></li>
-                <li><a href="#moderation" class="nav-link" data-section="moderation"><i class="fas fa-balance-scale"></i> Moderation</a></li>
-                <li><a href="#moderated-mediation" class="nav-link" data-section="moderated-mediation"><i class="fas fa-project-diagram"></i> Moderated Mediation</a></li>
+                <li class="nav-section">Step-by-Step Guides</li>
+                <li><a href="#simple-mediation-guide" class="nav-link" data-section="simple-mediation-guide"><i class="fas fa-chart-line"></i> Simple Mediation</a></li>
+                <li><a href="#serial-mediation-guide" class="nav-link" data-section="serial-mediation-guide"><i class="fas fa-layer-group"></i> Serial Mediation</a></li>
+                <li><a href="#moderation-guide" class="nav-link" data-section="moderation-guide"><i class="fas fa-balance-scale"></i> Moderation</a></li>
+                <li><a href="#moderated-mediation-guide" class="nav-link" data-section="moderated-mediation-guide"><i class="fas fa-project-diagram"></i> Moderated Mediation</a></li>
                 <li class="nav-section">Visualization</li>
                 <li><a href="#path-diagrams" class="nav-link" data-section="path-diagrams"><i class="fas fa-chart-pie"></i> Path Diagrams</a></li>
                 <li><a href="#slope-plot" class="nav-link" data-section="slope-plot"><i class="fas fa-chart-line"></i> Simple Slopes Plot</a></li>
                 <li class="nav-section">Technical Notes</li>
                 <li><a href="#statistical-engine" class="nav-link" data-section="statistical-engine"><i class="fas fa-chart-bar"></i> Statistical Engine</a></li>
                 <li><a href="#limitations" class="nav-link" data-section="limitations"><i class="fas fa-exclamation-triangle"></i> Limitations</a></li>
-                <li><a href="#project-structure" class="nav-link" data-section="project-structure"><i class="fas fa-folder-tree"></i> Project Structure</a></li>
                 <li><a href="#citation" class="nav-link" data-section="citation"><i class="fas fa-quote-right"></i> Citation</a></li>
                 <li><a href="#contact" class="nav-link" data-section="contact"><i class="fas fa-envelope"></i> Contact & Author</a></li>
                 <li><a href="#acknowledgments" class="nav-link" data-section="acknowledgments"><i class="fas fa-heart"></i> Acknowledgments</a></li>
@@ -403,50 +455,33 @@
             <section id="overview" class="topic">
                 <h1>MedModr</h1>
                 <p><strong>An Open-Source Mediation & Moderation Software for Structural Equation Modeling</strong></p>
-                <p>MedModr is a free, web-based R-Shiny application that provides an intuitive interface for conducting mediation and moderation analyses. Built on the powerful <strong>lavaan</strong> package, it enables researchers to test complex statistical models without requiring advanced programming skills. The tool supports simple mediation, serial mediation, moderation, and moderated mediation models with professional visualization and report generation.</p>
+                <p>MedModr is a free, web-based R-Shiny application that provides an intuitive interface for conducting mediation and moderation analyses. Built on the powerful <strong>lavaan</strong> package, it enables researchers to test complex statistical models without requiring advanced programming skills.</p>
                 <div class="note-box">
-                    <i class="fas fa-exclamation-triangle"></i> <strong>Common research problems solved:</strong>
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Before You Begin:</strong>
                     <ul style="margin-top: 8px; margin-left: 1.5rem;">
-                        <li>Complex mediation pathways requiring advanced statistical knowledge</li>
-                        <li>Difficulty testing moderated mediation (conditional process models)</li>
-                        <li>Manual calculation of indirect effects and standard errors</li>
-                        <li>Lack of publication-ready diagrams and tables</li>
+                        <li>Ensure your data is clean with no missing values (or be aware that rows with missing values will be removed)</li>
+                        <li>Variable names should not contain spaces or special characters</li>
+                        <li>For categorical variables, consider creating dummy variables beforehand</li>
+                        <li>Have at least 10-20 observations per variable for reliable estimates</li>
                     </ul>
                 </div>
-                <p>MedModr solves these problems by automatically generating lavaan syntax, computing indirect effects with bootstrap confidence intervals, and producing customizable path diagrams with coefficient estimates.</p>
             </section>
 
             <!-- Features -->
             <section id="features" class="topic">
                 <h2>Features</h2>
-                <h3>Supported Analysis Types</h3>
                 <div class="feature-grid">
                     <div class="feature-card"><i class="fas fa-chart-line"></i> Simple Mediation</div>
                     <div class="feature-card"><i class="fas fa-layer-group"></i> Serial Mediation</div>
                     <div class="feature-card"><i class="fas fa-balance-scale"></i> Moderation</div>
                     <div class="feature-card"><i class="fas fa-project-diagram"></i> Moderated Mediation</div>
                 </div>
-                <h3>Supported Input Formats</h3>
                 <div class="feature-grid">
-                    <div class="feature-card"><i class="fas fa-file-csv"></i> CSV</div>
-                    <div class="feature-card"><i class="fas fa-file-alt"></i> TSV, TXT</div>
-                    <div class="feature-card"><i class="fas fa-file-excel"></i> Excel (.xlsx, .xls)</div>
-                    <div class="feature-card"><i class="fas fa-chart-line"></i> Stata (.dta)</div>
-                    <div class="feature-card"><i class="fas fa-chart-bar"></i> SPSS (.sav)</div>
-                    <div class="feature-card"><i class="fab fa-r-project"></i> RData (.rdata)</div>
+                    <div class="feature-card"><i class="fas fa-file-csv"></i> CSV, Excel, SPSS, Stata</div>
+                    <div class="feature-card"><i class="fas fa-chart-pie"></i> Customizable Path Diagrams</div>
+                    <div class="feature-card"><i class="fas fa-file-word"></i> Professional Word Reports</div>
+                    <div class="feature-card"><i class="fas fa-calculator"></i> Bootstrap Confidence Intervals</div>
                 </div>
-                <h3>Key Features</h3>
-                <ul>
-                    <li><strong>Dual Interfaces:</strong> Interactive point-and-click OR syntax-based model specification</li>
-                    <li><strong>Automatic Syntax Generation:</strong> The app generates proper lavaan syntax based on your variable selections</li>
-                    <li><strong>Bootstrap Confidence Intervals:</strong> Robust standard errors for indirect effects</li>
-                    <li><strong>Comprehensive Fit Measures:</strong> Chi-square, CFI, TLI, RMSEA, SRMR</li>
-                    <li><strong>Customizable Path Diagrams:</strong> Display standardized coefficients with p-values</li>
-                    <li><strong>Simple Slopes Visualization:</strong> Plot conditional effects for moderation analysis</li>
-                    <li><strong>Professional Word Reports:</strong> Download analysis results with tables and interpretation</li>
-                    <li><strong>Covariate Adjustment:</strong> Control for confounding variables (categorical or continuous)</li>
-                    <li><strong>Dark/Light Theme Toggle:</strong> User preference saved locally</li>
-                </ul>
             </section>
 
             <!-- Live Application -->
@@ -454,26 +489,23 @@
                 <h2>Live Application</h2>
                 <p>Access the live application at: <a href="https://mudassiribrahim30.shinyapps.io/MedModr/" target="_blank">https://mudassiribrahim30.shinyapps.io/MedModr/</a></p>
                 <div class="success-box">
-                    <i class="fas fa-infinity"></i> <strong>No installation required:</strong> Use the web version directly in your browser. Upload your data, run analyses, and download reports instantly.
+                    <i class="fas fa-infinity"></i> <strong>No installation required:</strong> Use the web version directly in your browser.
                 </div>
             </section>
 
             <!-- Prerequisites -->
             <section id="prerequisites" class="topic">
-                <h2>Prerequisites for Local Installation</h2>
+                <h2>Prerequisites</h2>
                 <ul>
-                    <li>R version 4.4 or higher</li>
-                    <li>RStudio (recommended) or any R environment</li>
+                    <li>R version 4.4 or higher (for local installation)</li>
+                    <li>RStudio (recommended for local development)</li>
+                    <li>A modern web browser (for web version)</li>
                 </ul>
             </section>
 
             <!-- Installation -->
             <section id="installation" class="topic">
-                <h2>Installation and Local Setup</h2>
-                <h3>Steps to Run Locally</h3>
-                <p><strong>1. Download app.R from GitHub</strong><br>
-                Access the source code at: <a href="https://github.com/mudassiribrahim12/MedModr/blob/main/app.R" target="_blank">https://github.com/mudassiribrahim12/MedModr/blob/main/app.R</a></p>
-                <p><strong>2. Install required R packages</strong></p>
+                <h2>Local Installation</h2>
                 <div class="code-block-wrapper">
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                     <pre><code># Install required packages
@@ -481,234 +513,398 @@ install.packages(c(
   "shiny", "lavaan", "semPlot", "ggplot2", "readr", "readxl",
   "haven", "DT", "colourpicker", "officer", "magick", "flextable",
   "shinythemes", "shinyjs", "shinydashboard"
-))</code></pre>
-                </div>
-                <p><strong>3. Run the application in RStudio</strong></p>
-                <div class="code-block-wrapper">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code># Set your working directory to where you saved app.R
-# Example: if app.R is on your Desktop
-setwd("C:/Users/YourName/Desktop/")    # Windows example
-# or
-setwd("/home/yourname/Desktop/")       # Linux/Mac example
+))
 
-# Load the shiny library
+# Download app.R from GitHub and run
 library(shiny)
-
-# Run the application
-runApp("app.R")</code></pre>
-                </div>
-                <div class="path-note">
-                    <i class="fas fa-info-circle"></i> <strong>Note:</strong> Replace the path with the actual location where you saved the <code>app.R</code> file. Alternatively, open the file in RStudio and click the "Run App" button.
+runApp("path/to/app.R")</code></pre>
                 </div>
             </section>
 
             <!-- Deployment -->
             <section id="deployment" class="topic">
-                <h2>Deployment Options</h2>
-                <h3>ShinyApps.io (Free)</h3>
+                <h2>Deployment</h2>
                 <div class="code-block-wrapper">
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code># Install rsconnect
+                    <pre><code># Deploy to shinyapps.io
 install.packages("rsconnect")
-
-# Deploy (replace with the actual path to your app folder)
 rsconnect::deployApp("path/to/MedModr")</code></pre>
                 </div>
-                <div class="path-note">
-                    <i class="fas fa-info-circle"></i> <strong>Note:</strong> Replace <code>"path/to/MedModr"</code> with the actual folder path containing your <code>app.R</code> file.
-                </div>
-                <h3>Institutional Server</h3>
-                <ul>
-                    <li>Shiny Server (open source)</li>
-                    <li>RStudio Connect (commercial)</li>
-                    <li>Docker containerization</li>
-                </ul>
             </section>
 
-            <!-- Dual Interfaces -->
-            <section id="dual-interfaces" class="topic">
-                <h2>Dual Interfaces</h2>
-                <p>MedModr offers two ways to specify your model:</p>
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <i class="fas fa-mouse-pointer"></i>
-                        <strong>Interactive Interface</strong><br>
-                        Point-and-click variable selection. Perfect for beginners and quick analyses. Simply select variables from dropdown boxes and let the app generate the lavaan syntax automatically.
+            <!-- SIMPLE MEDIATION STEP-BY-STEP GUIDE -->
+            <section id="simple-mediation-guide" class="topic">
+                <h2>Simple Mediation Analysis - Step-by-Step Guide</h2>
+                <p>Test whether the effect of X on Y is transmitted through a mediator M (X → M → Y).</p>
+                
+                <div class="step-container">
+
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Select Your Interface</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>On startup, choose <strong>"Interactive Interface"</strong> for point-and-click selection</li>
+                                <li>Or choose <strong>"Syntax Interface"</strong> if you prefer writing lavaan code</li>
+                                <li>For beginners, the Interactive Interface is recommended</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="feature-card">
-                        <i class="fas fa-code"></i>
-                        <strong>Syntax Interface</strong><br>
-                        Write lavaan syntax directly for maximum flexibility. Ideal for advanced users who want complete control over model specification.
+                    
+                                        <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Load Your Data</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Click <strong>"Browse"</strong> in the Data Input section</li>
+                                <li>Select your data file (CSV, XLSX, Stata or SPSS)</li>
+                                <li>Wait for the data preview to appear in the "Variables in Data" tab</li>
+                                <li>Verify that all your variables are correctly loaded and displayed</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Select Analysis Type</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>From the dropdown menu, select <strong>"Simple Mediation"</strong></li>
+                                <li>Three variable selection boxes will appear: X, M, and Y</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Select Your Variables</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Click on the <strong>X box</strong> (Independent Variable) and select your predictor variable</li>
+                                <li>Click on the <strong>M box</strong> (Mediator Variable) and select your mediator variable</li>
+                                <li>Click on the <strong>Y box</strong> (Dependent Variable) and select your outcome variable</li>
+                                <li>Example: X = "Stress", M = "Anxiety", Y = "Performance"</li>
+                            </ul>
+                            <div class="info-box" style="margin-top: 10px;">
+                                <i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Variables are automatically validated — each box will display the selected variable name.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Run the Analysis</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Click the <strong>"Run Analysis"</strong> button (blue button with play icon)</li>
+                                <li>Wait for the analysis to complete (you'll see a notification when done)</li>
+                                <li>The Results tab will automatically open with your output</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-title">Interpret Your Results</div>
+                        <div class="step-content">
+                            <ul>
+                                <li><strong>Path Estimates:</strong> Look at a-path (X→M) and b-path (M→Y) significance (p < 0.05)</li>
+                                <li><strong>Indirect Effect:</strong> Check if a*b is significant - this indicates mediation</li>
+                                <li><strong>Direct Effect (c'):</strong> If not significant with significant indirect effect = full mediation</li>
+                                <li><strong>Total Effect (c):</strong> Overall effect of X on Y</li>
+                            </ul>
+                            <div class="success-box" style="margin-top: 10px;">
+                                <i class="fas fa-check-circle"></i> <strong>Interpretation Example:</strong><br>
+                                "The indirect effect of Stress on Performance through Anxiety was significant (β = -0.15, p < .001), indicating that Anxiety mediates this relationship."
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-title">Visualize & Export</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Go to <strong>"Diagram"</strong> tab to view and customize your path diagram</li>
+                                <li>Adjust layout, colors, and node labels as desired</li>
+                                <li>Click <strong>"Download Diagram (PNG)"</strong> to save as PNG</li>
+                                <li>Click <strong>"Download Word Report"</strong> to generate a complete analysis report</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Simple Mediation -->
-            <section id="simple-mediation" class="topic">
-                <h2>Simple Mediation Analysis</h2>
-                <p>Test whether the effect of an independent variable (X) on a dependent variable (Y) is transmitted through a mediator (M).</p>
-                <div class="note-box">
-                    <i class="fas fa-info-circle"></i> <strong>Model Specification:</strong> X → M → Y
-                </div>
-                <h3>Interactive Mode Syntax</h3>
-                <div class="code-block-wrapper">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code># Simple Mediation Model
-M ~ a*X
-Y ~ b*M + c*X
-
-# Indirect and total effects
-Indirect_Effect_M := a*b
-Total_Effect := c + (a*b)</code></pre>
-                </div>
-                <h3>Example with Real Variables</h3>
-                <div class="code-block-wrapper">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code># Example: Stress → Anxiety → Performance
-Anxiety ~ a*Stress
-Performance ~ b*Anxiety + c*Stress
-
-Indirect_Effect := a*b
-Total_Effect := c + (a*b)</code></pre>
-                </div>
-            </section>
-
-            <!-- Serial Mediation -->
-            <section id="serial-mediation" class="topic">
-                <h2>Serial Mediation Analysis</h2>
+            <!-- SERIAL MEDIATION STEP-BY-STEP GUIDE -->
+            <section id="serial-mediation-guide" class="topic">
+                <h2>Serial Mediation Analysis - Step-by-Step Guide</h2>
                 <p>Test sequential pathways where mediators are ordered (X → M1 → M2 → Y).</p>
-                <div class="note-box">
-                    <i class="fas fa-info-circle"></i> <strong>Model Specification:</strong> X → M1 → M2 → Y
-                </div>
-                <div class="code-block-wrapper">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code># Serial Mediation Model
-M1 ~ a1*X
-M2 ~ a2*M1 + d*X
-Y ~ b1*M1 + b2*M2 + c*X
+                
+                <div class="step-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Load Your Data</div>
+                        <div class="step-content">
+                            <p>Same as Simple Mediation - upload your data file and verify variables load correctly.</p>
+                        </div>
+                    </div>
 
-# User-friendly indirect effects
-Indirect_Effect_M1 := a1 * b1
-Indirect_Effect_M2 := d * b2
-Indirect_Effect_Serial := a1 * a2 * b2
-Total_Indirect_Effect := Indirect_Effect_M1 + Indirect_Effect_M2 + Indirect_Effect_Serial
-Total_Effect := c + Total_Indirect_Effect</code></pre>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Select Analysis Type</div>
+                        <div class="step-content">
+                            <p>From the dropdown, select <strong>"Serial Mediation"</strong>. Four variable boxes will appear: X, M1, M2, and Y.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Select Variables in Order</div>
+                        <div class="step-content">
+                            <ul>
+                                <li><strong>X (Independent Variable):</strong> Your predictor (e.g., "Workload")</li>
+                                <li><strong>M1 (First Mediator):</strong> The first mechanism (e.g., "Stress")</li>
+                                <li><strong>M2 (Second Mediator):</strong> The second mechanism (e.g., "Burnout")</li>
+                                <li><strong>Y (Dependent Variable):</strong> Your outcome (e.g., "Job Satisfaction")</li>
+                            </ul>
+                            <div class="info-box" style="margin-top: 10px;">
+                                <i class="fas fa-lightbulb"></i> <strong>Important:</strong> M1 and M2 must be in theoretical sequential order.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Run the Analysis</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Click the <strong>"Run Analysis"</strong> button (blue button with play icon)</li>
+                                <li>Wait for the analysis to complete (you'll see a notification when done)</li>
+                                <li>The Results tab will automatically open with your output</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Interpret Results</div>
+                        <div class="step-content">
+                            <ul>
+                                <li><strong>Indirect Effect M1:</strong> X → M1 → Y pathway (a1 × b1)</li>
+                                <li><strong>Indirect Effect M2:</strong> X → M2 → Y pathway (d × b2)</li>
+                                <li><strong>Serial Indirect Effect:</strong> X → M1 → M2 → Y pathway (a1 × a2 × b2)</li>
+                                <li><strong>Total Indirect Effect:</strong> Sum of all indirect pathways</li>
+                                <li><strong>Total Effect:</strong> c + Total Indirect Effect</li>
+                            </ul>
+                            <div class="success-box" style="margin-top: 10px;">
+                                <i class="fas fa-check-circle"></i> <strong>Interpretation Example:</strong><br>
+                                "The serial indirect effect (Workload → Stress → Burnout → Satisfaction) was significant (β = -0.08, p < .01), supporting the hypothesized sequential mediation process."
+                            </div>
+                        </div>
+                    </div>
+                                        <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-title">Visualize & Export</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Go to <strong>"Diagram"</strong> tab to view and customize your path diagram</li>
+                                <li>Adjust layout, colors, and node labels as desired</li>
+                                <li>Click <strong>"Download Diagram (PNG)"</strong> to save as PNG</li>
+                                <li>Click <strong>"Download Word Report"</strong> to generate a complete analysis report</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <!-- Moderation -->
-            <section id="moderation" class="topic">
-                <h2>Moderation Analysis</h2>
-                <p>Test whether the effect of X on Y depends on the level of a moderator (W).</p>
-                <div class="note-box">
-                    <i class="fas fa-lightbulb"></i> <strong>Automatic Interaction Term:</strong> The app automatically creates centered variables and the interaction term when you select variables for moderation analysis.
-                </div>
-                <div class="code-block-wrapper">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code># Moderation Model
-Y ~ b1*X + b2*W + b3*X_W
+            <!-- MODERATION STEP-BY-STEP GUIDE -->
+            <section id="moderation-guide" class="topic">
+                <h2>Moderation Analysis - Step-by-Step Guide</h2>
+                <p>Test whether the effect of X on Y depends on the level of moderator W.</p>
+                
+                <div class="step-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Load Your Data</div>
+                        <div class="step-content">
+                            <p>Upload your data file with X (independent), W (moderator), and Y (dependent) variables.</p>
+                        </div>
+                    </div>
 
-# Simple slopes (W centered at -1 SD, mean, +1 SD)
-Simple_Slope_Low := b1 + b3*(-1)
-Simple_Slope_Avg := b1 + b3*(0)
-Simple_Slope_High := b1 + b3*(1)</code></pre>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Select Analysis Type</div>
+                        <div class="step-content">
+                            <p>From dropdown, select <strong>"Moderation"</strong>. Three variable boxes appear: X, W, and Y.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Select Variables</div>
+                        <div class="step-content">
+                            <ul>
+                                <li><strong>X (Independent Variable):</strong> Your predictor (e.g., "Study Time")</li>
+                                <li><strong>W (Moderator Variable):</strong> The condition that modifies the relationship (e.g., "Sleep Quality")</li>
+                                <li><strong>Y (Dependent Variable):</strong> Your outcome (e.g., "Exam Score")</li>
+                            </ul>
+                            <div class="info-box" style="margin-top: 10px;">
+                                <i class="fas fa-magic"></i> <strong>Automatic:</strong> The app automatically creates centered variables and the interaction term (X_W) when you run the analysis!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Run the Analysis</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Click the <strong>"Run Analysis"</strong> button (blue button with play icon)</li>
+                                <li>Wait for the analysis to complete (you'll see a notification when done)</li>
+                                <li>The Results tab will automatically open with your output</li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Interpret Results</div>
+                        <div class="step-content">
+                            <ul>
+                                <li><strong>Interaction Term (X_W):</strong> If significant (p < 0.05), moderation is present</li>
+                                <li><strong>Simple Slopes:</strong> Check the effect of X on Y at different W levels:
+                                    <ul>
+                                        <li>Low W (-1 SD): slope = b1 + b3 × (-1)</li>
+                                        <li>Average W (mean): slope = b1</li>
+                                        <li>High W (+1 SD): slope = b1 + b3 × (+1)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Direction:</strong> Positive b3 = effect strengthens as W increases; Negative b3 = effect weakens</li>
+                            </ul>
+                            <div class="success-box" style="margin-top: 10px;">
+                                <i class="fas fa-chart-line"></i> <strong>Interpretation Example:</strong><br>
+                                "The interaction between Study Time and Sleep Quality was significant (β = 0.15, p = .002). Simple slopes analysis revealed that Study Time positively predicted Exam Score only when Sleep Quality was high (+1 SD: β = 0.32, p < .001), but not when Sleep Quality was low (-1 SD: β = 0.02, p = .85)."
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-title">Visualize with Slope Plot</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Go to <strong>"Diagram"</strong> tab and select <strong>"Slope Plot"</strong></li>
+                                <li>View the conditional effect at different moderator levels</li>
+                                <li>Customize colors, labels, and download the plot</li>
+                                <li>The Simple Slopes Values panel shows exact coefficients</li>
+                                                                <li>Click <strong>"Download Slope Plot (PNG)"</strong> to save as PNG</li>
+                            </ul>
+                                                            <li>Click <strong>"Download Word Report"</strong> to generate a complete analysis report</li>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <!-- Moderated Mediation -->
-            <section id="moderated-mediation" class="topic">
-                <h2>Moderated Mediation (Conditional Process Model)</h2>
-                <p>Test whether the indirect effect of X on Y through M depends on the level of a moderator W (path a moderation).</p>
-                <div class="note-box">
-                    <i class="fas fa-info-circle"></i> <strong>Model Specification:</strong> Path a (X → M) is moderated by W
+            <!-- MODERATED MEDIATION STEP-BY-STEP GUIDE -->
+            <section id="moderated-mediation-guide" class="topic">
+                <h2>Moderated Mediation (Conditional Process) - Step-by-Step Guide</h2>
+                <p>Test whether the indirect effect of X on Y through M depends on moderator W (path a moderation).</p>
+                
+                <div class="step-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Load Your Data</div>
+                        <div class="step-content">
+                            <p>Upload data with X (independent), M (mediator), W (moderator), and Y (dependent).</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Select Analysis Type</div>
+                        <div class="step-content">
+                            <p>From dropdown, select <strong>"Moderated Mediation"</strong>. Four variable boxes appear: X, M, W, and Y.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Select Variables</div>
+                        <div class="step-content">
+                            <ul>
+                                <li><strong>X (Independent Variable):</strong> Your predictor (e.g., "Leadership Support")</li>
+                                <li><strong>M (Mediator Variable):</strong> The mechanism (e.g., "Job Engagement")</li>
+                                <li><strong>W (Moderator Variable):</strong> The condition (e.g., "Organizational Climate")</li>
+                                <li><strong>Y (Dependent Variable):</strong> Your outcome (e.g., "Performance")</li>
+                            </ul>
+                            <div class="info-box" style="margin-top: 10px;">
+                                <i class="fas fa-magic"></i> <strong>Note:</strong> The app automatically creates the X×W interaction term and centers variables for the path a equation.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Run the Analysis</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Click the <strong>"Run Analysis"</strong> button (blue button with play icon)</li>
+                                <li>Wait for the analysis to complete (you'll see a notification when done)</li>
+                                <li>The Results tab will automatically open with your output</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Interpret Results</div>
+                        <div class="step-content">
+                            <ul>
+                                <li><strong>Path a (X → M) Moderated by W:</strong> Check a3 coefficient (X×W → M) - if significant, the a-path varies across W levels</li>
+                                <li><strong>Path b (M → Y):</strong> Should be significant for mediation to occur</li>
+                                <li><strong>Conditional Indirect Effects:</strong>
+                                    <ul>
+                                        <li>Low W (-1 SD): (a1 + a3×-1) × b</li>
+                                        <li>Average W (mean): a1 × b</li>
+                                        <li>High W (+1 SD): (a1 + a3×+1) × b</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Index of Moderated Mediation (a3 × b):</strong> If significant (p < 0.05), the indirect effect significantly differs across W levels - this is evidence of moderated mediation</li>
+                            </ul>
+                            <div class="success-box" style="margin-top: 10px;">
+                                <i class="fas fa-check-circle"></i> <strong>Interpretation Example:</strong><br>
+                                "The index of moderated mediation was significant (β = 0.08, p = .01), indicating that the indirect effect of Leadership Support on Performance through Job Engagement varied significantly across levels of Organizational Climate. The conditional indirect effect was significant only when Organizational Climate was high (β = 0.24, p < .001) but not when low (β = 0.05, p = .32)."
+                            </div>
+                        </div>
+                    </div>
+
+                                        <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-title">Export</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Click <strong>"Download Word Report"</strong> to generate a complete analysis report</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="code-block-wrapper">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code># Moderated Mediation Model
-M ~ a1*X + a2*W + a3*X_W
-Y ~ b*M + cp*X
-
-# Conditional indirect effects at different levels of W
-Conditional_Indirect_Low := (a1 + a3*(-1)) * b
-Conditional_Indirect_Avg := (a1 + a3*(0)) * b
-Conditional_Indirect_High := (a1 + a3*(1)) * b
-
-# Index of Moderated Mediation
-Index_Moderated_Mediation := a3 * b</code></pre>
-                </div>
-            </section>
-
-            <!-- Path Diagrams -->
-            <section id="path-diagrams" class="topic">
-                <h2>Path Diagrams</h2>
-                <p>Visualize your model with customizable diagrams that display standardized coefficients and p-values.</p>
-                <ul>
-                    <li><strong>Layout options:</strong> tree, circle, spring, tree2, tree3</li>
-                    <li><strong>Customizable colors:</strong> observed and latent variable colors</li>
-                    <li><strong>Node labels:</strong> Customize variable names displayed on the diagram</li>
-                    <li><strong>Edge labels:</strong> Display standardized coefficients with significance indicators</li>
-                    <li><strong>Download options:</strong> High-resolution PNG with mediation effects annotation</li>
-                </ul>
-                <div class="success-box">
-                    <i class="fas fa-chart-pie"></i> <strong>Diagram Features:</strong> Path diagrams automatically display standardized coefficients with p-values, and for mediation analyses, effect estimates are annotated directly on the diagram.
-                </div>
-            </section>
-
-            <!-- Simple Slopes Plot -->
-            <section id="slope-plot" class="topic">
-                <h2>Simple Slopes Plot</h2>
-                <p>For moderation analysis, visualize the conditional effect of X on Y at different levels of the moderator W.</p>
-                <ul>
-                    <li>Plot shows regression lines at low (-1 SD), average (mean), and high (+1 SD) moderator levels</li>
-                    <li>Customizable colors, line widths, and point transparency</li>
-                    <li>Interactive interpretation panel with slope values</li>
-                    <li>Download as high-resolution PNG for publication</li>
-                </ul>
-            </section>
-
-            <!-- Statistical Engine -->
-            <section id="statistical-engine" class="topic">
-                <h2>Statistical Engine: lavaan</h2>
-                <p>MedModr uses the <strong>lavaan</strong> (Latent Variable Analysis) package for all structural equation modeling analyses. Key features:</p>
-                <ul>
-                    <li><strong>Maximum Likelihood (ML) estimation</strong> as default</li>
-                    <li><strong>Bootstrap support</strong> for robust standard errors and confidence intervals (up to 5,000 samples)</li>
-                    <li><strong>Comprehensive fit measures:</strong> χ², CFI, TLI, RMSEA, SRMR</li>
-                    <li><strong>Standardized solutions</strong> (std.all) for effect size interpretation</li>
-                    <li><strong>User-defined parameters</strong> using := operator for indirect effects</li>
-                </ul>
             </section>
 
             <!-- Limitations -->
             <section id="limitations" class="topic">
-                <h2>Current Limitations</h2>
+                <h2>Limitations</h2>
                 <ul>
-                    <li><strong>Latent Variables:</strong> The current version focuses on observed variable models. Latent variable SEM will be added in future releases.</li>
-                    <li><strong>Complex Models:</strong> Very large datasets (>10,000 rows) are automatically truncated for performance.</li>
-                    <li><strong>Missing Data:</strong> Listwise deletion is used. Multiple imputation is not currently supported.</li>
-                    <li><strong>Bootstrap Samples:</strong> Limited to 5,000 samples for performance reasons.</li>
-                    <li><strong>File Size:</strong> Performance depends on system resources. Very large datasets may require longer processing times.</li>
+                    <li><strong>Latent Variables:</strong> Current version focuses on observed variable models</li>
+                    <li><strong>Missing Data:</strong> Listwise deletion only (cases with missing values are removed)</li>
+                    <li><strong>Large Datasets:</strong> >10,000 rows are truncated for performance</li>
+                    <li><strong>Bootstrap:</strong> Limited to 5,000 samples</li>
                 </ul>
-            </section>
-
-            <!-- Project Structure -->
-            <section id="project-structure" class="topic">
-                <h2>Project Structure</h2>
-                <div class="code-block-wrapper">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code>MedModr/
-├── app.R              # Main application file
-├── README.md          # Documentation
-├── LICENSE            # MIT License
-└── .gitignore         # Git ignore file</code></pre>
-                </div>
             </section>
 
             <!-- Citation -->
             <section id="citation" class="topic">
                 <h2>Citation</h2>
-                <p>If you use MedModr in your research, please cite:</p>
                 <div class="code-block-wrapper">
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                     <pre><code>@software{Ibrahim_MedModr_2025,
@@ -756,19 +952,16 @@ Index_Moderated_Mediation := a3 * b</code></pre>
                     <div class="package-item">shinyjs</div>
                     <div class="package-item">shinydashboard</div>
                 </div>
-                <p>Special thanks to the developers and maintainers of these packages for making advanced statistical analysis accessible in R, particularly the <strong>lavaan</strong> team for providing the structural equation modeling engine.</p>
+                <p>Special thanks to the developers and maintainers of these packages, particularly the <strong>lavaan</strong> team (Yves Rosseel) for providing the structural equation modeling engine.</p>
                 <div class="footer">
                     <p>MedModr: Empowering researchers with intuitive mediation and moderation analysis tools.</p>
-                    <p>License: MIT — Free to use, modify, and distribute for academic and research purposes.</p>
+                    <p>License: MIT — Free to use, modify, and distribute.</p>
                 </div>
             </section>
         </div>
     </div>
 
     <script>
-        // Set current year
-        document.getElementById('current-year')?.remove();
-
         // Copy code functionality
         function copyCode(button) {
             const pre = button.parentElement.querySelector('pre');
