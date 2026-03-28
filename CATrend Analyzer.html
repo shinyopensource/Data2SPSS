@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATrend Analyzer • Cochran-Armitage Trend Test Software</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Fira Code for monospace -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --r-blue: #2081C3;
+            --r-dark-blue: #0C4C8A;
+            --r-light-bg: #F7F9FB;
+            --r-border: #E5E9ED;
+            --r-text: #1A2C3E;
+            --r-text-light: #4A627A;
+            --r-code-bg: #F4F6F9;
+            --r-sidebar-bg: #FFFFFF;
+            --r-nav-active: #2081C3;
+            --r-hr: #DCE3E9;
+            --r-warning-bg: #FFF8E7;
+            --r-warning-border: #FFE0A3;
+            --r-success-bg: #E6F4EA;
+            --r-link: #2081C3;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e0;
+            --step-bg: #F0F7FF;
+            --step-border: #2081C3;
+        }
+
+        body.dark {
+            --r-blue: #5A9FD4;
+            --r-dark-blue: #2C6A9E;
+            --r-light-bg: #1A1F2A;
+            --r-border: #2D3748;
+            --r-text: #E8EDF2;
+            --r-text-light: #B0C4DE;
+            --r-code-bg: #252B36;
+            --r-sidebar-bg: #1E2430;
+            --r-hr: #2D3748;
+            --r-warning-bg: #2D2A1F;
+            --r-warning-border: #8B6B2C;
+            --r-success-bg: #1E3A2A;
+            --r-link: #7AB3D9;
+            --copy-btn-bg: #2D3748;
+            --copy-btn-hover: #4A5568;
+            --step-bg: #1E2A3A;
+            --step-border: #5A9FD4;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--r-light-bg);
+            color: var(--r-text);
+            line-height: 1.5;
+            font-size: 16px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .docs-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: var(--r-sidebar-bg);
+            border-right: 1px solid var(--r-border);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--r-border);
+        }
+
+        .pkg-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--r-blue);
+            letter-spacing: -0.3px;
+        }
+
+        .pkg-version {
+            font-size: 0.8rem;
+            color: var(--r-text-light);
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.3rem;
+        }
+
+        .sidebar-nav a {
+            text-decoration: none;
+            color: var(--r-text);
+            font-weight: 500;
+            display: block;
+            padding: 0.4rem 0.6rem;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--r-code-bg);
+            color: var(--r-blue);
+        }
+
+        .sidebar-nav .active {
+            color: var(--r-blue);
+            background: rgba(32, 129, 195, 0.08);
+            border-left: 3px solid var(--r-blue);
+            font-weight: 600;
+        }
+
+        .nav-section {
+            margin-top: 1.5rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--r-text-light);
+            margin-bottom: 0.6rem;
+            padding-left: 0.6rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: calc(100% - 320px);
+            overflow-x: auto;
+        }
+
+        .topic {
+            margin-bottom: 3rem;
+            scroll-margin-top: 1rem;
+        }
+
+        .topic h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid var(--r-border);
+            padding-bottom: 0.5rem;
+        }
+
+        .topic h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin: 1.8rem 0 1rem 0;
+            color: var(--r-blue);
+        }
+
+        .topic h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        .topic p {
+            margin-bottom: 1rem;
+            color: var(--r-text);
+        }
+
+        .code-block-wrapper {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .code-block-wrapper pre {
+            background: var(--r-code-bg);
+            padding: 1rem;
+            padding-right: 3rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--r-border);
+            margin: 0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: 1px solid var(--r-border);
+            border-radius: 6px;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--r-text);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+            transform: scale(1.02);
+        }
+
+        .copy-btn.copied {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: var(--r-code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .note-box {
+            background: var(--r-warning-bg);
+            border-left: 4px solid var(--r-warning-border);
+            padding: 1rem 1.2rem;
+            border-radius: 10px;
+            margin: 1.2rem 0;
+        }
+
+        .success-box {
+            background: var(--r-success-bg);
+            border-left: 4px solid #28a745;
+            padding: 1rem 1.2rem;
+            border-radius: 10px;
+            margin: 1.2rem 0;
+        }
+
+        .info-box {
+            background: var(--step-bg);
+            border-left: 4px solid var(--step-border);
+            padding: 1rem 1.2rem;
+            border-radius: 10px;
+            margin: 1.2rem 0;
+        }
+
+        .step-container {
+            margin: 1.5rem 0;
+        }
+
+        .step {
+            background: var(--r-code-bg);
+            border: 1px solid var(--r-border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--r-blue);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-right: 12px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--r-blue);
+            display: inline-block;
+        }
+
+        .step-content {
+            margin-left: 44px;
+            color: var(--r-text);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .feature-card {
+            background: var(--r-code-bg);
+            border: 1px solid var(--r-border);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .feature-card i {
+            color: var(--r-blue);
+            margin-right: 8px;
+        }
+        
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--r-border);
+            font-size: 0.85rem;
+            color: var(--r-text-light);
+            text-align: center;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--r-blue);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 900px) {
+            .docs-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid var(--r-border);
+            }
+            .main-content {
+                max-width: 100%;
+                padding: 1.5rem;
+            }
+        }
+
+        .package-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .package-item {
+            background: var(--r-code-bg);
+            border-radius: 8px;
+            padding: 0.5rem 0.8rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--r-border);
+        }
+
+        .path-note {
+            font-size: 0.85rem;
+            color: var(--r-text-light);
+            margin-top: 0.25rem;
+        }
+
+        .formula {
+            background: var(--r-code-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 1.5rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            border: 1px solid var(--r-border);
+        }
+
+        hr {
+            margin: 1.5rem 0;
+            border: none;
+            border-top: 1px solid var(--r-border);
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="docs-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="pkg-name">CATrend Analyzer</div>
+                <div class="pkg-version">Cochran-Armitage Trend Test Software</div>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#overview" class="nav-link active" data-section="overview"><i class="fas fa-info-circle"></i> Overview</a></li>
+                <li><a href="#formula" class="nav-link" data-section="formula"><i class="fas fa-square-root-alt"></i> Statistical Formula</a></li>
+                <li><a href="#features" class="nav-link" data-section="features"><i class="fas fa-star"></i> Features</a></li>
+                <li><a href="#live-app" class="nav-link" data-section="live-app"><i class="fas fa-globe"></i> Live Application</a></li>
+                <li class="nav-section">Installation & Setup</li>
+                <li><a href="#prerequisites" class="nav-link" data-section="prerequisites"><i class="fas fa-cogs"></i> Prerequisites</a></li>
+                <li><a href="#installation" class="nav-link" data-section="installation"><i class="fas fa-download"></i> Local Installation</a></li>
+                <li><a href="#deployment" class="nav-link" data-section="deployment"><i class="fas fa-cloud-upload-alt"></i> Deployment</a></li>
+                <li class="nav-section">Complete Step-by-Step Guide</li>
+                <li><a href="#complete-guide" class="nav-link" data-section="complete-guide"><i class="fas fa-list-ol"></i> Full Analysis Workflow</a></li>
+                <li class="nav-section">Technical Notes</li>
+                <li><a href="#assumptions" class="nav-link" data-section="assumptions"><i class="fas fa-check-double"></i> Assumptions</a></li>
+                <li><a href="#limitations" class="nav-link" data-section="limitations"><i class="fas fa-exclamation-triangle"></i> Limitations</a></li>
+                <li><a href="#citation" class="nav-link" data-section="citation"><i class="fas fa-quote-right"></i> Citation</a></li>
+                <li><a href="#contact" class="nav-link" data-section="contact"><i class="fas fa-envelope"></i> Contact & Author</a></li>
+                <li><a href="#acknowledgments" class="nav-link" data-section="acknowledgments"><i class="fas fa-heart"></i> Acknowledgments</a></li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="main-content" id="mainContent">
+            <!-- Overview -->
+            <section id="overview" class="topic">
+                <h1>CATrend Analyzer</h1>
+                <p><strong>A Specialized Tool for Performing the Cochran-Armitage Test for Trend</strong></p>
+                <p>CATrend Analyzer is a free, web-based R-Shiny application designed specifically for detecting trends in proportions across ordered categorical variables. This test is widely used in clinical trials, epidemiology, and public health research, particularly when assessing whether the probability of a binary outcome changes consistently across increasing levels of an exposure or dose.</p>
+                <div class="note-box">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Before You Begin:</strong>
+                    <ul style="margin-top: 8px; margin-left: 1.5rem;">
+                        <li>Ensure your data is clean with no missing values (or be aware that rows with missing values will be removed)</li>
+                        <li>Variable names should not contain spaces or special characters</li>
+                        <li>For binary dependent variables, ensure they are coded as 0/1 or two categories</li>
+                        <li>Have at least 5 observations per cell for reliable estimates</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Statistical Formula Section -->
+            <section id="formula" class="topic">
+                <h2>Statistical Formula</h2>
+                <p>The Cochran-Armitage test for trend evaluates whether there is a linear trend in proportions across ordered groups. The application implements the exact formula:</p>
+                
+                <div class="formula">
+                    <strong>Z = [Σ y<sub>j</sub> (x<sub>j</sub> - x̄)] / √[p̄(1-p̄) Σ n<sub>j</sub> (x<sub>j</sub> - x̄)²]</strong>
+                </div>
+                
+                <p>Where:</p>
+                <ul>
+                    <li><strong>x<sub>j</sub></strong> = scores assigned to the ordered groups (1, 2, 3, ..., k)</li>
+                    <li><strong>y<sub>j</sub></strong> = number of "successes" (events) in group j</li>
+                    <li><strong>n<sub>j</sub></strong> = total number of observations in group j</li>
+                    <li><strong>x̄</strong> = weighted mean of scores = Σ(n<sub>j</sub>x<sub>j</sub>) / Σn<sub>j</sub></li>
+                    <li><strong>p̄</strong> = overall proportion of successes = Σy<sub>j</sub> / Σn<sub>j</sub></li>
+                    <li><strong>k</strong> = number of ordered groups</li>
+                </ul>
+                
+                <p>The test statistic Z follows a standard normal distribution. The chi-square equivalent is Z² with 1 degree of freedom.</p>
+                
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i> <strong>Continuity Correction:</strong> For small samples, the app can apply a continuity correction of c = 0.5 × (score spacing) to improve approximation accuracy. This adjusts the numerator by ±c based on the test direction.
+                </div>
+                
+                <p><strong>Test Interpretation:</strong></p>
+                <ul>
+                    <li><strong>Z > 0:</strong> Increasing trend (proportion of successes increases across ordered groups)</li>
+                    <li><strong>Z < 0:</strong> Decreasing trend (proportion of successes decreases across ordered groups)</li>
+                    <li><strong>p-value < 0.05:</strong> Statistically significant trend at α = 0.05</li>
+                </ul>
+            </section>
+
+            <!-- Features -->
+            <section id="features" class="topic">
+                <h2>Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card"><i class="fas fa-file-import"></i> Multiple Data Formats (CSV, Excel, SPSS, Stata)</div>
+                    <div class="feature-card"><i class="fas fa-th"></i> Dual Data Input Modes (Raw Data or Crosstabulation)</div>
+                    <div class="feature-card"><i class="fas fa-sort-amount-down"></i> Interactive Level Ordering with Drag-and-Drop</div>
+                    <div class="feature-card"><i class="fas fa-chart-bar"></i> Enhanced Stacked Bar Plots with Percentages</div>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-card"><i class="fas fa-calculator"></i> Accurate Cochran-Armitage Test Implementation</div>
+                    <div class="feature-card"><i class="fas fa-file-word"></i> Professional Word Document Reports</div>
+                    <div class="feature-card"><i class="fas fa-chart-pie"></i> Row %, Column %, and Total % Tables</div>
+                    <div class="feature-card"><i class="fas fa-palette"></i> Customizable Plot Colors</div>
+                </div>
+            </section>
+
+            <!-- Live Application -->
+            <section id="live-app" class="topic">
+                <h2>Live Application</h2>
+                <p>Access the live application at: <a href="https://mudassiribrahim30.shinyapps.io/CATrend/" target="_blank">https://mudassiribrahim30.shinyapps.io/CATrend/</a></p>
+                <div class="success-box">
+                    <i class="fas fa-infinity"></i> <strong>No installation required:</strong> Use the web version directly in your browser.
+                </div>
+            </section>
+
+            <!-- Prerequisites -->
+            <section id="prerequisites" class="topic">
+                <h2>Prerequisites</h2>
+                <ul>
+                    <li>R version 4.4 or higher (for local installation)</li>
+                    <li>RStudio (recommended for local development)</li>
+                    <li>A modern web browser (for web version)</li>
+                </ul>
+            </section>
+
+            <!-- Installation -->
+            <section id="installation" class="topic">
+                <h2>Local Installation</h2>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Install required packages
+install.packages(c(
+  "shiny", "shinydashboard", "DT", "haven", "readxl", "ggplot2",
+  "officer", "rmarkdown", "tidyverse", "sortable", "scales"
+))
+
+# Download app.R from GitHub and run
+library(shiny)
+runApp("path/to/app.R")</code></pre>
+                </div>
+            </section>
+
+            <!-- Deployment -->
+            <section id="deployment" class="topic">
+                <h2>Deployment</h2>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Deploy to shinyapps.io
+install.packages("rsconnect")
+rsconnect::deployApp("path/to/CATrend")</code></pre>
+                </div>
+            </section>
+
+            <!-- COMPLETE STEP-BY-STEP GUIDE - SINGLE CONTINUOUS PROCEDURE -->
+            <section id="complete-guide" class="topic">
+                <h2>Complete Analysis Workflow - Step-by-Step Guide</h2>
+                <p>Follow these steps in order to perform a complete trend analysis from data upload to report download.</p>
+                
+                <div class="step-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Select Data Type</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>In the <strong>Data Upload</strong> tab, choose either <strong>"Normal Data"</strong> (raw dataset) or <strong>"Crosstabulation Data"</strong> (pre-summarized counts)</li>
+                                <li>For Normal Data: Each row represents one observation</li>
+                                <li>For Crosstabulation Data: Enter counts directly in a contingency table format</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Upload Your Data File (Normal Data Mode)</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Select file type: CSV, Excel, Stata, or SPSS</li>
+                                <li>Click <strong>"Browse"</strong> and select your data file</li>
+                                <li>For CSV: specify separator, header, and quote settings</li>
+                                <li>For Excel: specify sheet number and optional cell range</li>
+                                <li>Wait for data preview to appear in the "Data Preview" table</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Enter Crosstabulation Data (Crosstab Mode)</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Enter Dependent Variable Name and Independent Variable Name</li>
+                                <li>Set number of levels for both variables</li>
+                                <li>Click <strong>"Setup Crosstabulation Table"</strong></li>
+                                <li>Enter labels for each level and counts for each cell</li>
+                                <li>Click <strong>"Create Dataset from Crosstabulation"</strong> to expand counts into observations</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Review Missing Data</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Go to the <strong>Data Cleaning</strong> tab</li>
+                                <li>Review the missing data summary table showing missing values by variable</li>
+                                <li>Click <strong>"Remove Rows with Missing Values in Selected Variables"</strong> to clean data</li>
+                                <li>Check the cleaned data preview to confirm removal of missing cases</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Select Variables for Analysis</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Navigate to the <strong>Variable Selection</strong> tab</li>
+                                <li><strong>Dependent Variable:</strong> Select your binary or categorical outcome variable</li>
+                                <li><strong>Independent Variable:</strong> Select your ordered exposure or grouping variable</li>
+                                <li>Review the variable information panel to confirm selections</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-title">Order Independent Variable Levels</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>In the <strong>"Order Independent Variable Levels"</strong> section, locate the bucket list</li>
+                                <li>Drag levels from the left bucket to the right bucket in the correct order</li>
+                                <li>Place <strong>LOWEST level at the TOP</strong> and <strong>HIGHEST level at the BOTTOM</strong></li>
+                                <li>Example: Placebo → Low Dose → Medium Dose → High Dose</li>
+                                <li>Click <strong>"Update Level Ordering"</strong> to save the order</li>
+                                <li>Verify the order appears correctly in the "Current Variable Information" panel</li>
+                            </ul>
+                            <div class="info-box" style="margin-top: 10px;">
+                                <i class="fas fa-lightbulb"></i> <strong>Critical:</strong> Correct level ordering is essential for accurate trend detection. The order determines whether the test detects an increasing or decreasing trend.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-title">Order Dependent Variable Levels (Optional)</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>If your dependent variable has more than 2 levels, you can reorder them</li>
+                                <li>The first level will be treated as the "success" category for the trend test</li>
+                                <li>For binary variables, ordering does not affect the test results</li>
+                                <li>Click <strong>"Update Level Ordering"</strong> after making changes</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">8</div>
+                        <div class="step-title">Configure Test Options</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Go to the <strong>Analysis</strong> tab</li>
+                                <li><strong>Test Type:</strong> Choose one:
+                                    <ul>
+                                        <li>Two-sided: Detects any trend (increasing or decreasing)</li>
+                                        <li>One-sided (increasing): Tests if proportion increases across levels</li>
+                                        <li>One-sided (decreasing): Tests if proportion decreases across levels</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Continuity Correction:</strong> Check this box to apply continuity correction for small samples (recommended)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">9</div>
+                        <div class="step-title">Run the Cochran-Armitage Test</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Click the <strong>"Run Cochran-Armitage Test"</strong> button</li>
+                                <li>Wait for the analysis to complete (a notification will appear)</li>
+                                <li>The test results will appear in the "Cochran-Armitage Test Results" section</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">10</div>
+                        <div class="step-title">Review Test Results</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Check the <strong>Z-statistic</strong> (positive = increasing trend, negative = decreasing trend)</li>
+                                <li>Check the <strong>p-value</strong> (p < 0.05 indicates statistical significance)</li>
+                                <li>Review the <strong>Enhanced Crosstabulation Results</strong> showing counts, row %, column %, and total %</li>
+                                <li>Examine the detailed test calculations including numerator, variance term, and intermediate values</li>
+                                <li>Read the interpretation section for guidance on your results</li>
+                            </ul>
+                            <div class="success-box" style="margin-top: 10px;">
+                                <i class="fas fa-check-circle"></i> <strong>Interpretation Example:</strong><br>
+                                "The Cochran-Armitage test revealed a significant increasing trend in disease prevalence across dose levels (Z = 4.12, p < 0.001)."
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">11</div>
+                        <div class="step-title">Customize Visualization</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>In the <strong>Plot Customization</strong> section, select <strong>Plot Value Type</strong>:
+                                    <ul>
+                                        <li>Counts: Raw frequencies</li>
+                                        <li>Row Percentages: Percentage within each independent variable level</li>
+                                        <li>Column Percentages: Percentage within each dependent variable level</li>
+                                    </ul>
+                                </li>
+                                <li>Set <strong>Plot Title</strong>, <strong>Title Size</strong>, and other text sizes</li>
+                                <li>Click on color pickers to customize colors for each dependent variable level</li>
+                                <li>The <strong>Enhanced Stacked Bar Plot</strong> will update automatically with your settings</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">12</div>
+                        <div class="step-title">Download Full Analysis Report</div>
+                        <div class="step-content">
+                            <ul>
+                                <li>Navigate to the <strong>Results</strong> tab</li>
+                                <li>Review the report preview showing key findings</li>
+                                <li>Select <strong>"Word Document"</strong> as the report format</li>
+                                <li>Click the <strong>"Download Full Report"</strong> button</li>
+                                <li>The report will include:
+                                    <ul>
+                                        <li>Complete test results with Z-statistic and p-value</li>
+                                        <li>Enhanced contingency table with counts and percentages</li>
+                                        <li>Customized stacked bar plot with your chosen settings</li>
+                                        <li>Detailed interpretation of findings</li>
+                                        <li>Methodological details and assumptions</li>
+                                    </ul>
+                                </li>
+                                <li>The report will save to your computer as a Word document (.docx)</li>
+                            </ul>
+                            <div class="note-box" style="margin-top: 10px;">
+                                <i class="fas fa-download"></i> <strong>Note:</strong> The report includes all analysis outputs, the customized plot, and statistical interpretation. You can share this report directly with colleagues or include it in your research.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assumptions -->
+            <section id="assumptions" class="topic">
+                <h2>Assumptions of the Cochran-Armitage Test</h2>
+                <ul>
+                    <li><strong>Independence:</strong> Observations are independent of each other</li>
+                    <li><strong>Ordered Categories:</strong> Independent variable levels have a natural order</li>
+                    <li><strong>Monotonic Trend:</strong> The trend is assumed to be monotonic (consistently increasing or decreasing)</li>
+                    <li><strong>Adequate Sample Size:</strong> Expected cell counts should ideally be >5 for reliable results</li>
+                    <li><strong>Binary Outcome:</strong> The test is designed for binary dependent variables (though it can be adapted for multi-category by specifying a reference level)</li>
+                </ul>
+                
+                <div class="info-box">
+                    <i class="fas fa-lightbulb"></i> <strong>Checking Assumptions:</strong>
+                    <ul style="margin-top: 8px;">
+                        <li>Review the contingency table for small cell counts (values less than 5)</li>
+                        <li>Ensure independent variable levels are correctly ordered from lowest to highest</li>
+                        <li>Verify independence (no repeated measures or clustering in your study design)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Limitations -->
+            <section id="limitations" class="topic">
+                <h2>Limitations</h2>
+                <ul>
+                    <li><strong>Small Sample Sizes:</strong> Results may be unreliable when expected cell counts < 5</li>
+                    <li><strong>Sparse Data:</strong> Many zero cells can affect test accuracy and power</li>
+                    <li><strong>Multi-category Outcomes:</strong> Test is designed for binary outcomes; multi-category requires specifying a reference level, which may not capture all patterns</li>
+                    <li><strong>Non-monotonic Trends:</strong> The test may not detect non-linear patterns (e.g., U-shaped or J-shaped relationships)</li>
+                    <li><strong>Confounding:</strong> The test does not adjust for other variables (unadjusted analysis only)</li>
+                </ul>
+            </section>
+
+            <!-- Citation -->
+            <section id="citation" class="topic">
+                <h2>Citation</h2>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code>@software{Ibrahim_CATrend_Analyzer_2025,
+  author = {Ibrahim, Mudasir Mohammed},
+  title = {CATrend Analyzer: A Tool for Performing Cochran-Armitage Trend Test},
+  year = {2025},
+  version = {1.0.0},
+  url = {https://github.com/mudassiribrahim12/CATrend}
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- Contact -->
+            <section id="contact" class="topic">
+                <h2>Contact & Author</h2>
+                <p><strong>Author:</strong> Mudasir Mohammed Ibrahim<br>
+                <strong>Affiliation:</strong> Department of Internal Medicine (M3), Tamale Teaching Hospital, Tamale, Ghana<br>
+                <strong>Email:</strong> <a href="mailto:mudassiribrahim30@gmail.com">mudassiribrahim30@gmail.com</a></p>
+                <h3>Academic Profiles</h3>
+                <ul>
+                    <li><a href="https://www.researchgate.net/profile/Mudasir-Ibrahim" target="_blank">ResearchGate</a></li>
+                    <li><a href="https://scholar.google.com/citations?user=xEFzAvgAAAAJ&hl=en" target="_blank">Google Scholar</a></li>
+                    <li><a href="https://orcid.org/0000-0002-9049-8222" target="_blank">ORCID</a></li>
+                </ul>
+            </section>
+
+            <!-- Acknowledgments -->
+            <section id="acknowledgments" class="topic">
+                <h2>Acknowledgments</h2>
+                <p>CATrend Analyzer was built using the following R packages:</p>
+                <div class="package-list">
+                    <div class="package-item">shiny</div>
+                    <div class="package-item">shinydashboard</div>
+                    <div class="package-item">DT</div>
+                    <div class="package-item">haven</div>
+                    <div class="package-item">readxl</div>
+                    <div class="package-item">ggplot2</div>
+                    <div class="package-item">officer</div>
+                    <div class="package-item">rmarkdown</div>
+                    <div class="package-item">tidyverse</div>
+                    <div class="package-item">sortable</div>
+                    <div class="package-item">scales</div>
+                </div>
+                <p>Special thanks to the developers and maintainers of these packages for making advanced statistical analysis accessible in R.</p>
+                <div class="footer">
+                    <p>CATrend Analyzer: Empowering researchers with accurate trend detection tools.</p>
+                    <p>License: MIT — Free to use, modify, and distribute.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Copy code functionality
+        function copyCode(button) {
+            const pre = button.parentElement.querySelector('pre');
+            const code = pre.innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                button.textContent = 'Error!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDark = localStorage.getItem('docsTheme') === 'dark';
+        if (prefersDark) {
+            document.body.classList.add('dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('docsTheme', isDark ? 'dark' : 'light');
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        // Smooth scroll and active link highlighting
+        const links = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.topic');
+        function setActiveLink() {
+            let current = '';
+            const scrollPos = window.scrollY + 120;
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+                    current = section.getAttribute('id');
+                }
+            });
+            links.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('data-section');
+                if (href === current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', setActiveLink);
+        window.addEventListener('load', setActiveLink);
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('data-section');
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    history.pushState(null, null, `#${targetId}`);
+                    links.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+        if (window.location.hash) {
+            const hashId = window.location.hash.substring(1);
+            const target = document.getElementById(hashId);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
