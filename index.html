@@ -22,6 +22,8 @@
             --close-btn-bg: #ffffff;
             --close-btn-hover: #e9ecef;
             --title-color: #000000;
+            --toc-bg: #f8f9fa;
+            --toc-hover: #e9ecef;
         }
 
         /* Dark theme */
@@ -35,6 +37,8 @@
             --close-btn-bg: #2d3748;
             --close-btn-hover: #4a5568;
             --title-color: #e0e0e0;
+            --toc-bg: #16213e;
+            --toc-hover: #1e2a3a;
         }
 
         body {
@@ -65,32 +69,57 @@
             transition: background 0.3s ease;
         }
 
-        /* Apps container on left side */
-        .apps-left {
+        /* Table of Contents container */
+        .toc-wrapper {
             position: fixed;
             top: 70px;
             left: 20px;
             z-index: 10;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            min-width: 200px;
         }
 
-        .app-link {
+        .toc-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-color);
+            opacity: 0.6;
+            margin-bottom: 12px;
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc-item {
+            margin-bottom: 10px;
+        }
+
+        .toc-link {
             text-decoration: underline;
             color: var(--link-color);
             font-size: 1rem;
             font-family: inherit;
             cursor: pointer;
             transition: color 0.2s;
+            display: inline-block;
         }
 
-        .app-link:visited {
+        .toc-link:visited {
             color: var(--link-visited);
         }
 
-        .app-link:hover {
+        .toc-link:hover {
             opacity: 0.8;
+        }
+
+        .toc-number {
+            display: inline-block;
+            margin-right: 8px;
+            font-weight: 500;
         }
 
         /* Author name at bottom left */
@@ -110,7 +139,7 @@
             position: fixed;
             bottom: 16px;
             right: 20px;
-            background: #002D72;
+            background: #2081C3;
             color: white;
             border: none;
             border-radius: 50%;
@@ -127,7 +156,7 @@
         }
 
         body.dark .theme-toggle {
-            background: #4A90E2;
+            background: #5a9fd4;
         }
 
         .theme-toggle:hover {
@@ -149,12 +178,18 @@
 
         .iframe-header {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
-            padding: 12px 20px;
+            padding: 12px 24px;
             background: var(--header-bg);
             border-bottom: 1px solid var(--border-color);
             box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        .iframe-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color);
         }
 
         .close-simple {
@@ -201,13 +236,13 @@
             width: 60px;
             height: 60px;
             border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #002D72;
+            border-top: 4px solid #2081C3;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         body.dark .spinner {
-            border-top: 4px solid #5A9FD4;
+            border-top: 4px solid #5a9fd4;
         }
 
         @keyframes spin {
@@ -223,22 +258,32 @@
             letter-spacing: 0.5px;
         }
 
-        /* Hide iframe header initially - will be shown only after content loads */
-        .iframe-header {
-            display: none;
-        }
-
-        /* When iframe container is active and not loading, show header */
-        .iframe-overlay.active .iframe-header {
+        /* When iframe container is active */
+        .iframe-overlay.active {
             display: flex;
         }
 
-        iframe {
-            display: none;
-        }
-
-        .iframe-overlay.active iframe {
-            display: block;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .toc-wrapper {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 20px;
+                padding: 15px;
+                background: var(--toc-bg);
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+            }
+            
+            .top-title {
+                position: relative;
+                margin-bottom: 20px;
+            }
+            
+            body {
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -248,13 +293,19 @@
         Shiny Open Source Documentation
     </div>
 
-    <!-- Apps on left side -->
-    <div class="apps-left">
-        <a class="app-link" id="data2spssLink" data-path="Data2SPSS.html" data-title="Data2SPSS Documentation">Data2SPSS</a>
-        <!-- Add more apps here as needed -->
-        <!-- 
-        <a class="app-link" id="otherAppLink" data-path="OtherApp.html" data-title="Other App">Other App</a>
-        -->
+    <!-- Table of Contents on left side -->
+    <div class="toc-wrapper">
+        <div class="toc-title">CONTENTS</div>
+        <ul class="toc-list">
+            <li class="toc-item">
+                <span class="toc-number">1.</span>
+                <a class="toc-link" id="data2spssLink" data-path="Data2SPSS.html" data-title="Data2SPSS Documentation">Data2SPSS</a>
+            </li>
+            <li class="toc-item">
+                <span class="toc-number">2.</span>
+                <a class="toc-link" id="medmodrLink" data-path="MedModr.html" data-title="MedModr Documentation">MedModr</a>
+            </li>
+        </ul>
     </div>
 
     <!-- Author name at bottom left -->
@@ -264,7 +315,7 @@
 
     <!-- Dark theme toggle button -->
     <button class="theme-toggle" id="themeToggle">
-        <i class="fa-solid fa-moon"></i>
+        <i class="fas fa-moon"></i>
     </button>
 
     <!-- Spinner overlay - only visible during loading -->
@@ -273,9 +324,10 @@
         <div class="spinner-text">Loading documentation...</div>
     </div>
 
-    <!-- Iframe container - header with only close button, hidden until content loads -->
+    <!-- Iframe container - header with close button -->
     <div id="iframeContainer" class="iframe-overlay">
         <div class="iframe-header">
+            <span class="iframe-title" id="iframeTitle">Documentation</span>
             <button id="closeIframeBtn" class="close-simple">✕ Close</button>
         </div>
         <iframe id="contentFrame" src="" title="Documentation Viewer"></iframe>
@@ -285,25 +337,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <script>
-        // App configurations - add more apps here
-        const apps = [
-            {
-                id: 'data2spssLink',
-                path: 'Data2SPSS.html',
-                title: 'Data2SPSS Documentation'
-            }
-            // Add more apps here:
-            // {
-            //     id: 'otherAppLink',
-            //     path: 'OtherApp.html',
-            //     title: 'Other Application'
-            // }
-        ];
-
         const spinnerOverlay = document.getElementById('spinnerOverlay');
         const iframeContainer = document.getElementById('iframeContainer');
         const contentFrame = document.getElementById('contentFrame');
         const closeBtn = document.getElementById('closeIframeBtn');
+        const iframeTitle = document.getElementById('iframeTitle');
 
         // Function to show spinner
         function showSpinner() {
@@ -314,52 +352,49 @@
             spinnerOverlay.style.display = 'none';
         }
 
-        // Function to open a documentation page with spinner and 5 second delay
-        function openDocumentation(filePath) {
+        // Function to open a documentation page
+        function openDocumentation(filePath, docTitle) {
             // Show spinner
             showSpinner();
             
-            // Ensure iframe container is not active yet (header hidden)
+            // Update iframe title
+            iframeTitle.textContent = docTitle;
+            
+            // Ensure iframe container is not active yet
             iframeContainer.classList.remove('active');
             
             // Clear previous iframe content
             contentFrame.src = '';
             
-            // Show iframe container (without header initially)
+            // Show iframe container
             iframeContainer.style.display = 'flex';
             
-            // Simulate 5 second loading delay before showing content
+            // Set iframe source to the HTML file
+            contentFrame.src = filePath;
+            
+            // When iframe loads, hide spinner and show header + iframe
+            const onIframeLoad = () => {
+                hideSpinner();
+                iframeContainer.classList.add('active');
+                contentFrame.removeEventListener('load', onIframeLoad);
+            };
+            
+            contentFrame.addEventListener('load', onIframeLoad);
+            
+            // Handle iframe load error
+            contentFrame.onerror = function() {
+                hideSpinner();
+                iframeContainer.classList.remove('active');
+                alert(`Could not load ${filePath}. Please make sure the file exists in the same directory.`);
+            };
+            
+            // Fallback: in case iframe load doesn't trigger within 3 seconds
             setTimeout(() => {
-                // Set iframe source to the HTML file
-                contentFrame.src = filePath;
-                
-                // When iframe loads, hide spinner and show header + iframe
-                const onIframeLoad = () => {
-                    // Hide spinner
+                if (spinnerOverlay.style.display === 'flex') {
                     hideSpinner();
-                    // Make iframe container active to show header and iframe
                     iframeContainer.classList.add('active');
-                    contentFrame.removeEventListener('load', onIframeLoad);
-                };
-                
-                contentFrame.addEventListener('load', onIframeLoad);
-                
-                // Handle iframe load error
-                contentFrame.onerror = function() {
-                    hideSpinner();
-                    iframeContainer.classList.remove('active');
-                    alert(`Could not load ${filePath}. Please make sure the file exists in the same directory.`);
-                };
-                
-                // Fallback: in case iframe load doesn't trigger within 1.5 seconds
-                setTimeout(() => {
-                    if (spinnerOverlay.style.display === 'flex') {
-                        hideSpinner();
-                        iframeContainer.classList.add('active');
-                    }
-                }, 1500);
-                
-            }, 5000); // 5 second delay before loading the content
+                }
+            }, 3000);
         }
 
         // Function to close the iframe
@@ -374,16 +409,23 @@
             hideSpinner();
         }
 
-        // Initialize event listeners for all apps
-        apps.forEach(app => {
-            const link = document.getElementById(app.id);
-            if (link) {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openDocumentation(app.path);
-                });
-            }
-        });
+        // Initialize event listeners for links
+        const data2spssLink = document.getElementById('data2spssLink');
+        const medmodrLink = document.getElementById('medmodrLink');
+
+        if (data2spssLink) {
+            data2spssLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                openDocumentation('Data2SPSS.html', 'Data2SPSS Documentation');
+            });
+        }
+
+        if (medmodrLink) {
+            medmodrLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                openDocumentation('MedModr.html', 'MedModr Documentation');
+            });
+        }
 
         // Close button event listener
         closeBtn.addEventListener('click', () => {
@@ -403,20 +445,22 @@
         
         if (savedTheme === 'dark') {
             document.body.classList.add('dark');
-            themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         } else {
-            themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
         }
         
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark');
             const isDark = document.body.classList.contains('dark');
             localStorage.setItem('shiny-docs-theme', isDark ? 'dark' : 'light');
-            themeToggle.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         });
 
-        // Optional: Add a note that Data2SPSS.html must exist
-        console.log('Click on Data2SPSS to load the documentation. Make sure Data2SPSS.html is in the same directory.');
+        // Log to console
+        console.log('Documentation Hub Ready');
+        console.log('Click on any numbered link to view documentation');
+        console.log('Make sure Data2SPSS.html and MedModr.html are in the same directory');
     </script>
 </body>
 </html>
