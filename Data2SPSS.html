@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data2SPSS • Professional Data Conversion Tool</title>
+    <title>Data2SPSS: Professional Data Conversion Tool</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Fira Code for monospace -->
@@ -350,7 +350,7 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <div class="pkg-name">Data2SPSS</div>
-                <div class="pkg-version">Bidirectional Data Conversion Tool</div>
+                <div class="pkg-version">Professional Data Conversion Tool</div>
             </div>
             <ul class="sidebar-nav">
                 <li><a href="#overview" class="nav-link active" data-section="overview"><i class="fas fa-info-circle"></i> Overview</a></li>
@@ -471,7 +471,27 @@ install.packages(c(
   "writexl"
 ))</code></pre>
                 </div>
-                <p><strong>3. Run the application in RStudio</strong></p>
+                
+                                <p><strong>3. Load required packages</strong></p>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code># Load required packages
+library(shiny)
+library(shinythemes)
+library(readxl)
+library(readr)
+library(haven)
+library(foreign)
+library(rio)
+library(DT)
+library(dplyr)
+library(labelled)
+library(purrr)
+library(shinyjs)
+library(writexl)</code></pre>
+                </div>
+                
+                <p><strong>4. Run the application in RStudio</strong></p>
                 <div class="code-block-wrapper">
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                     <pre><code># Set your working directory to where you saved app.R
