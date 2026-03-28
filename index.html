@@ -24,6 +24,7 @@
             --title-color: #000000;
             --toc-bg: #f8f9fa;
             --toc-hover: #e9ecef;
+            --loading-bar-color: #2081C3;
         }
 
         /* Dark theme */
@@ -39,6 +40,7 @@
             --title-color: #e0e0e0;
             --toc-bg: #16213e;
             --toc-hover: #1e2a3a;
+            --loading-bar-color: #5a9fd4;
         }
 
         body {
@@ -49,6 +51,54 @@
             position: relative;
             padding: 20px;
             transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Professional loading bar at the top */
+        .loading-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(32, 129, 195, 0.1);
+            z-index: 10000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.2s ease;
+        }
+
+        .loading-bar-container.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--loading-bar-color);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 40px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(200%);
+            }
         }
 
         /* title at the top */
@@ -215,54 +265,6 @@
             background: var(--bg-color);
         }
 
-        /* Spinner overlay - full screen with blur background */
-        .spinner-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #2081C3;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        body.dark .spinner {
-            border-top: 4px solid #5a9fd4;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .spinner-text {
-            color: white;
-            font-family: system-ui, -apple-system, 'Segoe UI', monospace;
-            font-size: 1rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        /* When iframe container is active */
-        .iframe-overlay.active {
-            display: flex;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .toc-wrapper {
@@ -288,6 +290,11 @@
     </style>
 </head>
 <body>
+    <!-- Professional loading bar at the top -->
+    <div id="loadingBarContainer" class="loading-bar-container">
+        <div id="loadingBar" class="loading-bar"></div>
+    </div>
+
     <!-- Title at the top -->
     <div class="top-title">
         Shiny Open Source Documentation
@@ -322,12 +329,6 @@
         <i class="fas fa-moon"></i>
     </button>
 
-    <!-- Spinner overlay - only visible during loading -->
-    <div id="spinnerOverlay" class="spinner-overlay">
-        <div class="spinner"></div>
-        <div class="spinner-text">Loading documentation...</div>
-    </div>
-
     <!-- Iframe container - header with close button -->
     <div id="iframeContainer" class="iframe-overlay">
         <div class="iframe-header">
@@ -348,44 +349,59 @@
             currentYearSpan.textContent = currentYear;
         }
 
-        const spinnerOverlay = document.getElementById('spinnerOverlay');
+        const loadingBarContainer = document.getElementById('loadingBarContainer');
+        const loadingBar = document.getElementById('loadingBar');
         const iframeContainer = document.getElementById('iframeContainer');
         const contentFrame = document.getElementById('contentFrame');
         const closeBtn = document.getElementById('closeIframeBtn');
         const iframeTitle = document.getElementById('iframeTitle');
 
-        // Function to show spinner
-        function showSpinner() {
-            spinnerOverlay.style.display = 'flex';
+        // Function to animate loading bar from 0 to 100% with customizable duration
+        function animateLoadingBar(duration = 5000) {
+            return new Promise((resolve) => {
+                loadingBarContainer.classList.add('active');
+                loadingBar.style.width = '0%';
+                
+                const startTime = performance.now();
+                
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(1, elapsed / duration);
+                    // Use easeOutCubic for smooth deceleration
+                    const easeProgress = 1 - Math.pow(1 - progress, 3);
+                    const percentage = easeProgress * 100;
+                    loadingBar.style.width = percentage + '%';
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    } else {
+                        // Hide the loading bar after completion
+                        setTimeout(() => {
+                            loadingBarContainer.classList.remove('active');
+                            loadingBar.style.width = '0%';
+                            resolve();
+                        }, 200);
+                    }
+                }
+                
+                requestAnimationFrame(update);
+            });
         }
 
-        function hideSpinner() {
-            spinnerOverlay.style.display = 'none';
-        }
-
-        // Function to open a documentation page
-        function openDocumentation(filePath, docTitle) {
-            // Show spinner
-            showSpinner();
+        // Function to open a documentation page with 5-second loading bar
+        async function openDocumentation(filePath, docTitle) {
+            // Show loading bar and animate to 100% over 5 seconds
+            await animateLoadingBar(5000);
             
-            // Update iframe title
+            // After loading bar completes, open the iframe
             iframeTitle.textContent = docTitle;
-            
-            // Ensure iframe container is not active yet
             iframeContainer.classList.remove('active');
-            
-            // Clear previous iframe content
             contentFrame.src = '';
-            
-            // Show iframe container (but hidden until loaded via active class)
             iframeContainer.style.display = 'flex';
-            
-            // Set iframe source to the HTML file
             contentFrame.src = filePath;
             
-            // When iframe loads, hide spinner and show header + iframe
+            // When iframe loads, show it
             const onIframeLoad = () => {
-                hideSpinner();
                 iframeContainer.classList.add('active');
                 contentFrame.removeEventListener('load', onIframeLoad);
             };
@@ -394,30 +410,23 @@
             
             // Handle iframe load error
             contentFrame.onerror = function() {
-                hideSpinner();
                 iframeContainer.classList.remove('active');
                 alert(`Could not load ${filePath}. Please make sure the file exists in the same directory.`);
             };
             
-            // Fallback: in case iframe load doesn't trigger within 4 seconds
+            // Fallback: in case iframe load doesn't trigger within 3 seconds
             setTimeout(() => {
-                if (spinnerOverlay.style.display === 'flex') {
-                    hideSpinner();
+                if (!iframeContainer.classList.contains('active')) {
                     iframeContainer.classList.add('active');
                 }
-            }, 4000);
+            }, 3000);
         }
 
         // Function to close the iframe
         function closeDocumentation() {
-            // Clear iframe content
             contentFrame.src = '';
-            // Hide iframe container
             iframeContainer.style.display = 'none';
-            // Remove active class
             iframeContainer.classList.remove('active');
-            // Hide spinner if visible
-            hideSpinner();
         }
 
         // Initialize event listeners for links
@@ -426,23 +435,23 @@
         const catrendLink = document.getElementById('catrendLink');
 
         if (data2spssLink) {
-            data2spssLink.addEventListener('click', (e) => {
+            data2spssLink.addEventListener('click', async (e) => {
                 e.preventDefault();
-                openDocumentation('Data2SPSS.html', 'Data2SPSS Documentation');
+                await openDocumentation('Data2SPSS.html', 'Data2SPSS Documentation');
             });
         }
 
         if (medmodrLink) {
-            medmodrLink.addEventListener('click', (e) => {
+            medmodrLink.addEventListener('click', async (e) => {
                 e.preventDefault();
-                openDocumentation('MedModr.html', 'MedModr Documentation');
+                await openDocumentation('MedModr.html', 'MedModr Documentation');
             });
         }
 
         if (catrendLink) {
-            catrendLink.addEventListener('click', (e) => {
+            catrendLink.addEventListener('click', async (e) => {
                 e.preventDefault();
-                openDocumentation('CATrend Analyzer.html', 'CATrend Analyzer Documentation');
+                await openDocumentation('CATrend Analyzer.html', 'CATrend Analyzer Documentation');
             });
         }
 
@@ -479,6 +488,7 @@
         // Log to console
         console.log('Documentation Hub Ready');
         console.log('Click on any numbered link to view documentation');
+        console.log('Loading bar runs for 5 seconds before opening content');
         console.log('Make sure Data2SPSS.html, MedModr.html, and CATrend Analyzer.html are in the same directory');
         console.log('Copyright year auto-updates: 2025-' + new Date().getFullYear());
     </script>
