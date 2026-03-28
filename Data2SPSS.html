@@ -108,13 +108,16 @@
             display: block;
             padding: 0.4rem 0.6rem;
             border-radius: 8px;
-            transition: 0.2s;
+            transition: text-decoration 0.2s;
             font-size: 0.9rem;
         }
 
+        /* Hover effect: underline instead of background/transform */
         .sidebar-nav a:hover {
-            background: var(--r-code-bg);
-            color: var(--r-blue);
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+            background: transparent;
         }
 
         .sidebar-nav .active {
@@ -122,6 +125,11 @@
             background: rgba(32, 129, 195, 0.08);
             border-left: 3px solid var(--r-blue);
             font-weight: 600;
+        }
+
+        .sidebar-nav .active:hover {
+            text-decoration: none;
+            background: rgba(32, 129, 195, 0.08);
         }
 
         .nav-section {
@@ -203,13 +211,13 @@
             font-family: 'Inter', sans-serif;
             font-weight: 500;
             color: var(--r-text);
-            transition: all 0.2s;
+            transition: none;
             z-index: 10;
         }
 
         .copy-btn:hover {
             background: var(--copy-btn-hover);
-            transform: scale(1.02);
+            transform: none;
         }
 
         .copy-btn.copied {
@@ -254,6 +262,13 @@
             border: 1px solid var(--r-border);
             border-radius: 12px;
             padding: 1rem;
+            transition: none;
+        }
+        
+        /* Remove hover transform from feature cards */
+        .feature-card:hover {
+            transform: none;
+            box-shadow: none;
         }
         
         .feature-card i {
@@ -284,11 +299,12 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             z-index: 1000;
-            transition: transform 0.2s;
+            transition: none;
         }
 
         .theme-toggle:hover {
-            transform: scale(1.05);
+            transform: none;
+            opacity: 0.9;
         }
 
         @media (max-width: 900px) {
@@ -338,6 +354,94 @@
             color: var(--r-text-light);
             margin-top: 0.25rem;
         }
+        
+        /* YouTube embed styles - vertical layout, one above the other */
+        .youtube-section {
+            margin-top: 1rem;
+        }
+        
+        .youtube-card {
+            background: var(--r-code-bg);
+            border: 1px solid var(--r-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: none;
+        }
+        
+        /* Remove hover transform from youtube cards */
+        .youtube-card:hover {
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .youtube-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .youtube-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--r-blue);
+        }
+        
+        .youtube-card p {
+            color: var(--r-text-light);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-top: 0.5rem;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            border: none;
+        }
+        
+        .final-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--r-border);
+            font-size: 0.85rem;
+            color: var(--r-text-light);
+            text-align: center;
+        }
+        
+        /* Ensure regular links also have underline on hover */
+        a {
+            color: var(--r-link);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Remove any transform effects from any interactive elements */
+        button, .copy-btn, .theme-toggle, .feature-card, .youtube-card, .step {
+            transition: none;
+        }
+        
+        .copy-btn:hover {
+            transform: none;
+        }
+        
+        .theme-toggle:hover {
+            transform: none;
+        }
     </style>
 </head>
 <body>
@@ -373,6 +477,7 @@
                 <li><a href="#citation" class="nav-link" data-section="citation">Citation</a></li>
                 <li><a href="#contact" class="nav-link" data-section="contact">Contact & Author</a></li>
                 <li><a href="#acknowledgments" class="nav-link" data-section="acknowledgments">Acknowledgments</a></li>
+                <li><a href="#tutorials" class="nav-link" data-section="tutorials"><i class="fab fa-youtube"></i> Video Tutorials</a></li>
             </ul>
         </div>
 
@@ -699,7 +804,34 @@ rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
                     <div class="package-item">writexl</div>
                 </div>
                 <p>Special thanks to the developers and maintainers of these packages for making data conversion in R robust and accessible.</p>
-                <div class="footer">
+            </section>
+
+            <!-- YOUTUBE TUTORIALS SECTION - LAST PAGE WITH TWO EMBEDS VERTICAL -->
+            <section id="tutorials" class="topic">
+                <h2><i class="fab fa-youtube"></i> Video Tutorials: Professional Use</h2>
+                <p>Watch these tutorials to master Data2SPSS. Click the videos below for step-by-step demonstrations.</p>
+                
+                <div class="youtube-section">
+                    <!-- Tutorial 1: Converting to SPSS Statistics -->
+                    <div class="youtube-card">
+                        <h3>📊 1. Converting to SPSS Statistics</h3>
+                        <p>Complete walkthrough: upload data from CSV, Excel, Stata, or other formats, review variable types, generate proper value labels, and download a fully formatted SPSS (.sav) file ready for analysis.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Converting to SPSS Statistics Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    
+                    <!-- Tutorial 2: Exporting to Other Supported Formats -->
+                    <div class="youtube-card">
+                        <h3>📈 2. Exporting to Other Supported Formats</h3>
+                        <p>Step-by-step guide: after loading your data, export to CSV, Excel, Stata (.dta), SAS (.sas7bdat), SAS Transport (.xpt for JMP), RData, TSV, or TXT formats with proper metadata preservation.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Exporting to Other Formats Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="final-footer">
                     <p>Data2SPSS: Making data preparation faster, easier, and more reliable for researchers worldwide.</p>
                     <p>License: MIT — No rights reserved. Free to use, modify, distribute.</p>
                 </div>
