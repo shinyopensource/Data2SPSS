@@ -255,6 +255,8 @@
             font-size: 0.85rem;
             border: 1px solid var(--r-border);
             margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .copy-btn {
@@ -367,7 +369,7 @@
 
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin: 1rem 0;
         }
@@ -377,6 +379,7 @@
             border-radius: 12px;
             padding: 1rem;
             transition: none;
+            text-align: center;
         }
         
         .feature-card:hover {
@@ -387,6 +390,18 @@
         .feature-card i {
             color: var(--r-blue);
             margin-right: 8px;
+        }
+
+        @media (max-width: 900px) {
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         .footer {
@@ -576,6 +591,7 @@
                 <li><a href="#prerequisites" class="nav-link" data-section="prerequisites"><i class="fas fa-cogs"></i> Prerequisites</a></li>
                 <li><a href="#installation" class="nav-link" data-section="installation"><i class="fas fa-download"></i> Local Installation</a></li>
                 <li><a href="#deployment" class="nav-link" data-section="deployment"><i class="fas fa-cloud-upload-alt"></i> Deployment</a></li>
+                <li><a href="#example-dataset" class="nav-link" data-section="example-dataset"><i class="fas fa-database"></i> Example Dataset</a></li>
                 <li class="nav-section">Step-by-Step Guides</li>
                 <li><a href="#simple-mediation-guide" class="nav-link" data-section="simple-mediation-guide"><i class="fas fa-chart-line"></i> Simple Mediation</a></li>
                 <li><a href="#serial-mediation-guide" class="nav-link" data-section="serial-mediation-guide"><i class="fas fa-layer-group"></i> Serial Mediation</a></li>
@@ -599,7 +615,7 @@
             <!-- Overview -->
             <section id="overview" class="topic">
                 <h1>MedModr</h1>
-                <p><strong>An Open-Source Mediation & Moderation Software for Structural Equation Modeling</strong></p>
+                <p><strong>An Open-Source Mediation & Moderation Software</strong></p>
                 <p>MedModr is a free, web-based R-Shiny application that provides an intuitive interface for conducting mediation and moderation analyses. Built on the powerful <strong>lavaan</strong> package, it enables researchers to test complex statistical models without requiring advanced programming skills.</p>
                 <div class="note-box">
                     <i class="fas fa-exclamation-triangle"></i> <strong>Before You Begin:</strong>
@@ -619,12 +635,9 @@
                     <div class="feature-card"><i class="fas fa-layer-group"></i> Serial Mediation</div>
                     <div class="feature-card"><i class="fas fa-balance-scale"></i> Moderation</div>
                     <div class="feature-card"><i class="fas fa-project-diagram"></i> Moderated Mediation</div>
-                </div>
-                <div class="feature-grid">
                     <div class="feature-card"><i class="fas fa-file-csv"></i> CSV, Excel, SPSS, Stata</div>
                     <div class="feature-card"><i class="fas fa-chart-pie"></i> Customizable Path Diagrams</div>
                     <div class="feature-card"><i class="fas fa-file-word"></i> Professional Word Reports</div>
-                    <div class="feature-card"><i class="fas fa-calculator"></i> Bootstrap Confidence Intervals</div>
                 </div>
             </section>
 
@@ -648,17 +661,66 @@
                 <h2>Steps to Run Locally</h2>
                 <p><strong>1. Download app.R from GitHub</strong><br>Access the source code at: <a href="https://github.com/mudassiribrahim12/MedModr/blob/main/app.R" target="_blank">https://github.com/mudassiribrahim12/MedModr/blob/main/app.R</a></p>
                 <p><strong>2. Install required R packages</strong></p>
-                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>install.packages(c("shiny", "lavaan", "semPlot", "ggplot2", "readr", "readxl", "haven", "DT", "colourpicker", "officer", "magick", "flextable", "shinythemes", "shinyjs", "shinydashboard"))</code></pre></div>
-                <p><strong>3. Run the application in RStudio</strong></p>
-                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>library(shiny)
-runApp("path/to/app.R")</code></pre></div>
+                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>install.packages(c(
+  "shiny",
+  "lavaan",
+  "semPlot",
+  "ggplot2",
+  "readr",
+  "readxl",
+  "haven",
+  "DT",
+  "colourpicker",
+  "officer",
+  "magick",
+  "flextable",
+  "shinythemes",
+  "shinyjs",
+  "shinydashboard"
+))</code></pre></div>
+                <p><strong>3. Load required R packages</strong></p>
+                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Load libraries
+library(shiny)
+library(shinydashboard)
+library(DT)
+library(haven)
+library(readxl)
+library(ggplot2)
+library(officer)
+library(rmarkdown)
+library(tidyverse)
+library(sortable)
+library(scales)</code></pre></div>
+                <p><strong>4. Run the application in RStudio</strong></p>
+                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Set your working directory to where you saved app.R
+setwd("C:/Users/YourName/Desktop/")    # Windows example
+# or
+setwd("/home/yourname/Desktop/")       # Linux/Mac example
+
+# Load the shiny library
+library(shiny)
+
+# Run the application
+runApp("app.R")</code></pre></div>
                 <div class="path-note"><i class="fas fa-info-circle"></i> Replace the path with the actual location where you saved the <code>app.R</code> file.</div>
             </section>
 
             <!-- Deployment -->
             <section id="deployment" class="topic">
                 <h2>Deployment</h2>
-                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>rsconnect::deployApp("path/to/MedModr")</code></pre></div>
+                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Deploy to shinyapps.io
+install.packages("rsconnect")
+rsconnect::deployApp("path/to/MedModr")</code></pre></div>
+            </section>
+
+            <!-- Example Dataset Section - Added after Deployment -->
+            <section id="example-dataset" class="topic">
+                <h2><i class="fas fa-database"></i> Example Dataset</h2>
+                <div class="success-box">
+                    <i class="fas fa-file-excel"></i> <strong>Example dataset available for testing:</strong><br>
+                    <a href="https://archive.org/download/catrend-analyzer-example-data/mediation_moderationdataset.xlsx" target="_blank">https://archive.org/download/catrend-analyzer-example-data/mediation_moderationdataset.xlsx</a>
+                    <p style="margin-top: 8px; font-size: 0.85rem;"><i class="fas fa-info-circle"></i> This dataset can be used for all analyses in the app, including simple mediation, serial mediation, moderation, and moderated mediation.</p>
+                </div>
             </section>
 
             <!-- SIMPLE MEDIATION STEP-BY-STEP GUIDE -->
@@ -723,7 +785,7 @@ runApp("path/to/app.R")</code></pre></div>
                 <h2>Statistical Engine</h2>
                 <p>MedModr uses the <strong>lavaan</strong> package for structural equation modeling, implementing:</p>
                 <ul>
-                    <li><strong>Mediation:</strong> Product-of-coefficients method with bootstrap confidence intervals</li>
+                    <li><strong>Mediation:</strong> Product-of-coefficients method</li>
                     <li><strong>Moderation:</strong> Linear regression with mean-centering and simple slopes analysis</li>
                     <li><strong>Moderated Mediation:</strong> Conditional process modeling with index of moderated mediation</li>
                 </ul>
@@ -748,7 +810,6 @@ runApp("path/to/app.R")</code></pre></div>
                     <li>Current version focuses on observed variable models</li>
                     <li>Listwise deletion only for missing values</li>
                     <li>Datasets >10,000 rows are truncated for performance</li>
-                    <li>Bootstrap limited to 5,000 samples</li>
                 </ul>
             </section>
 
@@ -792,7 +853,7 @@ runApp("path/to/app.R")</code></pre></div>
                     <!-- Tutorial 1: Simple Mediation -->
                     <div class="youtube-card">
                         <h3>📊 1. Simple Mediation Analysis</h3>
-                        <p>Complete walkthrough: test whether the effect of X on Y is transmitted through mediator M (X → M → Y). Learn variable selection, interpretation of a-path, b-path, indirect effect, and bootstrap confidence intervals.</p>
+                        <p>Complete walkthrough: test whether the effect of X on Y is transmitted through mediator M (X → M → Y). Learn variable selection, interpretation of a-path, b-path, and indirect effect.</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Simple Mediation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
