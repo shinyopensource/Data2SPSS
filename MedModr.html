@@ -634,10 +634,10 @@
                     <div class="feature-card"><i class="fas fa-chart-line"></i> Simple Mediation</div>
                     <div class="feature-card"><i class="fas fa-layer-group"></i> Serial Mediation</div>
                     <div class="feature-card"><i class="fas fa-balance-scale"></i> Moderation</div>
-                    <div class="feature-card"><i class="fas fa-project-diagram"></i> Moderated Mediation</div>
-                    <div class="feature-card"><i class="fas fa-file-csv"></i> CSV, Excel, SPSS, Stata</div>
+                    <div class="feature-card"><i class="fas fa-project-diagram"></i> Moderated Mediation (Conditional Process)</div>
+                    <div class="feature-card"><i class="fas fa-file-csv"></i> Supported Input Formats (CSV, Excel, SPSS, Stata)</div>
                     <div class="feature-card"><i class="fas fa-chart-pie"></i> Customizable Path Diagrams</div>
-                    <div class="feature-card"><i class="fas fa-file-word"></i> Professional Word Reports</div>
+                    <div class="feature-card"><i class="fas fa-file-word"></i> Professional Word Document Reports Generation</div>
                 </div>
             </section>
 
@@ -703,6 +703,10 @@ library(shiny)
 # Run the application
 runApp("app.R")</code></pre></div>
                 <div class="path-note"><i class="fas fa-info-circle"></i> Replace the path with the actual location where you saved the <code>app.R</code> file.</div>
+                
+                <p><strong>5. Open the application in a web browser</strong><br>
+                The application will open in RStudio; then click <strong>Open in Browser</strong></p>
+                
             </section>
 
             <!-- Deployment -->
@@ -800,7 +804,7 @@ rsconnect::deployApp("path/to/MedModr")</code></pre></div>
             <!-- Simple Slopes Plot -->
             <section id="slope-plot" class="topic">
                 <h2>Simple Slopes Plot</h2>
-                <p>Visualize moderation effects with customizable colors, line types, and confidence bands.</p>
+                <p>Visualize moderation effects with customizable colors and line types.</p>
             </section>
 
             <!-- Limitations -->
@@ -809,7 +813,7 @@ rsconnect::deployApp("path/to/MedModr")</code></pre></div>
                 <ul>
                     <li>Current version focuses on observed variable models</li>
                     <li>Listwise deletion only for missing values</li>
-                    <li>Datasets >10,000 rows are truncated for performance</li>
+                    <li>Datasets >10,000 rows are truncated for performance. Users with datasets exceeding 10,000 observations may contact the developer for full-scale analysis assistance.</li>
                 </ul>
             </section>
 
@@ -846,13 +850,13 @@ rsconnect::deployApp("path/to/MedModr")</code></pre></div>
 
             <!-- YOUTUBE TUTORIALS SECTION - FOUR VIDEOS VERTICAL LAYOUT -->
             <section id="tutorials" class="topic">
-                <h2><i class="fab fa-youtube"></i> Video Tutorials: Professional Use</h2>
+                <h2><i class="fab fa-youtube"></i> Video Tutorials</h2>
                 <p>Watch these tutorials to master MedModr. Click the videos below for step-by-step demonstrations of each analysis type.</p>
                 
                 <div class="youtube-section">
                     <!-- Tutorial 1: Simple Mediation -->
                     <div class="youtube-card">
-                        <h3>📊 1. Simple Mediation Analysis</h3>
+                        <h3>1. Simple Mediation Analysis</h3>
                         <p>Complete walkthrough: test whether the effect of X on Y is transmitted through mediator M (X → M → Y).</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/BSRN1SBevtY?si=ZRmkZOcbamLIP9Je" title="Simple Mediation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -861,7 +865,7 @@ rsconnect::deployApp("path/to/MedModr")</code></pre></div>
                     
                     <!-- Tutorial 2: Serial Mediation -->
                     <div class="youtube-card">
-                        <h3>📈 2. Serial Mediation Analysis</h3>
+                        <h3>2. Serial Mediation Analysis</h3>
                         <p>Complete walkthrough: test sequential pathways with two mediators in order (X → M1 → M2 → Y).</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/N8E02G8Tx_Y?si=sXfAlpdZ_HA8Ye1c" title="Serial Mediation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -870,7 +874,7 @@ rsconnect::deployApp("path/to/MedModr")</code></pre></div>
                     
                     <!-- Tutorial 3: Moderation -->
                     <div class="youtube-card">
-                        <h3>⚖️ 3. Moderation Analysis</h3>
+                        <h3>3. Moderation Analysis</h3>
                         <p>Complete walkthrough: test whether the effect of X on Y depends on moderator W.</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/CVXYYavLH5E?si=RxuIc7RG-hbrU-ih" title="Moderation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -879,7 +883,7 @@ rsconnect::deployApp("path/to/MedModr")</code></pre></div>
                     
                     <!-- Tutorial 4: Moderated Mediation -->
                     <div class="youtube-card">
-                        <h3>🔗 4. Moderated Mediation (Conditional Process)</h3>
+                        <h3>4. Moderated Mediation (Conditional Process)</h3>
                         <p>Complete walkthrough: test whether the indirect effect of X on Y through M depends on moderator W.</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/Mv7LGGf8NnY?si=_f5M6uk-_iJAoKNH" title="Moderated Mediation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
