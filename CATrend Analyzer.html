@@ -658,7 +658,6 @@
                     <ul style="margin-top: 8px; margin-left: 1.5rem;">
                         <li>Ensure your data is clean with no missing values (or be aware that rows with missing values will be removed)</li>
                         <li>Variable names should not contain spaces or special characters</li>
-                        <li>For binary dependent variables, ensure they are coded as 0/1 or two categories</li>
                         <li>Have at least 5 observations per cell for reliable estimates</li>
                     </ul>
                 </div>
@@ -699,14 +698,11 @@
             <section id="features" class="topic">
                 <h2>Features</h2>
                 <div class="feature-grid">
-                    <div class="feature-card"><i class="fas fa-file-import"></i> Multiple Data Formats (CSV, Excel, SPSS, Stata)</div>
+                    <div class="feature-card"><i class="fas fa-file-import"></i> Supported Input Formats (CSV, Excel, SPSS, Stata)</div>
                     <div class="feature-card"><i class="fas fa-th"></i> Dual Data Input Modes (Raw Data or Crosstabulation)</div>
                     <div class="feature-card"><i class="fas fa-sort-amount-down"></i> Interactive Level Ordering with Drag-and-Drop</div>
-                    <div class="feature-card"><i class="fas fa-chart-bar"></i> Enhanced Stacked Bar Plots with Percentages</div>
-                    <div class="feature-card"><i class="fas fa-calculator"></i> Accurate Cochran-Armitage Test Implementation</div>
-                    <div class="feature-card"><i class="fas fa-file-word"></i> Professional Word Document Reports</div>
-                    <div class="feature-card"><i class="fas fa-chart-pie"></i> Row %, Column %, and Total % Tables</div>
-                    <div class="feature-card"><i class="fas fa-palette"></i> Customizable Plot Colors</div>
+                    <div class="feature-card"><i class="fas fa-chart-bar"></i>Customizable Enhanced Stacked Bar Plots</div>
+                    <div class="feature-card"><i class="fas fa-file-word"></i> Professional Word Document Report Generation</div>
                 </div>
             </section>
 
@@ -721,9 +717,8 @@
             <section id="prerequisites" class="topic">
                 <h2>Prerequisites</h2>
                 <ul>
-                    <li>R version 4.4 or higher (for local installation)</li>
-                    <li>RStudio (recommended for local development)</li>
-                    <li>A modern web browser (for web version)</li>
+                    <li>R version 4.4 or higher</li>
+                    <li>RStudio (recommended)</li>
                 </ul>
             </section>
 
@@ -795,10 +790,10 @@ rsconnect::deployApp("path/to/CATrend")</code></pre>
                 <div class="success-box">
                     <i class="fas fa-file-excel"></i> <strong>Example Dataset for Normal Data Procedure:</strong><br>
                     <a href="https://archive.org/download/catrend-analyzer-example-data/CATrendAnalyzer%20example%20data.xlsx" target="_blank">https://archive.org/download/catrend-analyzer-example-data/CATrendAnalyzer%20example%20data.xlsx</a>
-                    <p style="margin-top: 8px; font-size: 0.85rem;"><i class="fas fa-info-circle"></i> This dataset contains patient data with variables including Patient ID, Age, Sex, Drug Dose (mg), and Response (Not Recovered, Recovered).</p>
+                    <p style="margin-top: 8px; font-size: 0.85rem;"><i class="fas fa-info-circle"></i> This dataset contains variables such as Patient ID, Age, Sex, Drug Dose (mg), and Response (Not Recovered, Recovered).</p>
                 </div>
                 
-                <h3>📊 Example 1: Dose-Response Study (Increasing Trend)</h3>
+                <h3>Example 1 (for Crosstabulation Procedure)</h3>
                 <table class="data-table">
                     <caption><strong>Treatment Response by Drug Dose Level</strong></caption>
                     <thead>
@@ -841,7 +836,7 @@ rsconnect::deployApp("path/to/CATrend")</code></pre>
                     </tfoot>
                 </table>
                 
-                <h3>📉 Example 2: Physical Activity & Disease Severity (Decreasing Trend)</h3>
+                <h3>Example 2 (for Crosstabulation Procedure)</h3>
                 <table class="data-table">
                     <caption><strong>Disease Severity by Physical Activity Level</strong></caption>
                     <thead>
@@ -935,7 +930,7 @@ rsconnect::deployApp("path/to/CATrend")</code></pre>
             </section>
 
             <section id="assumptions" class="topic">
-                <h2>Assumptions of the Cochran-Armitage Test</h2>
+                <h2>Assumptions of the Cochran-Armitage trend test</h2>
                 <ul>
                     <li><strong>Independence:</strong> Observations are independent of each other</li>
                     <li><strong>Ordered Categories:</strong> Independent variable levels have a natural order</li>
@@ -963,8 +958,7 @@ rsconnect::deployApp("path/to/CATrend")</code></pre>
   author = {Ibrahim, Mudasir Mohammed},
   title = {CATrend Analyzer: A Tool for Performing Cochran-Armitage Trend Test},
   year = {2025},
-  version = {1.0.0},
-  url = {https://github.com/mudassiribrahim12/CATrend}
+  url = {https://github.com/mudassiribrahim12/CATrend-Analyzer}
 }</code></pre>
                 </div>
             </section>
@@ -1002,21 +996,21 @@ rsconnect::deployApp("path/to/CATrend")</code></pre>
             </section>
 
             <section id="tutorials" class="topic">
-                <h2><i class="fab fa-youtube"></i> Video Tutorials: Professional App Use</h2>
-                <p>Click on the videos below to watch step-by-step tutorials for using CATrend Analyzer professionally.</p>
+                <h2><i class="fab fa-youtube"></i> Video Tutorials</h2>
+                <p>Click on the videos below to watch step-by-step tutorials for using CATrend Analyzer.</p>
                 
                 <div class="youtube-section">
                     <div class="youtube-card">
-                        <h3>📊 1. Using the Normal Data Procedure</h3>
-                        <p>Complete walkthrough: upload raw dataset (CSV/Excel), variable selection, level ordering, running Cochran-Armitage test, interpreting results, and generating reports.</p>
+                        <h3>1. Using the Normal Data Procedure</h3>
+                        <p>Complete walkthrough: upload raw dataset and perform Cochran-Armitage trend test</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/_XDR2wijMU4?si=_JJ2Z776g4jhU6Sd" title="Normal Data Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
                     
                     <div class="youtube-card">
-                        <h3>📈 2. Using the Crosstabulation Procedure</h3>
-                        <p>Step-by-step guide: entering pre-summarized contingency tables, defining row/column levels, expanding counts to dataset, performing trend test, and producing publication-ready outputs.</p>
+                        <h3>2. Using the Crosstabulation Procedure</h3>
+                        <p>Step-by-step guide: enter pre-summarized contingency table, define row/column levels, expand counts to dataset, and perform Cochran-Armitage trend test</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/UtesYwrCGGM?si=i7lXcGhsXOCC_UUg" title="Crosstabulation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
@@ -1031,7 +1025,7 @@ rsconnect::deployApp("path/to/CATrend")</code></pre>
                 </div>
                 
                 <div class="final-footer">
-                    <p>CATrend Analyzer: Empowering researchers with accurate trend detection tools.</p>
+                    <p>CATrend Analyzer: Empowering researchers to easily perform the Cochran–Armitage trend test.</p>
                     <p>License: MIT — Free to use, modify, and distribute.</p>
                 </div>
             </section>
