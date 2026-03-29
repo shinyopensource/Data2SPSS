@@ -509,31 +509,20 @@
                     <div class="feature-card"><i class="fas fa-file-alt"></i> TSV, TXT</div>
                     <div class="feature-card"><i class="fas fa-file-excel"></i> Excel (.xlsx, .xls)</div>
                     <div class="feature-card"><i class="fas fa-chart-line"></i> Stata (.dta)</div>
-                    <div class="feature-card"><i class="fas fa-chart-bar"></i> SPSS (.sav, .por)</div>
+                    <div class="feature-card"><i class="fas fa-chart-bar"></i> SPSS (.sav)</div>
                     <div class="feature-card"><i class="fas fa-database"></i> SAS (.sas7bdat, .xpt)</div>
                     <div class="feature-card"><i class="fab fa-r-project"></i> RData (.rdata)</div>
                 </div>
                 <h3>Supported Output Formats</h3>
                 <div class="feature-grid">
-                    <div class="feature-card"><i class="fas fa-chart-bar"></i> SPSS (.sav)</div>
                     <div class="feature-card"><i class="fas fa-file-csv"></i> CSV</div>
-                    <div class="feature-card"><i class="fas fa-file-excel"></i> Excel (.xlsx)</div>
-                    <div class="feature-card"><i class="fas fa-chart-line"></i> Stata (.dta)</div>
-                    <div class="feature-card"><i class="fas fa-database"></i> SAS (.sas7bdat)</div>
-                    <div class="feature-card"><i class="fas fa-exchange-alt"></i> SAS Transport (.xpt - JMP compatible)</div>
                     <div class="feature-card"><i class="fas fa-file-alt"></i> TSV, TXT</div>
+                    <div class="feature-card"><i class="fas fa-file-excel"></i> Excel (.xlsx, .xls)</div>
+                    <div class="feature-card"><i class="fas fa-chart-line"></i> Stata (.dta)</div>
+                    <div class="feature-card"><i class="fas fa-chart-bar"></i> SPSS (.sav)</div>
+                    <div class="feature-card"><i class="fas fa-database"></i> SAS (.sas7bdat, .xpt)</div>
                     <div class="feature-card"><i class="fab fa-r-project"></i> RData (.rdata)</div>
                 </div>
-                <h3>Key Features</h3>
-                <ul>
-                    <li><strong>Intelligent variable type detection:</strong> Automatically distinguishes between continuous and categorical variables</li>
-                    <li><strong>Automatic value label preservation:</strong> Maintains existing labels from Stata and SPSS files</li>
-                    <li><strong>Variable name cleaning:</strong> Removes spaces, special characters, and ensures SPSS compatibility</li>
-                    <li><strong>Character encoding handling:</strong> Converts all text to UTF-8 to prevent corruption</li>
-                    <li><strong>Bidirectional conversion:</strong> Convert any loaded file to any supported format</li>
-                    <li><strong>Dark/Light theme toggle:</strong> User preference saved locally</li>
-                    <li><strong>Responsive design:</strong> Works on desktop, tablet, and mobile devices</li>
-                </ul>
             </section>
 
             <!-- Live Application -->
@@ -541,7 +530,7 @@
                 <h2>Live Application</h2>
                 <p>Access the live application at: <a href="https://newappstesting.shinyapps.io/Data2SPSS/" target="_blank">https://newappstesting.shinyapps.io/Data2SPSS/</a></p>
                 <div class="success-box">
-                    <i class="fas fa-infinity"></i> <strong>No file size limit:</strong> The application removes upload size restrictions. You can process datasets of any size (subject to system memory).
+                    <i class="fas fa-infinity"></i> <strong>No file size upload limit:</strong> The application has been tested with datasets containing up to 2 million observations and performs effectively at that scale. You can process datasets of any size (subject to system memory).
                 </div>
             </section>
 
@@ -623,8 +612,7 @@ runApp("app.R")</code></pre>
 
             <!-- Deployment -->
             <section id="deployment" class="topic">
-                <h2>Deployment Options</h2>
-                <h3>ShinyApps.io (Free)</h3>
+                <h2>Deployment</h2>
                 <div class="code-block-wrapper">
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                     <pre><code># Install rsconnect
@@ -636,18 +624,11 @@ rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
                 <div class="path-note">
                     <i class="fas fa-info-circle"></i> <strong>Note:</strong> Replace <code>"path/to/Data2SPSS"</code> with the actual folder path containing your <code>app.R</code> file (e.g., <code>"C:/Users/YourName/Desktop/Data2SPSS"</code>).
                 </div>
-                <h3>Institutional Server</h3>
-                <p>For universities or organizations, deploy on your own server using:</p>
-                <ul>
-                    <li>Shiny Server (open source)</li>
-                    <li>RStudio Connect (commercial)</li>
-                    <li>Docker containerization</li>
-                </ul>
             </section>
 
             <!-- Basic Workflow -->
             <section id="basic-workflow" class="topic">
-                <h2>Basic Workflow</h2>
+                <h2>Basic Workflow in Data2SPSS</h2>
                 <ol>
                     <li><strong>Open the application</strong> in your web browser</li>
                     <li><strong>Navigate to the Data Converter tab</strong></li>
@@ -661,12 +642,8 @@ rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
                     </li>
                     <li><strong>Click "Convert to SPSS format"</strong></li>
                     <li><strong>Review the SPSS Metadata panel</strong> to confirm variable names, labels, and value labels</li>
-                    <li><strong>Enter a filename</strong> and click "Download SPSS File"</li>
+                    <li>Enter a filename and click <strong>"Download SPSS File"</strong></li>
                 </ol>
-                <div class="note-box">
-                    <i class="fas fa-lightbulb"></i> <strong>Example dataset available for testing:</strong><br>
-                    <a href="https://archive.org/download/data-2-spss-example-dataset/Data2SPSS%20Example%20dataset.xlsx" target="_blank">https://archive.org/download/data-2-spss-example-dataset/Data2SPSS%20Example%20dataset.xlsx</a>
-                </div>
             </section>
 
             <!-- Final Steps in SPSS -->
@@ -686,19 +663,24 @@ rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
                 <div class="success-box">
                     <i class="fas fa-exclamation-circle"></i> <strong>Important:</strong> If categorical variables are left as "Scale", SPSS may treat them as continuous numbers in statistical procedures, leading to incorrect results.
                 </div>
+                
+                                <div class="note-box">
+                    <i class="fas fa-lightbulb"></i> <strong>Example dataset available for testing:</strong><br>
+                    <a href="https://archive.org/download/data-2-spss-example-dataset/Data2SPSS%20Example%20dataset.xlsx" target="_blank">https://archive.org/download/data-2-spss-example-dataset/Data2SPSS%20Example%20dataset.xlsx</a>
+                </div>
             </section>
 
             <!-- Export to Other Formats -->
             <section id="export-formats" class="topic">
-                <h2>Exporting to Other Formats</h2>
+                <h2>Exporting to Other Supported Formats</h2>
                 <ol>
                     <li><strong>Load your data</strong> in the Data Converter tab</li>
                     <li><strong>Navigate to the Export to Other Formats tab</strong></li>
                     <li><strong>Select your desired output format</strong> from the dropdown menu</li>
                     <li><strong>Review the preview</strong> to verify the conversion</li>
-                    <li><strong>Click "Download Converted File"</strong></li>
+                    <li>Enter a filename and click <strong>"Download Converted File"</strong></li>
                 </ol>
-                <p>Supported export formats: CSV, Excel, Stata, RData, SAS (.sas7bdat), SAS Transport (.xpt - JMP compatible), TSV, TXT.</p>
+                <p>Supported export formats: CSV, Excel, Stata, RData, SAS (.sas7bdat, .xpt), TSV, TXT.</p>
             </section>
 
             <!-- How It Works: Name Cleaning -->
@@ -714,15 +696,6 @@ rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
                 </ul>
             </section>
 
-            <section id="label-assignment" class="topic">
-                <h2>Value Label Assignment</h2>
-                <ul>
-                    <li><strong>Text categorical variables:</strong> Converted to numbers (1, 2, 3, ...) with corresponding value labels</li>
-                    <li><strong>Continuous variables:</strong> Each observation assigned both a value and a label mirroring that value (e.g., 26 → "26")</li>
-                    <li><strong>Pre-labeled variables:</strong> Existing labels from Stata or SPSS are preserved</li>
-                </ul>
-            </section>
-
             <!-- Technical Notes -->
             <section id="limitations" class="topic">
                 <h2>Current Limitations</h2>
@@ -732,27 +705,6 @@ rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
                     <li><strong>File Size:</strong> Performance depends on system resources. Very large datasets may require longer processing times.</li>
                     <li><strong>Internet Connection:</strong> The web version requires an internet connection. Run locally for offline use.</li>
                 </ul>
-            </section>
-
-            <section id="performance" class="topic">
-                <h2>Performance Considerations</h2>
-                <ul>
-                    <li>For typical research datasets (up to tens of thousands of rows), processing is nearly instantaneous</li>
-                    <li>Large datasets with hundreds of thousands of rows may require more time</li>
-                    <li>For optimal performance with large files, run the application locally</li>
-                </ul>
-            </section>
-
-            <section id="project-structure" class="topic">
-                <h2>Project Structure</h2>
-                <div class="code-block-wrapper">
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    <pre><code>Data2SPSS/
-├── app.R              # Main application file
-├── README.md          # Documentation
-├── LICENSE            # MIT License
-└── .gitignore         # Git ignore file</code></pre>
-                </div>
             </section>
 
             <!-- Citation -->
@@ -808,13 +760,13 @@ rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
 
             <!-- YOUTUBE TUTORIALS SECTION - LAST PAGE WITH TWO EMBEDS VERTICAL -->
             <section id="tutorials" class="topic">
-                <h2><i class="fab fa-youtube"></i> Video Tutorials: Professional Use</h2>
+                <h2><i class="fab fa-youtube"></i> Video Tutorials</h2>
                 <p>Watch these tutorials to master Data2SPSS. Click the videos below for step-by-step demonstrations.</p>
                 
                 <div class="youtube-section">
                     <!-- Tutorial 1: Converting to SPSS Statistics -->
                     <div class="youtube-card">
-                        <h3>📊 1. Converting to SPSS Statistics</h3>
+                        <h3>1. Converting to SPSS Statistics</h3>
                         <p>Upload data from CSV, Excel, Stata, or other supported formats and download a fully formatted SPSS (.sav) file ready for analysis.</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/tr5vOb9h3EI?si=5ufoC255WYGA74hb" title="Converting to SPSS Statistics Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -823,8 +775,8 @@ rsconnect::deployApp("path/to/Data2SPSS")</code></pre>
                     
                     <!-- Tutorial 2: Exporting to Other Supported Formats -->
                     <div class="youtube-card">
-                        <h3>📈 2. Exporting to Other Supported Formats</h3>
-                        <p>Upload data from CSV, Excel, Stata, or other formats and export to other supported formats.</p>
+                        <h3>2. Exporting to Other Supported Formats</h3>
+                        <p>Upload data from CSV, SPSS, Excel, Stata, or other supported formats and export to other formats.</p>
                         <div class="video-container">
                             <iframe src="https://www.youtube.com/embed/n_AjEJN3cRs?si=C4E4qj2KW84s5uc2" title="Exporting to Other Formats Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
