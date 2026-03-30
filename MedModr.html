@@ -1,970 +1,735 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedModr: Open-Source Mediation & Moderation Software</title>
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Fira Code for monospace -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedModr: Open-Source Mediation & Moderation Software</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --white: #ffffff;
+      --bg: #f8f8f8;
+      --border: #e0e0e0;
+      --border-light: #eeeeee;
+      --text: #212121;
+      --muted: #555555;
+      --light: #888888;
+      --accent: #2980b9;
+      --accent-dark: #1a5f8a;
+      --accent-bg: #eaf4fb;
+      --warn-bg: #fef9e7;
+      --warn-border: #f39c12;
+      --success-bg: #eafaf1;
+      --success-border: #27ae60;
+      --code-bg: #f5f5f5;
+      --sidebar-w: 240px;
+      --header-h: 52px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--white);
+      color: var(--text);
+      font-size: 15.5px;
+      line-height: 1.85;
+    }
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: var(--accent);
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .logo {
+      font-family: 'Lato', sans-serif;
+      font-weight: 700; font-size: 1.1rem;
+      color: #fff; text-decoration: none; white-space: nowrap;
+    }
+    .header-nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+    .header-nav a {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      color: rgba(255,255,255,0.85); text-decoration: none;
+      padding: 5px 12px; border-radius: 4px;
+      transition: background .15s, color .15s;
+    }
+    .header-nav a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+    .header-nav .btn-app {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35); color: #fff;
+    }
+    .header-nav .btn-app:hover { background: rgba(255,255,255,0.32); }
+    .shell { display: flex; padding-top: var(--header-h); min-height: 100vh; }
+    aside {
+      width: var(--sidebar-w); flex-shrink: 0;
+      position: sticky; top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      background: var(--bg); padding: 20px 0 40px;
+    }
+    aside::-webkit-scrollbar { width: 3px; }
+    aside::-webkit-scrollbar-thumb { background: var(--border); }
+    .toc-title {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--light); text-transform: uppercase; letter-spacing: 1.2px;
+      padding: 0 18px 10px;
+      border-bottom: 1px solid var(--border-light); margin-bottom: 10px;
+    }
+    .toc-group { margin-bottom: 6px; }
+    .toc-group-label {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--light); text-transform: uppercase; letter-spacing: 1px;
+      padding: 10px 18px 4px;
+    }
+    aside a {
+      display: block; font-family: 'Lato', sans-serif;
+      font-size: 0.84rem; color: var(--muted); text-decoration: none;
+      padding: 4px 18px 4px 22px;
+      border-left: 3px solid transparent;
+      transition: all .12s; line-height: 1.5;
+    }
+    aside a:hover { color: var(--accent); background: rgba(41,128,185,0.06); }
+    aside a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(41,128,185,0.07); font-weight: 700; }
+    main { flex: 1; min-width: 0; padding: 40px 60px 80px 52px; max-width: 860px; }
+    section { margin-bottom: 52px; }
+    .page-title { border-bottom: 2px solid var(--border); padding-bottom: 18px; margin-bottom: 32px; }
+    .page-title h1 {
+      font-family: 'Lato', sans-serif; font-size: 2.2rem; font-weight: 700;
+      color: var(--text); letter-spacing: -0.3px; margin-bottom: 8px;
+    }
+    .page-title p { color: var(--muted); font-size: 1rem; font-style: italic; margin: 0; }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .badge {
+      font-family: 'Lato', sans-serif; font-size: 0.72rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-blue { background: var(--accent); color: #fff; }
+    .badge-gray { background: #666; color: #fff; }
+    .badge-green { background: #27ae60; color: #fff; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .btn {
+      font-family: 'Lato', sans-serif; font-size: 0.85rem; font-weight: 700;
+      padding: 8px 18px; border-radius: 4px; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all .15s; border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-dark); }
+    .btn-outline { background: #fff; color: var(--accent); border-color: var(--accent); }
+    .btn-outline:hover { background: var(--accent-bg); }
+    h2 {
+      font-family: 'Lato', sans-serif; font-size: 1.5rem; font-weight: 700;
+      color: var(--text); border-bottom: 1px solid var(--border);
+      padding-bottom: 10px; margin-bottom: 16px;
+    }
+    h3 { font-family: 'Lato', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 24px 0 10px; }
+    p { color: var(--muted); margin-bottom: 14px; }
+    a { color: var(--accent); }
+    .callout {
+      border: 1px solid #bee3f8; border-left: 4px solid var(--accent);
+      background: var(--accent-bg); border-radius: 4px;
+      padding: 12px 16px; font-size: 0.9rem; color: var(--text); margin: 16px 0;
+    }
+    .callout.warn { background: var(--warn-bg); border-color: #f9d78e; border-left-color: var(--warn-border); }
+    .callout.success { background: var(--success-bg); border-color: #a9dfbf; border-left-color: var(--success-border); }
+    .callout p { margin: 0; color: inherit; }
+    .callout-title {
+      font-family: 'Lato', sans-serif; font-weight: 700; font-size: 0.82rem;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--accent);
+    }
+    .callout.warn .callout-title { color: #b7770d; }
+    .callout.success .callout-title { color: #1e8449; }
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .problem-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 14px 16px; font-size: 0.88rem; color: var(--muted); display: flex; gap: 10px;
+    }
+    .problem-card .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .problem-card strong { font-family: 'Lato', sans-serif; display: block; color: var(--text); margin-bottom: 2px; }
+    .format-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .format-box { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 16px; }
+    .format-box h4 {
+      font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: 700;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;
+    }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-family: 'Source Code Pro', monospace; font-size: 0.78rem;
+      background: #fff; border: 1px solid var(--border); color: var(--text);
+      padding: 2px 8px; border-radius: 3px;
+    }
+    .steps { counter-reset: step; margin-top: 16px; }
+    .step { display: flex; gap: 14px; margin-bottom: 18px; }
+    .step-num {
+      font-family: 'Lato', sans-serif; font-weight: 700; font-size: 0.78rem;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 3px;
+    }
+    .step-body strong { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 0.92rem; color: var(--text); display: block; margin-bottom: 4px; }
+    .step-body p { margin: 0; font-size: 0.9rem; }
 
-        :root {
-            --r-blue: #2081C3;
-            --r-dark-blue: #0C4C8A;
-            --r-light-bg: #F7F9FB;
-            --r-border: #E5E9ED;
-            --r-text: #1A2C3E;
-            --r-text-light: #4A627A;
-            --r-code-bg: #F4F6F9;
-            --r-sidebar-bg: #FFFFFF;
-            --r-nav-active: #2081C3;
-            --r-hr: #DCE3E9;
-            --r-warning-bg: #FFF8E7;
-            --r-warning-border: #FFE0A3;
-            --r-success-bg: #E6F4EA;
-            --r-link: #2081C3;
-            --copy-btn-bg: #e2e8f0;
-            --copy-btn-hover: #cbd5e0;
-            --step-bg: #F0F7FF;
-            --step-border: #2081C3;
-            --main-bg: #FFFFFF;
-        }
-
-        body.dark {
-            --r-blue: #5A9FD4;
-            --r-dark-blue: #2C6A9E;
-            --r-light-bg: #1A1F2A;
-            --r-border: #2D3748;
-            --r-text: #E8EDF2;
-            --r-text-light: #B0C4DE;
-            --r-code-bg: #252B36;
-            --r-sidebar-bg: #1E2430;
-            --r-hr: #2D3748;
-            --r-warning-bg: #2D2A1F;
-            --r-warning-border: #8B6B2C;
-            --r-success-bg: #1E3A2A;
-            --r-link: #7AB3D9;
-            --copy-btn-bg: #2D3748;
-            --copy-btn-hover: #4A5568;
-            --step-bg: #1E2A3A;
-            --step-border: #5A9FD4;
-            --main-bg: #1A1F2A;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--r-light-bg);
-            color: var(--r-text);
-            line-height: 1.5;
-            font-size: 16px;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        /* ALL sections use CSS variables for proper dark mode */
-        .sidebar,
-        .main-content,
-        .topic,
-        .feature-card,
-        .step,
-        .note-box,
-        .success-box,
-        .info-box,
-        .code-block-wrapper pre,
-        .package-item,
-        .youtube-card {
-            background-color: var(--main-bg);
-            transition: background-color 0.2s;
-        }
-
-        .code-block-wrapper pre {
-            background-color: var(--r-code-bg);
-        }
-        
-        .sidebar {
-            background-color: var(--r-sidebar-bg);
-        }
-        
-        .feature-card,
-        .step {
-            background-color: var(--r-code-bg);
-        }
-        
-        .note-box {
-            background-color: var(--r-warning-bg);
-        }
-        
-        .success-box {
-            background-color: var(--r-success-bg);
-        }
-        
-        .info-box {
-            background-color: var(--step-bg);
-        }
-        
-        .docs-container {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .sidebar {
-            width: 320px;
-            border-right: 1px solid var(--r-border);
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-            padding: 2rem 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .sidebar-header {
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--r-border);
-        }
-
-        .pkg-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--r-blue);
-            letter-spacing: -0.3px;
-        }
-
-        .pkg-version {
-            font-size: 0.8rem;
-            color: var(--r-text-light);
-            margin-top: 0.25rem;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-        }
-
-        .sidebar-nav li {
-            margin-bottom: 0.3rem;
-        }
-
-        .sidebar-nav a {
-            text-decoration: none;
-            color: var(--r-text);
-            font-weight: 500;
-            display: block;
-            padding: 0.4rem 0.6rem;
-            border-radius: 8px;
-            transition: text-decoration 0.2s;
-            font-size: 0.9rem;
-        }
-
-        /* Hover effect: underline instead of background/transform */
-        .sidebar-nav a:hover {
-            text-decoration: underline;
-            text-decoration-thickness: 2px;
-            text-underline-offset: 4px;
-            background: transparent;
-        }
-
-        .sidebar-nav .active {
-            color: var(--r-blue);
-            background: rgba(32, 129, 195, 0.08);
-            border-left: 3px solid var(--r-blue);
-            font-weight: 600;
-        }
-
-        .sidebar-nav .active:hover {
-            text-decoration: none;
-            background: rgba(32, 129, 195, 0.08);
-        }
-
-        .nav-section {
-            margin-top: 1.5rem;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            color: var(--r-text-light);
-            margin-bottom: 0.6rem;
-            padding-left: 0.6rem;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 2rem 2.5rem;
-            max-width: calc(100% - 320px);
-            overflow-x: auto;
-        }
-
-        .topic {
-            margin-bottom: 3rem;
-            scroll-margin-top: 1rem;
-        }
-
-        .topic h1 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            border-bottom: 2px solid var(--r-border);
-            padding-bottom: 0.5rem;
-            color: var(--r-text);
-        }
-
-        .topic h2 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin: 1.8rem 0 1rem 0;
-            color: var(--r-blue);
-        }
-
-        .topic h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin: 1.5rem 0 0.8rem 0;
-            color: var(--r-text);
-        }
-
-        .topic p {
-            margin-bottom: 1rem;
-            color: var(--r-text);
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        .topic ul, .topic li, .topic ol {
-            color: var(--r-text);
-        }
-
-        .code-block-wrapper {
-            position: relative;
-            margin: 1rem 0;
-        }
-
-        .code-block-wrapper pre {
-            padding: 1rem;
-            padding-right: 3rem;
-            border-radius: 12px;
-            overflow-x: auto;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            border: 1px solid var(--r-border);
-            margin: 0;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: var(--copy-btn-bg);
-            border: 1px solid var(--r-border);
-            border-radius: 6px;
-            padding: 0.3rem 0.6rem;
-            font-size: 0.7rem;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            color: var(--r-text);
-            transition: none;
-            z-index: 10;
-        }
-
-        .copy-btn:hover {
-            background: var(--copy-btn-hover);
-            transform: none;
-        }
-
-        .copy-btn.copied {
-            background: #28a745;
-            color: white;
-            border-color: #28a745;
-        }
-
-        code {
-            font-family: 'Fira Code', monospace;
-            background: var(--r-code-bg);
-            padding: 0.2rem 0.4rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: var(--r-text);
-        }
-
-        .note-box {
-            border-left: 4px solid var(--r-warning-border);
-            padding: 1rem 1.2rem;
-            border-radius: 10px;
-            margin: 1.2rem 0;
-            border: 1px solid var(--r-border);
-            border-left-width: 4px;
-        }
-        
-        .success-box {
-            border-left: 4px solid #28a745;
-            padding: 1rem 1.2rem;
-            border-radius: 10px;
-            margin: 1.2rem 0;
-            border: 1px solid var(--r-border);
-            border-left-width: 4px;
-        }
-        
-        .info-box {
-            border-left: 4px solid var(--step-border);
-            padding: 1rem 1.2rem;
-            border-radius: 10px;
-            margin: 1.2rem 0;
-            border: 1px solid var(--r-border);
-            border-left-width: 4px;
-        }
-
-        .step-container {
-            margin: 1.5rem 0;
-        }
-
-        .step {
-            border: 1px solid var(--r-border);
-            border-radius: 12px;
-            padding: 1.2rem;
-            margin-bottom: 1rem;
-            position: relative;
-            transition: none;
-        }
-
-        .step:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        .step-number {
-            display: inline-block;
-            background: var(--r-blue);
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 28px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-right: 12px;
-        }
-
-        .step-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--r-blue);
-        }
-
-        .step-content {
-            margin-left: 40px;
-            color: var(--r-text);
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .feature-card {
-            border: 1px solid var(--r-border);
-            border-radius: 12px;
-            padding: 1rem;
-            transition: none;
-            text-align: center;
-        }
-        
-        .feature-card:hover {
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .feature-card i {
-            color: var(--r-blue);
-            margin-right: 8px;
-        }
-
-        @media (max-width: 900px) {
-            .feature-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .footer {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--r-border);
-            font-size: 0.85rem;
-            color: var(--r-text-light);
-            text-align: center;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: var(--r-blue);
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1000;
-            transition: none;
-        }
-
-        .theme-toggle:hover {
-            transform: none;
-            opacity: 0.9;
-        }
-
-        @media (max-width: 900px) {
-            .docs-container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                border-right: none;
-                border-bottom: 1px solid var(--r-border);
-            }
-            .main-content {
-                max-width: 100%;
-                padding: 1.5rem;
-            }
-        }
-
-        .package-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-        
-        .package-item {
-            border-radius: 8px;
-            padding: 0.5rem 0.8rem;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            border: 1px solid var(--r-border);
-        }
-
-        .path-note {
-            font-size: 0.85rem;
-            color: var(--r-text-light);
-            margin-top: 0.25rem;
-        }
-
-        .analysis-badge {
-            display: inline-block;
-            background: var(--r-blue);
-            color: white;
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            margin-right: 0.5rem;
-        }
-
-        hr {
-            margin: 1.5rem 0;
-            border: none;
-            border-top: 1px solid var(--r-border);
-        }
-
-        /* YouTube embed styles - vertical layout */
-        .youtube-section {
-            margin-top: 1rem;
-        }
-        
-        .youtube-card {
-            border: 1px solid var(--r-border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: none;
-            transition: none;
-        }
-        
-        .youtube-card:hover {
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .youtube-card:last-child {
-            margin-bottom: 0;
-        }
-        
-        .youtube-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-            color: var(--r-blue);
-        }
-        
-        .youtube-card p {
-            color: var(--r-text-light);
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-        
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 12px;
-            margin-top: 0.5rem;
-        }
-        
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 12px;
-            border: none;
-        }
-        
-        .final-footer {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--r-border);
-            font-size: 0.85rem;
-            color: var(--r-text-light);
-            text-align: center;
-        }
-        
-        a {
-            color: var(--r-link);
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
-        
-        button, .copy-btn, .theme-toggle {
-            transition: none;
-        }
-        
-        .copy-btn:hover {
-            transform: none;
-        }
-    </style>
+    .code-container { position: relative; margin: 14px 0; }
+    pre {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 16px 18px; overflow-x: auto; font-size: 0.84rem;
+    }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.85em; color: #c0392b; }
+    pre code { color: var(--text); font-size: 0.84rem; line-height: 1.7; }
+    .ck { color: #2980b9; }
+    .cs { color: #27ae60; }
+    .cc { color: #999; font-style: italic; }
+    .cf { color: #8e44ad; }
+    p code, li code {
+      font-family: 'Source Code Pro', monospace; font-size: 0.82em;
+      background: var(--code-bg); border: 1px solid var(--border);
+      padding: 1px 5px; border-radius: 3px; color: #c0392b;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88rem; border: 1px solid var(--border); }
+    thead { background: var(--bg); }
+    th {
+      font-family: 'Lato', sans-serif; font-size: 0.82rem; font-weight: 700;
+      color: var(--text); text-align: left; padding: 10px 14px;
+      border-bottom: 2px solid var(--border); border-right: 1px solid var(--border-light);
+    }
+    td {
+      padding: 9px 14px; border-bottom: 1px solid var(--border-light);
+      border-right: 1px solid var(--border-light); color: var(--muted); vertical-align: top;
+    }
+    td:first-child { font-family: 'Source Code Pro', monospace; font-size: 0.83rem; color: var(--text); }
+    tbody tr:nth-child(even) td { background: #fafafa; }
+    tbody tr:hover td { background: var(--accent-bg); }
+    .limit-list { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .limit-item {
+      display: flex; gap: 12px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 12px 16px; font-size: 0.88rem;
+    }
+    .limit-item .licon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    .limit-item strong { font-family: 'Lato', sans-serif; color: var(--text); display: block; margin-bottom: 2px; font-size: 0.86rem; }
+    .limit-item p { margin: 0; }
+    .citation-block {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 16px 18px; font-family: 'Source Code Pro', monospace;
+      font-size: 0.82rem; color: var(--muted); line-height: 1.85;
+      white-space: pre-wrap; position: relative;
+    }
+    .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      font-family: 'Lato', sans-serif; font-size: 0.72rem; font-weight: 700;
+      background: #fff; border: 1px solid var(--border); color: var(--muted);
+      padding: 4px 10px; border-radius: 3px; cursor: pointer; transition: all .15s;
+      z-index: 5;
+    }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .author-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 22px; display: flex; gap: 20px; align-items: flex-start; margin-top: 16px;
+    }
+    .author-avatar {
+      width: 52px; height: 52px; border-radius: 50%; background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Lato', sans-serif; font-weight: 700; font-size: 1.1rem; color: #fff; flex-shrink: 0;
+    }
+    .author-info h4 { font-family: 'Lato', sans-serif; font-weight: 700; color: var(--text); margin-bottom: 2px; font-size: 1rem; }
+    .author-info p { margin: 0 0 12px; font-size: 0.88rem; }
+    .author-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .author-links a {
+      font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: 700;
+      color: var(--accent); text-decoration: none;
+      border: 1px solid var(--accent); padding: 4px 12px; border-radius: 3px; transition: all .15s;
+    }
+    .author-links a:hover { background: var(--accent); color: #fff; }
+    .pkg-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+    .pkg {
+      font-family: 'Source Code Pro', monospace; font-size: 0.8rem;
+      background: var(--code-bg); border: 1px solid var(--border);
+      color: #8e44ad; padding: 3px 10px; border-radius: 3px;
+    }
+    .section-hr { border: none; border-top: 1px solid var(--border); margin: 0 0 52px; }
+    .video-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 20px; }
+    .video-wrapper { 
+      position: relative; 
+      padding-bottom: 56.25%; 
+      height: 0; 
+      overflow: hidden; 
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #000;
+    }
+    .video-wrapper iframe { 
+      position: absolute; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
+    }
+    .video-desc { margin-top: 10px; font-size: 0.9rem; color: var(--muted); }
+    footer {
+      background: var(--bg); border-top: 1px solid var(--border);
+      padding: 22px 52px; display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+      font-family: 'Lato', sans-serif; font-size: 0.8rem; color: var(--light);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+    @media (max-width: 768px) {
+      aside { display: none; }
+      main { padding: 24px 20px 60px; }
+      .format-grid, .problem-grid { grid-template-columns: 1fr; }
+      footer { padding: 18px 20px; }
+    }
+  </style>
 </head>
 <body>
-    <button class="theme-toggle" id="themeToggle" aria-label="Dark mode">
-        <i class="fas fa-moon"></i>
-    </button>
 
-    <div class="docs-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="pkg-name">MedModr</div>
-                <div class="pkg-version">Open-Source Mediation & Moderation Software</div>
-            </div>
-            <ul class="sidebar-nav">
-                <li><a href="#overview" class="nav-link active" data-section="overview"><i class="fas fa-info-circle"></i> Overview</a></li>
-                <li><a href="#features" class="nav-link" data-section="features"><i class="fas fa-star"></i> Features</a></li>
-                <li><a href="#live-app" class="nav-link" data-section="live-app"><i class="fas fa-globe"></i> Live Application</a></li>
-                <li class="nav-section">Installation & Setup</li>
-                <li><a href="#prerequisites" class="nav-link" data-section="prerequisites"><i class="fas fa-cogs"></i> Prerequisites</a></li>
-                <li><a href="#installation" class="nav-link" data-section="installation"><i class="fas fa-download"></i> Local Installation</a></li>
-                <li><a href="#deployment" class="nav-link" data-section="deployment"><i class="fas fa-cloud-upload-alt"></i> Deployment</a></li>
-                <li><a href="#example-dataset" class="nav-link" data-section="example-dataset"><i class="fas fa-database"></i> Example Dataset</a></li>
-                <li class="nav-section">Step-by-Step Guides</li>
-                <li><a href="#simple-mediation-guide" class="nav-link" data-section="simple-mediation-guide"><i class="fas fa-chart-line"></i> Simple Mediation</a></li>
-                <li><a href="#serial-mediation-guide" class="nav-link" data-section="serial-mediation-guide"><i class="fas fa-layer-group"></i> Serial Mediation</a></li>
-                <li><a href="#moderation-guide" class="nav-link" data-section="moderation-guide"><i class="fas fa-balance-scale"></i> Moderation</a></li>
-                <li><a href="#moderated-mediation-guide" class="nav-link" data-section="moderated-mediation-guide"><i class="fas fa-project-diagram"></i> Moderated Mediation (Conditional Process)</a></li>
-                <li class="nav-section">Visualization</li>
-                <li><a href="#path-diagrams" class="nav-link" data-section="path-diagrams"><i class="fas fa-chart-pie"></i> Path Diagrams</a></li>
-                <li><a href="#slope-plot" class="nav-link" data-section="slope-plot"><i class="fas fa-chart-line"></i> Simple Slopes Plot</a></li>
-                <li class="nav-section">Technical Notes</li>
-                <li><a href="#statistical-engine" class="nav-link" data-section="statistical-engine"><i class="fas fa-chart-bar"></i> Statistical Engine</a></li>
-                <li><a href="#limitations" class="nav-link" data-section="limitations"><i class="fas fa-exclamation-triangle"></i> Limitations</a></li>
-                <li><a href="#citation" class="nav-link" data-section="citation"><i class="fas fa-quote-right"></i> Citation</a></li>
-                <li><a href="#contact" class="nav-link" data-section="contact"><i class="fas fa-envelope"></i> Contact & Author</a></li>
-                <li><a href="#acknowledgments" class="nav-link" data-section="acknowledgments"><i class="fas fa-heart"></i> Acknowledgments</a></li>
-                <li><a href="#tutorials" class="nav-link" data-section="tutorials"><i class="fab fa-youtube"></i> Video Tutorials</a></li>
-            </ul>
-        </div>
+<header>
+  <a class="logo" href="#">MedModr</a>
+  <nav class="header-nav">
+    <a href="#overview">Docs</a>
+    <a href="https://github.com/mudassiribrahim12/MedModr" target="_blank">GitHub</a>
+    <a href="https://mudassiribrahim30.shinyapps.io/MedModr/" target="_blank" class="btn-app">▶ Launch App</a>
+  </nav>
+</header>
 
-        <!-- Main content -->
-        <div class="main-content" id="mainContent">
-            <!-- Overview -->
-            <section id="overview" class="topic">
-                <h1>MedModr</h1>
-                <p><strong>An Open-Source Mediation & Moderation Software</strong></p>
-                <p>MedModr is a free, web-based R-Shiny application that provides an intuitive interface for conducting mediation and moderation analyses. Built on the powerful <strong>lavaan</strong> package, it enables researchers to test complex statistical models without requiring advanced programming skills.</p>
-                <div class="note-box">
-                    <i class="fas fa-exclamation-triangle"></i> <strong>Before You Begin:</strong>
-                    <ul style="margin-top: 8px; margin-left: 1.5rem;">
-                        <li>Ensure your data is clean with no missing values</li>
-                        <li>Variable names should not contain spaces or special characters</li>
-                        <li>Have at least 10-20 observations per variable for reliable estimates</li>
-                    </ul>
-                </div>
-            </section>
+<div class="shell">
+  <aside id="sidebar">
+    <div class="toc-title">Table of Contents</div>
+    <div class="toc-group">
+      <div class="toc-group-label">Getting Started</div>
+      <a href="#overview" class="active">Overview</a>
+      <a href="#features">Supported Formats & Features</a>
+      <a href="#live-app">Live Application</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">Installation</div>
+      <a href="#prerequisites">Prerequisites</a>
+      <a href="#local-setup">Local Setup</a>
+      <a href="#deployment">Deployment</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">User Guides</div>
+      <a href="#simple-mediation">Simple Mediation</a>
+      <a href="#serial-mediation">Serial Mediation</a>
+      <a href="#moderation">Moderation Analysis</a>
+      <a href="#moderated-mediation">Moderated Mediation</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">Visualization</div>
+      <a href="#path-diagrams">Path Diagrams</a>
+      <a href="#slope-plots">Simple Slopes Plots</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">Reference</div>
+      <a href="#statistical-engine">Statistical Engine</a>
+      <a href="#limitations">Limitations</a>
+      <a href="#example-dataset">Example Dataset</a>
+      <a href="#tutorials">Video Tutorials</a>
+      <a href="#citation">Citation</a>
+      <a href="#contact">Contact &amp; Author</a>
+      <a href="#acknowledgments">Acknowledgments</a>
+    </div>
+  </aside>
 
-            <!-- Features -->
-            <section id="features" class="topic">
-                <h2>Features</h2>
-                <div class="feature-grid">
-                    <div class="feature-card"><i class="fas fa-chart-line"></i> Simple Mediation</div>
-                    <div class="feature-card"><i class="fas fa-layer-group"></i> Serial Mediation</div>
-                    <div class="feature-card"><i class="fas fa-balance-scale"></i> Moderation</div>
-                    <div class="feature-card"><i class="fas fa-project-diagram"></i> Moderated Mediation (Conditional Process)</div>
-                    <div class="feature-card"><i class="fas fa-file-csv"></i> Supported Input Formats (CSV, Excel, SPSS, Stata)</div>
-                    <div class="feature-card"><i class="fas fa-chart-pie"></i> Customizable Path Diagrams</div>
-                    <div class="feature-card"><i class="fas fa-file-word"></i> Professional Word Document Reports Generation</div>
-                </div>
-            </section>
-
-            <!-- Live Application -->
-            <section id="live-app" class="topic">
-                <h2>Live Application</h2>
-                <p>Access the live application at: <a href="https://mudassiribrahim30.shinyapps.io/MedModr/" target="_blank">https://mudassiribrahim30.shinyapps.io/MedModr/</a></p>
-                <div class="success-box">
-                    <i class="fas fa-infinity"></i> <strong>No installation required:</strong> Use the web version directly in your browser.
-                </div>
-            </section>
-
-            <!-- Prerequisites -->
-            <section id="prerequisites" class="topic">
-                <h2>Prerequisites</h2>
-                <ul><li>R version 4.4 or higher</li><li>RStudio (recommended)</li></ul>
-            </section>
-
-            <!-- Installation -->
-            <section id="installation" class="topic">
-                <h2>Steps to Run Locally</h2>
-                <p><strong>1. Download app.R from GitHub</strong><br>Access the source code at: <a href="https://github.com/mudassiribrahim12/MedModr/blob/main/app.R" target="_blank">https://github.com/mudassiribrahim12/MedModr/blob/main/app.R</a></p>
-                <p><strong>2. Install required R packages</strong></p>
-                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>install.packages(c(
-  "shiny",
-  "lavaan",
-  "semPlot",
-  "ggplot2",
-  "readr",
-  "readxl",
-  "haven",
-  "DT",
-  "colourpicker",
-  "officer",
-  "magick",
-  "flextable",
-  "shinythemes",
-  "shinyjs",
-  "shinydashboard"
-))</code></pre></div>
-                <p><strong>3. Load required R packages</strong></p>
-                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Load libraries
-library(shiny)
-library(shinydashboard)
-library(DT)
-library(haven)
-library(readxl)
-library(ggplot2)
-library(officer)
-library(rmarkdown)
-library(tidyverse)
-library(sortable)
-library(scales)</code></pre></div>
-                <p><strong>4. Run the application in RStudio</strong></p>
-                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Set your working directory to where you saved app.R
-setwd("C:/Users/YourName/Desktop/")    # Windows example
-# or
-setwd("/home/yourname/Desktop/")       # Linux/Mac example
-
-# Load the shiny library
-library(shiny)
-
-# Run the application
-runApp("app.R")</code></pre></div>
-                <div class="path-note"><i class="fas fa-info-circle"></i> Replace the path with the actual location where you saved the <code>app.R</code> file.</div>
-                
-                <p><strong>5. Open the application in a web browser</strong><br>
-                The application will open in RStudio; then click <strong>Open in Browser</strong></p>
-                
-            </section>
-
-            <!-- Deployment -->
-            <section id="deployment" class="topic">
-                <h2>Deployment</h2>
-                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Deploy to shinyapps.io
-install.packages("rsconnect")
-rsconnect::deployApp("path/to/MedModr")</code></pre></div>
-            </section>
-
-            <!-- Example Dataset Section - Added after Deployment -->
-            <section id="example-dataset" class="topic">
-                <h2><i class="fas fa-database"></i> Example Dataset</h2>
-                <div class="success-box">
-                    <i class="fas fa-file-excel"></i> <strong>Example dataset available for testing:</strong><br>
-                    <a href="https://archive.org/download/catrend-analyzer-example-data/mediation_moderationdataset.xlsx" target="_blank">https://archive.org/download/catrend-analyzer-example-data/mediation_moderationdataset.xlsx</a>
-                    <p style="margin-top: 8px; font-size: 0.85rem;"><i class="fas fa-info-circle"></i> This dataset can be used for all analyses in the app, including simple mediation, serial mediation, moderation, and moderated mediation.</p>
-                </div>
-            </section>
-
-            <!-- SIMPLE MEDIATION STEP-BY-STEP GUIDE -->
-            <section id="simple-mediation-guide" class="topic">
-                <h2>Simple Mediation Analysis - Step-by-Step Guide</h2>
-                <p>Test whether the effect of X on Y is transmitted through a mediator M (X → M → Y).</p>
-                <div class="step-container">
-                    <div class="step"><div class="step-number">1</div><div class="step-title">Select Your Interface</div><div class="step-content">Choose "Interactive Interface" for point-and-click selection or "Syntax Interface" for lavaan code.</div></div>
-                    <div class="step"><div class="step-number">2</div><div class="step-title">Load Your Data</div><div class="step-content">Click "Browse" and select your data file (CSV, XLSX, Stata, or SPSS).</div></div>
-                    <div class="step"><div class="step-number">3</div><div class="step-title">Select Analysis Type</div><div class="step-content">From dropdown, select "Simple Mediation". Three variable boxes appear: X, M, and Y.</div></div>
-                    <div class="step"><div class="step-number">4</div><div class="step-title">Select Your Variables</div><div class="step-content">Select predictor (X), mediator (M), and outcome (Y) from the dropdown lists.</div></div>
-                    <div class="step"><div class="step-number">5</div><div class="step-title">Run the Analysis</div><div class="step-content">Click "Run Analysis" and wait for results to appear.</div></div>
-                    <div class="step"><div class="step-number">6</div><div class="step-title">Interpret Results</div><div class="step-content">Check a-path (X→M), b-path (M→Y), indirect effect (a×b), direct effect (c'), and total effect (c).</div></div>
-                    <div class="step"><div class="step-number">7</div><div class="step-title">Visualize & Export</div><div class="step-content">View path diagram, customize colors, download PNG, or generate Word report.</div></div>
-                </div>
-            </section>
-
-            <!-- SERIAL MEDIATION STEP-BY-STEP GUIDE -->
-            <section id="serial-mediation-guide" class="topic">
-                <h2>Serial Mediation Analysis - Step-by-Step Guide</h2>
-                <p>Test sequential pathways where mediators are ordered (X → M1 → M2 → Y).</p>
-                <div class="step-container">
-                    <div class="step"><div class="step-number">1</div><div class="step-title">Load Your Data</div><div class="step-content">Upload your data file with all variables.</div></div>
-                    <div class="step"><div class="step-number">2</div><div class="step-title">Select Analysis Type</div><div class="step-content">From dropdown, select "Serial Mediation". Four variable boxes appear: X, M1, M2, and Y.</div></div>
-                    <div class="step"><div class="step-number">3</div><div class="step-title">Select Variables in Order</div><div class="step-content">Select X (predictor), M1 (first mediator), M2 (second mediator), and Y (outcome) in theoretical sequence.</div></div>
-                    <div class="step"><div class="step-number">4</div><div class="step-title">Run the Analysis</div><div class="step-content">Click "Run Analysis" and wait for results.</div></div>
-                    <div class="step"><div class="step-number">5</div><div class="step-title">Interpret Results</div><div class="step-content">Review indirect effects: X→M1→Y, X→M2→Y, and serial X→M1→M2→Y pathways.</div></div>
-                    <div class="step"><div class="step-number">6</div><div class="step-title">Visualize & Export</div><div class="step-content">View path diagram and download report.</div></div>
-                </div>
-            </section>
-
-            <!-- MODERATION STEP-BY-STEP GUIDE -->
-            <section id="moderation-guide" class="topic">
-                <h2>Moderation Analysis - Step-by-Step Guide</h2>
-                <p>Test whether the effect of X on Y depends on the level of moderator W.</p>
-                <div class="step-container">
-                    <div class="step"><div class="step-number">1</div><div class="step-title">Load Your Data</div><div class="step-content">Upload data with X, W, and Y variables.</div></div>
-                    <div class="step"><div class="step-number">2</div><div class="step-title">Select Analysis Type</div><div class="step-content">From dropdown, select "Moderation". Three variable boxes appear: X, W, and Y.</div></div>
-                    <div class="step"><div class="step-number">3</div><div class="step-title">Select Variables</div><div class="step-content">Select predictor (X), moderator (W), and outcome (Y).</div></div>
-                    <div class="step"><div class="step-number">4</div><div class="step-title">Run the Analysis</div><div class="step-content">Click "Run Analysis" - app automatically creates centered variables and interaction term.</div></div>
-                    <div class="step"><div class="step-number">5</div><div class="step-title">Interpret Results</div><div class="step-content">Check interaction term (X×W) significance and simple slopes at low (-1 SD), average, and high (+1 SD) moderator levels.</div></div>
-                    <div class="step"><div class="step-number">6</div><div class="step-title">Visualize with Slope Plot</div><div class="step-content">Go to "Diagram" tab, select "Slope Plot", customize, and download.</div></div>
-                </div>
-            </section>
-
-            <!-- MODERATED MEDIATION STEP-BY-STEP GUIDE -->
-            <section id="moderated-mediation-guide" class="topic">
-                <h2>Moderated Mediation (Conditional Process) Analysis - Step-by-Step Guide</h2>
-                <p>Test whether the indirect effect of X on Y through M depends on moderator W.</p>
-                <div class="step-container">
-                    <div class="step"><div class="step-number">1</div><div class="step-title">Load Your Data</div><div class="step-content">Upload data with X, M, W, and Y variables.</div></div>
-                    <div class="step"><div class="step-number">2</div><div class="step-title">Select Analysis Type</div><div class="step-content">From dropdown, select "Moderated Mediation". Four variable boxes appear: X, M, W, and Y.</div></div>
-                    <div class="step"><div class="step-number">3</div><div class="step-title">Select Variables</div><div class="step-content">Select predictor (X), mediator (M), moderator (W), and outcome (Y).</div></div>
-                    <div class="step"><div class="step-number">4</div><div class="step-title">Run the Analysis</div><div class="step-content">Click "Run Analysis" - app creates X×W interaction term.</div></div>
-                    <div class="step"><div class="step-number">5</div><div class="step-title">Interpret Results</div><div class="step-content">Check a3 coefficient (X×W→M) significance and index of moderated mediation (a3×b).</div></div>
-                    <div class="step"><div class="step-number">6</div><div class="step-title">Export</div><div class="step-content">Download Word report with complete results.</div></div>
-                </div>
-            </section>
-
-            <!-- Statistical Engine -->
-            <section id="statistical-engine" class="topic">
-                <h2>Statistical Engine</h2>
-                <p>MedModr uses the <strong>lavaan</strong> package for structural equation modeling, implementing:</p>
-                <ul>
-                    <li><strong>Mediation:</strong> Product-of-coefficients method</li>
-                    <li><strong>Moderation:</strong> Linear regression with mean-centering and simple slopes analysis</li>
-                    <li><strong>Moderated Mediation:</strong> Conditional process modeling with index of moderated mediation</li>
-                </ul>
-            </section>
-
-            <!-- Path Diagrams -->
-            <section id="path-diagrams" class="topic">
-                <h2>Path Diagrams</h2>
-                <p>Customizable path diagrams using semPlot with options for layout, edge colors, node colors, and label sizes.</p>
-            </section>
-
-            <!-- Simple Slopes Plot -->
-            <section id="slope-plot" class="topic">
-                <h2>Simple Slopes Plot</h2>
-                <p>Visualize moderation effects with customizable colors and line types.</p>
-            </section>
-
-            <!-- Limitations -->
-            <section id="limitations" class="topic">
-                <h2>Limitations</h2>
-                <ul>
-                    <li>Current version focuses on observed variable models</li>
-                    <li>Listwise deletion only for missing values</li>
-                    <li>Datasets >10,000 rows are truncated for performance. Users with datasets exceeding 10,000 observations may contact the developer for full-scale analysis assistance.</li>
-                </ul>
-            </section>
-
-            <!-- Citation -->
-            <section id="citation" class="topic">
-                <h2>Citation</h2>
-                <div class="code-block-wrapper"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>@software{Ibrahim_MedModr_2025,
-  author = {Ibrahim, Mudasir Mohammed},
-  title = {MedModr: An Open-Source Mediation & Moderation Software},
-  year = {2025},
-  version = {3.0.0},
-  url = {https://github.com/mudassiribrahim12/MedModr}
-}</code></pre></div>
-            </section>
-
-            <!-- Contact -->
-            <section id="contact" class="topic">
-                <h2>Contact & Author</h2>
-                <p><strong>Author:</strong> Mudasir Mohammed Ibrahim<br><strong>Affiliation:</strong> Department of Internal Medicine (M3), Tamale Teaching Hospital, Tamale, Ghana<br><strong>Email:</strong> <a href="mailto:mudassiribrahim30@gmail.com">mudassiribrahim30@gmail.com</a></p>
-            </section>
-
-            <!-- Acknowledgments -->
-            <section id="acknowledgments" class="topic">
-                <h2>Acknowledgments</h2>
-                <div class="package-list">
-                    <div class="package-item">shiny</div><div class="package-item">lavaan</div><div class="package-item">semPlot</div>
-                    <div class="package-item">ggplot2</div><div class="package-item">readr</div><div class="package-item">readxl</div>
-                    <div class="package-item">haven</div><div class="package-item">DT</div><div class="package-item">colourpicker</div>
-                    <div class="package-item">officer</div><div class="package-item">magick</div><div class="package-item">flextable</div>
-                    <div class="package-item">shinythemes</div><div class="package-item">shinyjs</div><div class="package-item">shinydashboard</div>
-                </div>
-                <p>Special thanks to the lavaan team (Yves Rosseel) for providing the structural equation modeling engine.</p>
-            </section>
-
-            <!-- YOUTUBE TUTORIALS SECTION - FOUR VIDEOS VERTICAL LAYOUT -->
-            <section id="tutorials" class="topic">
-                <h2><i class="fab fa-youtube"></i> Video Tutorials</h2>
-                <p>Watch these tutorials to master MedModr. Click the videos below for step-by-step demonstrations of each analysis type.</p>
-                
-                <div class="youtube-section">
-                    <!-- Tutorial 1: Simple Mediation -->
-                    <div class="youtube-card">
-                        <h3>1. Simple Mediation Analysis</h3>
-                        <p>Complete walkthrough: test whether the effect of X on Y is transmitted through mediator M (X → M → Y).</p>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/BSRN1SBevtY?si=ZRmkZOcbamLIP9Je" title="Simple Mediation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                    
-                    <!-- Tutorial 2: Serial Mediation -->
-                    <div class="youtube-card">
-                        <h3>2. Serial Mediation Analysis</h3>
-                        <p>Complete walkthrough: test sequential pathways with two mediators in order (X → M1 → M2 → Y).</p>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/N8E02G8Tx_Y?si=sXfAlpdZ_HA8Ye1c" title="Serial Mediation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                    
-                    <!-- Tutorial 3: Moderation -->
-                    <div class="youtube-card">
-                        <h3>3. Moderation Analysis</h3>
-                        <p>Complete walkthrough: test whether the effect of X on Y depends on moderator W.</p>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/CVXYYavLH5E?si=RxuIc7RG-hbrU-ih" title="Moderation Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                    
-                    <!-- Tutorial 4: Moderated Mediation -->
-                    <div class="youtube-card">
-                        <h3>4. Moderated Mediation (Conditional Process)</h3>
-                        <p>Complete walkthrough: test whether the indirect effect of X on Y through M depends on moderator W.</p>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/Mv7LGGf8NnY?si=_f5M6uk-_iJAoKNH" title="Moderated Mediation (Conditional Process) Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="final-footer">
-                    <p>MedModr: Empowering researchers with intuitive mediation and moderation analysis tool.</p>
-                    <p>License: MIT — Free to use, modify, and distribute.</p>
-                </div>
-            </section>
-        </div>
+  <main>
+    <div class="page-title" id="overview">
+      <h1>MedModr</h1>
+      <p>An Open-Source Mediation & Moderation Software</p>
+      <div class="badges">
+        <span class="badge badge-blue">R-Shiny</span>
+        <span class="badge badge-green">MIT License</span>
+        <span class="badge badge-gray">Free to Use</span>
+      </div>
+      <div class="hero-actions">
+        <a href="https://mudassiribrahim30.shinyapps.io/MedModr/" target="_blank" class="btn btn-primary">▶ Launch Live App</a>
+        <a href="https://github.com/mudassiribrahim12/MedModr" target="_blank" class="btn btn-outline">View on GitHub</a>
+        <a href="https://archive.org/download/catrend-analyzer-example-data/mediation_moderationdataset.xlsx" class="btn btn-outline">⬇ Example Dataset</a>
+      </div>
     </div>
 
-    <script>
-        function copyCode(button) {
-            const pre = button.parentElement.querySelector('pre');
-            const code = pre.innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                const originalText = button.textContent;
-                button.textContent = 'Copied!';
-                button.classList.add('copied');
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.classList.remove('copied');
-                }, 2000);
-            }).catch(() => {
-                button.textContent = 'Error!';
-                setTimeout(() => { button.textContent = 'Copy'; }, 1500);
-            });
-        }
+    <section>
+      <h2>Overview</h2>
+      <p>MedModr is a free, web-based R-Shiny application that provides an intuitive interface for conducting mediation and moderation analyses. Built on the powerful <strong>lavaan</strong> package for structural equation modeling, it enables researchers to test complex statistical models without requiring advanced programming skills. The tool eliminates the need for manual calculations, requires no software installation, and is completely free to use.</p>
+      
+      <h3>Common Research Problems Solved</h3>
+      <div class="problem-grid">
+        <div class="problem-card"><div class="icon">🔗</div><div><strong>Mediation Testing</strong>Automatically tests whether the effect of X on Y is transmitted through a mediator M.</div></div>
+        <div class="problem-card"><div class="icon">⚖️</div><div><strong>Moderation Analysis</strong>Determines whether the effect of X on Y depends on the level of moderator W.</div></div>
+        <div class="problem-card"><div class="icon">🔄</div><div><strong>Serial Mediation</strong>Tests sequential pathways with multiple mediators in a causal chain.</div></div>
+        <div class="problem-card"><div class="icon">📊</div><div><strong>Conditional Process</strong>Evaluates whether indirect effects vary across levels of a moderator.</div></div>
+      </div>
+    </section>
 
-        const themeToggle = document.getElementById('themeToggle');
-        const prefersDark = localStorage.getItem('docsTheme') === 'dark';
-        if (prefersDark) {
-            document.body.classList.add('dark');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
-            localStorage.setItem('docsTheme', isDark ? 'dark' : 'light');
-            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-        });
+    <hr class="section-hr" />
 
-        const links = document.querySelectorAll('.nav-link');
-        const sections = document.querySelectorAll('.topic');
-        function setActiveLink() {
-            let current = '';
-            const scrollPos = window.scrollY + 120;
-            sections.forEach(section => {
-                const top = section.offsetTop;
-                const bottom = top + section.offsetHeight;
-                if (scrollPos >= top && scrollPos < bottom) current = section.getAttribute('id');
-            });
-            links.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('data-section') === current) link.classList.add('active');
-            });
-        }
-        window.addEventListener('scroll', setActiveLink);
-        window.addEventListener('load', setActiveLink);
-        links.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('data-section');
-                const target = document.getElementById(targetId);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    history.pushState(null, null, `#${targetId}`);
-                    links.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-                }
-            });
-        });
-        if (window.location.hash) {
-            const id = window.location.hash.substring(1);
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }
-    </script>
+    <section id="features">
+      <h2>Supported Formats & Features</h2>
+      <p>MedModr supports multiple data input formats and provides comprehensive analysis capabilities.</p>
+      <div class="format-grid">
+        <div class="format-box">
+          <h4>📂 Input Formats</h4>
+          <div class="tag-list">
+            <span class="tag">CSV</span><span class="tag">Excel</span><span class="tag">Stata</span>
+            <span class="tag">SPSS</span>
+          </div>
+        </div>
+        <div class="format-box">
+          <h4>⚙️ Analysis Features</h4>
+          <div class="tag-list">
+            <span class="tag">Simple Mediation</span><span class="tag">Serial Mediation</span>
+            <span class="tag">Moderation</span><span class="tag">Moderated Mediation</span>
+            <span class="tag">Path Diagrams</span><span class="tag">Simple Slopes Plots</span>
+            <span class="tag">Word Reports</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <section id="live-app">
+      <h2>Live Application</h2>
+      <p>Access the hosted version directly in your browser — no installation required.</p>
+      <div class="callout success">
+        <div class="callout-title">🌐 Live URL</div>
+        <p><a href="https://mudassiribrahim30.shinyapps.io/MedModr/" target="_blank">https://mudassiribrahim30.shinyapps.io/MedModr/</a></p>
+      </div>
+      <div class="callout">
+        <div class="callout-title">📊 Statistical Engine</div>
+        <p>The application uses <strong>lavaan</strong> for structural equation modeling, implementing product-of-coefficients method for mediation, mean-centering for moderation, and conditional process modeling for moderated mediation.</p>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <section id="prerequisites">
+      <h2>Prerequisites</h2>
+      <p>To run MedModr locally, the following software must be installed:</p>
+      <table>
+        <thead><tr><th>Requirement</th><th>Version</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>R</td><td>≥ 4.4</td><td>Core runtime for the Shiny application</td></tr>
+          <tr><td>RStudio</td><td>Any recent</td><td>Recommended IDE — optional but convenient</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="local-setup">
+      <h2>Local Installation</h2>
+      <h3>Step 1 — Download app.R</h3>
+      <p>Download the source file from the GitHub repository: <a href="https://github.com/mudassiribrahim12/MedModr/blob/main/app.R" target="_blank">github.com/mudassiribrahim12/MedModr</a></p>
+
+      <h3>Step 2 — Install required packages</h3>
+      <p>Run the following in your R console:</p>
+<div class="code-container">
+  <button class="copy-btn" onclick="copyCode(this, 'code-step2')">Copy</button>
+  <pre id="code-step2"><code><span class="cf">install.packages</span>(<span class="cf">c</span>(
+    <span class="cs">"shiny"</span>, <span class="cs">"shinydashboard"</span>, <span class="cs">"DT"</span>,
+    <span class="cs">"haven"</span>, <span class="cs">"readxl"</span>, <span class="cs">"readr"</span>,
+    <span class="cs">"lavaan"</span>, <span class="cs">"semPlot"</span>, <span class="cs">"ggplot2"</span>,
+    <span class="cs">"officer"</span>, <span class="cs">"colourpicker"</span>, <span class="cs">"magick"</span>,
+    <span class="cs">"flextable"</span>, <span class="cs">"shinythemes"</span>, <span class="cs">"shinyjs"</span>
+  ))</code></pre>
+</div>
+
+      <h3>Step 3 — Load the libraries</h3>
+<div class="code-container">
+  <button class="copy-btn" onclick="copyCode(this, 'code-step3')">Copy</button>
+  <pre id="code-step3"><code><span class="ck">library</span>(shiny)
+<span class="ck">library</span>(shinydashboard)
+<span class="ck">library</span>(DT)
+<span class="ck">library</span>(haven)
+<span class="ck">library</span>(readxl)
+<span class="ck">library</span>(readr)
+<span class="ck">library</span>(lavaan)
+<span class="ck">library</span>(semPlot)
+<span class="ck">library</span>(ggplot2)
+<span class="ck">library</span>(officer)
+<span class="ck">library</span>(colourpicker)
+<span class="ck">library</span>(magick)
+<span class="ck">library</span>(flextable)
+<span class="ck">library</span>(shinythemes)
+<span class="ck">library</span>(shinyjs)</code></pre>
+</div>
+
+      <h3>Step 4 — Set working directory and run</h3>
+      <p>Replace the path below with the location of your saved <code>app.R</code> file:</p>
+      <div class="code-container">
+        <button class="copy-btn" onclick="copyCode(this, 'code-step4')">Copy</button>
+<pre id="code-step4"><code><span class="cc"># Windows</span>
+<span class="cf">setwd</span>(<span class="cs">"C:/Users/YourName/Desktop/"</span>)
+
+<span class="cc"># Linux / macOS</span>
+<span class="cf">setwd</span>(<span class="cs">"/home/yourname/Desktop/"</span>)
+
+<span class="cc"># Launch the app</span>
+<span class="ck">library</span>(shiny)
+<span class="cf">runApp</span>(<span class="cs">"app.R"</span>)</code></pre>
+      </div>
+
+      <h3>Step 5 — Open in browser</h3>
+      <p>The app opens in the RStudio viewer pane. Click <strong>Open in Browser</strong> for the best experience.</p>
+    </section>
+
+    <section id="deployment">
+      <h2>Deployment</h2>
+      <p>Deploy your own instance to shinyapps.io or any compatible hosting platform using the <code>rsconnect</code> package.</p>
+      <div class="code-container">
+        <button class="copy-btn" onclick="copyCode(this, 'code-deploy')">Copy</button>
+<pre id="code-deploy"><code><span class="cc"># Install rsconnect</span>
+<span class="cf">install.packages</span>(<span class="cs">"rsconnect"</span>)
+
+<span class="cc"># Deploy — replace with actual path to your app folder</span>
+rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/MedModr"</span>)</code></pre>
+      </div>
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Note</div>
+        <p>Replace <code>"path/to/MedModr"</code> with the actual folder path containing your <code>app.R</code> file.</p>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <section id="simple-mediation">
+      <h2>Simple Mediation Analysis - Step-by-Step Guide</h2>
+      <p>Test whether the effect of X on Y is transmitted through a mediator M (X → M → Y).</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Select Your Interface</strong><p>Choose "Interactive Interface" for point-and-click selection or "Syntax Interface" for lavaan code.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Load Your Data</strong><p>Click "Browse" and select your data file (CSV, XLSX, Stata, or SPSS).</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Select Analysis Type</strong><p>From dropdown, select "Simple Mediation". Three variable boxes appear: X, M, and Y.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Select Your Variables</strong><p>Select predictor (X), mediator (M), and outcome (Y) from the dropdown lists.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Run the Analysis</strong><p>Click "Run Analysis" and wait for results to appear.</p></div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Interpret Results</strong><p>Check a-path (X→M), b-path (M→Y), indirect effect (a×b), direct effect (c'), and total effect (c).</p></div></div>
+        <div class="step"><div class="step-num">7</div><div class="step-body"><strong>Visualize & Export</strong><p>View path diagram, customize colors, download PNG, or generate Word report.</p></div></div>
+      </div>
+    </section>
+
+    <section id="serial-mediation">
+      <h2>Serial Mediation Analysis - Step-by-Step Guide</h2>
+      <p>Test sequential pathways where mediators are ordered (X → M1 → M2 → Y).</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Load Your Data</strong><p>Upload your data file with all variables.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Select Analysis Type</strong><p>From dropdown, select "Serial Mediation". Four variable boxes appear: X, M1, M2, and Y.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Select Variables in Order</strong><p>Select X (predictor), M1 (first mediator), M2 (second mediator), and Y (outcome) in theoretical sequence.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Run the Analysis</strong><p>Click "Run Analysis" and wait for results.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Interpret Results</strong><p>Review indirect effects: X→M1→Y, X→M2→Y, and serial X→M1→M2→Y pathways.</p></div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Visualize & Export</strong><p>View path diagram and download report.</p></div></div>
+      </div>
+    </section>
+
+    <section id="moderation">
+      <h2>Moderation Analysis - Step-by-Step Guide</h2>
+      <p>Test whether the effect of X on Y depends on the level of moderator W.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Load Your Data</strong><p>Upload data with X, W, and Y variables.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Select Analysis Type</strong><p>From dropdown, select "Moderation". Three variable boxes appear: X, W, and Y.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Select Variables</strong><p>Select predictor (X), moderator (W), and outcome (Y).</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Run the Analysis</strong><p>Click "Run Analysis" — app automatically creates centered variables and interaction term.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Interpret Results</strong><p>Check interaction term (X×W) significance and simple slopes at low (-1 SD), average, and high (+1 SD) moderator levels.</p></div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Visualize with Slope Plot</strong><p>Go to "Diagram" tab, select "Slope Plot", customize, and download, and download report.</p></div></div>
+      </div>
+    </section>
+
+    <section id="moderated-mediation">
+      <h2>Moderated Mediation (Conditional Process) - Step-by-Step Guide</h2>
+      <p>Test whether the indirect effect of X on Y through M depends on moderator W.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Load Your Data</strong><p>Upload data with X, M, W, and Y variables.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Select Analysis Type</strong><p>From dropdown, select "Moderated Mediation". Four variable boxes appear: X, M, W, and Y.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Select Variables</strong><p>Select predictor (X), mediator (M), moderator (W), and outcome (Y).</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Run the Analysis</strong><p>Click "Run Analysis" — app creates X×W interaction term.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Interpret Results</strong><p>Check a3 coefficient (X×W→M) significance and index of moderated mediation (a3×b).</p></div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Export</strong><p>Download Word report with complete results.</p></div></div>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <section id="path-diagrams">
+      <h2>Path Diagrams</h2>
+      <p>MedModr generates customizable path diagrams using the <strong>semPlot</strong> package. Users can adjust layout, edge colors, node colors, label sizes, and other visual elements to create publication-ready figures.</p>
+      <div class="callout">
+        <div class="callout-title">🎨 Customization Options</div>
+        <p>Choose from multiple layout algorithms (tree, circle, spring), modify edge colors to highlight significant paths, and adjust label sizes for clarity. Diagrams can be downloaded as PNG files for inclusion in manuscripts.</p>
+      </div>
+    </section>
+
+    <section id="slope-plots">
+      <h2>Simple Slopes Plots</h2>
+      <p>Visualize moderation effects with customizable simple slopes plots showing the relationship between X and Y at different levels of the moderator W (typically at -1 SD, mean, and +1 SD).</p>
+      <div class="callout">
+        <div class="callout-title">📊 Plot Features</div>
+        <p>Customize colors, line types, and confidence bands. Plots can be downloaded in PNG format for direct use in presentations and publications.</p>
+      </div>
+    </section>
+
+    <section id="statistical-engine">
+      <h2>Statistical Engine</h2>
+      <p>MedModr uses the <strong>lavaan</strong> package for structural equation modeling, implementing:</p>
+      <table>
+        <thead><tr><th>Analysis Type</th><th>Method</th><th>Implementation</th></tr></thead>
+        <tbody>
+          <tr><td>Simple & Serial Mediation</td><td>Product-of-coefficients</td><td>Path analysis</td></tr>
+          <tr><td>Moderation</td><td>Linear regression</td><td>Mean-centering, interaction term, simple slopes at ±1 SD</td></tr>
+          <tr><td>Moderated Mediation</td><td>Conditional process modeling</td><td>Index of moderated mediation (a3×b)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr class="section-hr" />
+
+    <section id="limitations">
+      <h2>Limitations</h2>
+      <p>The following known limitations apply to the current version of MedModr:</p>
+      <div class="limit-list">
+        <div class="limit-item"><div class="licon">📊</div><div><strong>Observed Variables Only</strong><p>Current version focuses on observed variable models (no latent variables).</p></div></div>
+        <div class="limit-item"><div class="licon">❓</div><div><strong>Missing Data Handling</strong><p>Uses listwise deletion only. Users should pre-process missing data before uploading.</p></div></div>
+        <div class="limit-item"><div class="licon">📏</div><div><strong>Dataset Size Limit</strong><p>Datasets >10,000 rows are truncated for performance. Contact developer for full-scale analysis assistance.</p></div></div>
+        <div class="limit-item"><div class="licon">🌐</div><div><strong>Internet Required for Web Version</strong><p>The hosted version requires an active internet connection. For offline use, install and run the app locally.</p></div></div>
+      </div>
+    </section>
+
+    <section id="example-dataset">
+      <h2>Example Dataset</h2>
+      <p>Use this example dataset to practice and test MedModr's features.</p>
+      <div class="callout success">
+        <div class="callout-title">📥 Example Dataset Download</div>
+        <p><a href="https://archive.org/download/catrend-analyzer-example-data/mediation_moderationdataset.xlsx" target="_blank">Download mediation_moderationdataset.xlsx</a> — Contains variables suitable for simple mediation, serial mediation, moderation, and moderated mediation analyses.</p>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <section id="tutorials">
+      <h2>Video Tutorials</h2>
+      <p>Watch these step-by-step guides to master MedModr.</p>
+      <div class="video-grid">
+        <div class="video-item">
+          <h3>1. Simple Mediation Analysis</h3>
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/BSRN1SBevtY?si=ZRmkZOcbamLIP9Je" title="Simple Mediation Tutorial" allowfullscreen></iframe>
+          </div>
+          <p class="video-desc">Complete walkthrough: test whether the effect of X on Y is transmitted through mediator M (X → M → Y).</p>
+        </div>
+        <div class="video-item">
+          <h3>2. Serial Mediation Analysis</h3>
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/N8E02G8Tx_Y?si=sXfAlpdZ_HA8Ye1c" title="Serial Mediation Tutorial" allowfullscreen></iframe>
+          </div>
+          <p class="video-desc">Test sequential pathways with two mediators in order (X → M1 → M2 → Y).</p>
+        </div>
+        <div class="video-item">
+          <h3>3. Moderation Analysis</h3>
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/CVXYYavLH5E?si=RxuIc7RG-hbrU-ih" title="Moderation Tutorial" allowfullscreen></iframe>
+          </div>
+          <p class="video-desc">Test whether the effect of X on Y depends on moderator W with simple slopes visualization.</p>
+        </div>
+        <div class="video-item">
+          <h3>4. Moderated Mediation (Conditional Process) Analysis</h3>
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/Mv7LGGf8NnY?si=_f5M6uk-_iJAoKNH" title="Moderated Mediation Tutorial" allowfullscreen></iframe>
+          </div>
+          <p class="video-desc">Test whether the indirect effect of X on Y through M depends on moderator W.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <section id="citation">
+      <h2>Citation</h2>
+      <p>If you use MedModr in your research, please cite it as follows:</p>
+      <div class="citation-block" id="cite-block">@software{Ibrahim_MedModr_2025,
+  author = {Ibrahim, Mudasir Mohammed},
+  title  = {MedModr: An Open-Source Mediation & Moderation Software},
+  year   = {2025},
+  version = {3.0.0},
+  url    = {https://github.com/mudassiribrahim12/MedModr}
+}<button class="copy-btn" onclick="copyCite()">Copy</button></div>
+    </section>
+
+<section id="acknowledgments">
+  <h2>Acknowledgments</h2>
+  <p>MedModr was built using the following R packages. Special thanks to the developers and maintainers of these packages for making advanced statistical analysis accessible in R.</p>
+  <div class="pkg-grid">
+    <span class="pkg">shiny</span><span class="pkg">shinydashboard</span><span class="pkg">lavaan</span>
+    <span class="pkg">semPlot</span><span class="pkg">ggplot2</span><span class="pkg">haven</span>
+    <span class="pkg">readxl</span><span class="pkg">readr</span><span class="pkg">DT</span>
+    <span class="pkg">colourpicker</span><span class="pkg">officer</span><span class="pkg">magick</span>
+    <span class="pkg">flextable</span><span class="pkg">shinythemes</span><span class="pkg">shinyjs</span>
+  </div>
+</section>
+
+    <section id="contact">
+      <h2>Developer Information</h2>
+      <div class="author-card">
+        <div class="author-avatar">MI</div>
+        <div class="author-info">
+          <h4>Mudasir Mohammed Ibrahim</h4>
+          <p>
+            Department of Internal Medicine (M3), Tamale Teaching Hospital, Tamale, Ghana<br />
+            <a href="mailto:mudassiribrahim30@gmail.com">mudassiribrahim30@gmail.com</a>
+          </p>
+          <div class="author-links" style="margin-top: 15px;">
+            <a href="https://www.researchgate.net/profile/Mudasir-Ibrahim" target="_blank">ResearchGate</a>
+            <a href="https://scholar.google.com/citations?user=xEFzAvgAAAAJ&hl=en" target="_blank">Google Scholar</a>
+            <a href="https://orcid.org/0000-0002-9049-8222" target="_blank">ORCID</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div>© 2025-Present Mudasir Mohammed Ibrahim · MIT License</div>
+  <div>
+    <a href="https://github.com/mudassiribrahim30" target="_blank">GitHub</a> ·
+    <a href="mailto:mudassiribrahim30@gmail.com">Contact</a>
+  </div>
+</footer>
+
+<script>
+  function copyCode(btn, elementId) {
+    const element = document.getElementById(elementId);
+    let textToCopy = element.innerText || element.textContent;
+    if (elementId === 'cite-block') {
+      textToCopy = textToCopy.replace('Copy', '').trim();
+    }
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      const originalText = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.style.color = 'var(--success-border)';
+      btn.style.borderColor = 'var(--success-border)';
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 2000);
+    });
+  }
+
+  function copyCite() {
+    const btn = document.querySelector('#cite-block .copy-btn');
+    if (btn) copyCode(btn, 'cite-block');
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('aside a').forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`aside a[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -75% 0px' });
+  document.querySelectorAll('section[id], .page-title[id]').forEach(s => observer.observe(s));
+</script>
 </body>
 </html>
