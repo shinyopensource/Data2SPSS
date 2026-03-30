@@ -33,9 +33,10 @@
       color: var(--text);
       font-size: 15.5px;
       line-height: 1.85;
+      overflow-x: hidden;
     }
     
-    /* Header - clean, only GitHub and search */
+    /* Header */
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       height: var(--header-h);
@@ -353,7 +354,7 @@
     }
     footer a:hover { text-decoration: underline; }
     
-    /* Iframe Overlay with Minimal Close Button */
+    /* Iframe Overlay - NO HEADER, just fullscreen iframe with ESC to close */
     .iframe-overlay {
       position: fixed;
       top: 0;
@@ -363,49 +364,10 @@
       background: var(--white);
       z-index: 1000;
       display: none;
-      flex-direction: column;
     }
-    .iframe-header {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 10px 16px;
-      background: var(--accent);
-      position: relative;
-    }
-    .iframe-title {
-      font-family: 'Lato', sans-serif;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #fff;
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    .minimize-iframe {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-family: 'Lato', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .minimize-iframe:hover {
-      background: rgba(255,255,255,0.35);
-      transform: scale(1.05);
-    }
-    iframe {
+    .fullscreen-iframe {
       width: 100%;
-      height: calc(100% - 52px);
+      height: 100%;
       border: none;
       background: var(--white);
     }
@@ -460,6 +422,9 @@
     body.dark .info-section {
       background: var(--accent-bg);
     }
+    body.dark .iframe-overlay {
+      background: var(--white);
+    }
     
     /* Responsive */
     @media (max-width: 900px) {
@@ -502,15 +467,6 @@
         right: 0;
         left: auto;
         min-width: 240px;
-      }
-      .iframe-title {
-        font-size: 0.7rem;
-        left: 12px;
-      }
-      .minimize-iframe {
-        width: 28px;
-        height: 28px;
-        font-size: 0.9rem;
       }
     }
   </style>
@@ -594,13 +550,9 @@
   </div>
 </footer>
 
-<!-- Iframe Overlay with Minimal Close (Minus Sign) -->
+<!-- Iframe Overlay - NO HEADER, just fullscreen iframe -->
 <div id="iframeContainer" class="iframe-overlay">
-  <div class="iframe-header">
-    <span class="iframe-title" id="iframeTitle">Documentation</span>
-    <button id="minimizeIframeBtn" class="minimize-iframe" aria-label="Close">−</button>
-  </div>
-  <iframe id="contentFrame" src="" title="Documentation Viewer"></iframe>
+  <iframe id="contentFrame" class="fullscreen-iframe" src="" title="Documentation Viewer"></iframe>
 </div>
 
 <!-- Loading Bar -->
@@ -617,8 +569,6 @@
   const loadingBar = document.getElementById('loadingBar');
   const iframeContainer = document.getElementById('iframeContainer');
   const contentFrame = document.getElementById('contentFrame');
-  const minimizeBtn = document.getElementById('minimizeIframeBtn');
-  const iframeTitle = document.getElementById('iframeTitle');
   const disclaimerBox = document.getElementById('disclaimerBox');
   
   // Search elements
@@ -626,7 +576,6 @@
   const searchClear = document.getElementById('searchClear');
   const searchResults = document.getElementById('searchResults');
   const cards = document.querySelectorAll('.doc-card');
-  const cardsGrid = document.getElementById('cardsGrid');
 
   // Card data for search
   const docsData = Array.from(cards).map(card => ({
@@ -664,17 +613,11 @@
     });
   }
 
-  // Open documentation
-  async function openDocumentation(filePath, title) {
+  // Open documentation - NO HEADER, just iframe
+  async function openDocumentation(filePath) {
     await animateLoading(4000);
-    iframeTitle.textContent = title;
-    iframeContainer.style.display = 'flex';
+    iframeContainer.style.display = 'block';
     contentFrame.src = filePath;
-    
-    const onLoad = () => {
-      contentFrame.removeEventListener('load', onLoad);
-    };
-    contentFrame.addEventListener('load', onLoad);
     
     contentFrame.onerror = () => {
       alert(`Could not load "${filePath}". Please ensure the file exists in the same directory.`);
@@ -714,7 +657,7 @@
       searchResults.innerHTML = '<div class="search-no-results">No matching documentation found</div>';
     } else {
       searchResults.innerHTML = matches.map(match => `
-        <div class="search-result-item" data-path="${match.docPath}" data-title="${match.title}">
+        <div class="search-result-item" data-path="${match.docPath}">
           <div class="search-result-title">${match.name}</div>
           <div class="search-result-desc">${match.description.substring(0, 80)}${match.description.length > 80 ? '...' : ''}</div>
         </div>
@@ -723,8 +666,7 @@
       document.querySelectorAll('.search-result-item').forEach(item => {
         item.addEventListener('click', () => {
           const path = item.getAttribute('data-path');
-          const title = item.getAttribute('data-title');
-          openDocumentation(path, title);
+          openDocumentation(path);
           searchResults.style.display = 'none';
           searchInput.value = '';
           cards.forEach(card => card.style.display = 'block');
@@ -755,22 +697,22 @@
     if (searchInput.value.trim() !== '') performSearch();
   });
 
-  // Card click handlers
+  // Card click handlers - open documentation with NO header
   document.querySelectorAll('.doc-card').forEach(card => {
     card.addEventListener('click', (e) => {
       const filePath = card.getAttribute('data-doc');
-      const title = card.getAttribute('data-title');
-      if (filePath && title) openDocumentation(filePath, title);
+      if (filePath) openDocumentation(filePath);
     });
   });
 
-  // Close with minus sign button
-  minimizeBtn.addEventListener('click', closeDocumentation);
+  // Close iframe with ESC key
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && iframeContainer.style.display === 'flex') closeDocumentation();
+    if (e.key === 'Escape' && iframeContainer.style.display === 'block') {
+      closeDocumentation();
+    }
   });
 
-  // Dark mode preference (no toggle on this page, but respects user preference)
+  // Dark mode preference
   const savedTheme = localStorage.getItem('shiny-docs-theme');
   if (savedTheme === 'dark') document.body.classList.add('dark');
 
@@ -805,7 +747,7 @@
     });
   }
 
-  console.log('Documentation Hub — Clean header, minus sign close button');
+  console.log('Documentation Hub — Clean header, fullscreen iframe with no header, ESC to close');
 </script>
 </body>
 </html>
