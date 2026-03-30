@@ -35,32 +35,50 @@
       line-height: 1.85;
     }
     
-    /* Header - identical to documentation pages */
+    /* Header - clean, only GitHub and search */
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       height: var(--header-h);
       background: var(--accent);
-      display: flex; align-items: center;
-      padding: 0 20px; gap: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
     .logo {
       font-family: 'Lato', sans-serif;
-      font-weight: 700; font-size: 1.1rem;
-      color: #fff; text-decoration: none; white-space: nowrap;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      text-decoration: none;
     }
-    .header-nav { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
     .header-nav a {
       font-family: 'Lato', sans-serif;
-      font-size: 0.85rem; font-weight: 700;
-      color: rgba(255,255,255,0.85); text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
       padding: 5px 12px;
       border-radius: 4px;
       transition: background .15s, color .15s;
     }
-    .header-nav a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+    .header-nav a:hover {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+    }
     
-    /* Search Bar Styles */
+    /* Search Bar */
     .search-wrapper {
       display: flex;
       align-items: center;
@@ -176,7 +194,7 @@
       padding-bottom: 3rem;
     }
     
-    /* Hero Section - more compact */
+    /* Hero Section */
     .hero {
       text-align: center;
       padding: 2.5rem 1rem 1.5rem;
@@ -217,7 +235,7 @@
     .badge-gray { background: #666; color: #fff; }
     .badge-green { background: #27ae60; color: #fff; }
     
-    /* Card Grid - professional, compact */
+    /* Card Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -282,7 +300,7 @@
       transform: translateX(3px);
     }
     
-    /* Info Section - matches callout styling */
+    /* Info Section */
     .info-section {
       background: var(--accent-bg);
       border: 1px solid #bee3f8;
@@ -314,7 +332,7 @@
       margin: 0;
     }
     
-    /* Footer - matches documentation */
+    /* Footer */
     footer {
       background: var(--bg);
       border-top: 1px solid var(--border);
@@ -335,7 +353,7 @@
     }
     footer a:hover { text-decoration: underline; }
     
-    /* Iframe Overlay - matches documentation style */
+    /* Iframe Overlay with Minimal Close Button */
     .iframe-overlay {
       position: fixed;
       top: 0;
@@ -349,35 +367,45 @@
     }
     .iframe-header {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      padding: 0.65rem 1.5rem;
+      padding: 10px 16px;
       background: var(--accent);
-      color: #fff;
+      position: relative;
     }
     .iframe-title {
       font-family: 'Lato', sans-serif;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      color: #fff;
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
     }
-    .close-iframe {
+    .minimize-iframe {
       background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.35);
-      padding: 4px 14px;
-      border-radius: 4px;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
       cursor: pointer;
       font-family: 'Lato', sans-serif;
-      font-size: 0.75rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #fff;
-      transition: all 0.15s;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .close-iframe:hover {
-      background: rgba(255,255,255,0.32);
+    .minimize-iframe:hover {
+      background: rgba(255,255,255,0.35);
+      transform: scale(1.05);
     }
     iframe {
       width: 100%;
-      height: calc(100% - 50px);
+      height: calc(100% - 52px);
       border: none;
       background: var(--white);
     }
@@ -406,7 +434,7 @@
       transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Dark Theme - matches documentation dark mode */
+    /* Dark Theme */
     body.dark {
       --white: #1a1f2a;
       --bg: #1e2430;
@@ -475,6 +503,15 @@
         left: auto;
         min-width: 240px;
       }
+      .iframe-title {
+        font-size: 0.7rem;
+        left: 12px;
+      }
+      .minimize-iframe {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -482,15 +519,17 @@
 
 <header>
   <a class="logo" href="#">Shiny Open Source</a>
-  <nav class="header-nav">
-    <a href="https://github.com/mudassiribrahim12" target="_blank">GitHub</a>
+  <div class="header-right">
+    <div class="header-nav">
+      <a href="https://github.com/mudassiribrahim12" target="_blank">GitHub</a>
+    </div>
     <div class="search-wrapper">
       <i class="fas fa-search search-icon"></i>
-      <input type="text" id="searchInput" class="search-input" placeholder="Search documentation..." autocomplete="off">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search docs..." autocomplete="off">
       <button id="searchClear" class="search-clear" aria-label="Clear search">✕</button>
       <div id="searchResults" class="search-results"></div>
     </div>
-  </nav>
+  </div>
 </header>
 
 <div class="container">
@@ -505,64 +544,40 @@
     </div>
   </div>
 
-  <!-- Cards Grid - Professional compact cards -->
+  <!-- Cards Grid -->
   <div class="cards-grid" id="cardsGrid">
-    <!-- Data2SPSS Card -->
     <div class="doc-card" data-doc="Data2SPSS.html" data-title="Data2SPSS Documentation" data-name="Data2SPSS" data-keywords="spss conversion data convert statistics">
-      <div class="card-icon">
-        <i class="fas fa-exchange-alt"></i>
-      </div>
+      <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
       <h3>Data2SPSS</h3>
       <p>Convert data to SPSS with automatic value label preservation, variable cleaning, and encoding resolution.</p>
-      <div class="card-meta">
-        <span>Read Documentation</span>
-        <i class="fas fa-arrow-right"></i>
-      </div>
+      <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
     </div>
 
-    <!-- MedModr Card -->
     <div class="doc-card" data-doc="MedModr.html" data-title="MedModr Documentation" data-name="MedModr" data-keywords="mediation moderation serial conditional process lavaan path diagram">
-      <div class="card-icon">
-        <i class="fas fa-chart-line"></i>
-      </div>
+      <div class="card-icon"><i class="fas fa-chart-line"></i></div>
       <h3>MedModr</h3>
       <p>Mediation, moderation, serial mediation, and conditional process analysis with path diagrams.</p>
-      <div class="card-meta">
-        <span>Read Documentation</span>
-        <i class="fas fa-arrow-right"></i>
-      </div>
+      <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
     </div>
 
-    <!-- CATrend Analyzer Card -->
     <div class="doc-card" data-doc="CATrend Analyzer.html" data-title="CATrend Analyzer Documentation" data-name="CATrend Analyzer" data-keywords="cochran armitage trend test dose response crosstabulation">
-      <div class="card-icon">
-        <i class="fas fa-chart-bar"></i>
-      </div>
+      <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
       <h3>CATrend Analyzer</h3>
       <p>Cochran-Armitage trend test for dose-response relationships with raw data and crosstabulation modes.</p>
-      <div class="card-meta">
-        <span>Read Documentation</span>
-        <i class="fas fa-arrow-right"></i>
-      </div>
+      <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
     </div>
   </div>
 
-  <!-- Info Section -->
   <div class="info-section">
-    <div class="info-icon">
-      <i class="fas fa-info-circle"></i>
-    </div>
+    <div class="info-icon"><i class="fas fa-info-circle"></i></div>
     <div class="info-content">
       <h4>About These Tools</h4>
       <p>All applications are built with R-Shiny and are completely free to use. Each tool includes detailed documentation, installation guides, video tutorials, and example datasets. Click any card above to view the full documentation.</p>
     </div>
   </div>
 
-  <!-- Disclaimer Box -->
   <div class="info-section" id="disclaimerBox" style="background: var(--warn-bg); border-left-color: var(--warn-border); cursor: pointer;">
-    <div class="info-icon" style="color: var(--warn-border);">
-      <i class="fas fa-exclamation-triangle"></i>
-    </div>
+    <div class="info-icon" style="color: var(--warn-border);"><i class="fas fa-exclamation-triangle"></i></div>
     <div class="info-content">
       <h4 style="color: #b7770d;">Disclaimer</h4>
       <p>Example datasets provided are for practice and demonstration purposes only. They do not represent real-world data and are not from any organization or entity.</p>
@@ -579,11 +594,11 @@
   </div>
 </footer>
 
-<!-- Iframe Overlay -->
+<!-- Iframe Overlay with Minimal Close (Minus Sign) -->
 <div id="iframeContainer" class="iframe-overlay">
   <div class="iframe-header">
     <span class="iframe-title" id="iframeTitle">Documentation</span>
-    <button id="closeIframeBtn" class="close-iframe">✕ Close</button>
+    <button id="minimizeIframeBtn" class="minimize-iframe" aria-label="Close">−</button>
   </div>
   <iframe id="contentFrame" src="" title="Documentation Viewer"></iframe>
 </div>
@@ -602,7 +617,7 @@
   const loadingBar = document.getElementById('loadingBar');
   const iframeContainer = document.getElementById('iframeContainer');
   const contentFrame = document.getElementById('contentFrame');
-  const closeBtn = document.getElementById('closeIframeBtn');
+  const minimizeBtn = document.getElementById('minimizeIframeBtn');
   const iframeTitle = document.getElementById('iframeTitle');
   const disclaimerBox = document.getElementById('disclaimerBox');
   
@@ -678,18 +693,15 @@
     
     if (query === '') {
       searchResults.style.display = 'none';
-      // Show all cards
       cards.forEach(card => card.style.display = 'block');
       return;
     }
     
-    // Filter cards and show results dropdown
     const matches = docsData.filter(doc => {
       const searchableText = `${doc.name} ${doc.description} ${doc.keywords}`.toLowerCase();
       return searchableText.includes(query);
     });
     
-    // Also filter the actual cards visibility
     cards.forEach(card => {
       const cardName = card.getAttribute('data-name').toLowerCase();
       const cardDesc = card.querySelector('p').innerText.toLowerCase();
@@ -698,7 +710,6 @@
       card.style.display = matchesCard ? 'block' : 'none';
     });
     
-    // Build dropdown results
     if (matches.length === 0) {
       searchResults.innerHTML = '<div class="search-no-results">No matching documentation found</div>';
     } else {
@@ -709,7 +720,6 @@
         </div>
       `).join('');
       
-      // Add click handlers to search results
       document.querySelectorAll('.search-result-item').forEach(item => {
         item.addEventListener('click', () => {
           const path = item.getAttribute('data-path');
@@ -725,7 +735,6 @@
     searchResults.style.display = 'block';
   }
 
-  // Clear search
   function clearSearch() {
     searchInput.value = '';
     searchResults.style.display = 'none';
@@ -733,20 +742,17 @@
     searchInput.focus();
   }
 
-  // Close search results when clicking outside
+  const searchWrapper = document.querySelector('.search-wrapper');
   document.addEventListener('click', (e) => {
     if (!searchWrapper.contains(e.target)) {
       searchResults.style.display = 'none';
     }
   });
-
-  const searchWrapper = document.querySelector('.search-wrapper');
+  
   searchInput.addEventListener('input', performSearch);
   searchClear.addEventListener('click', clearSearch);
   searchInput.addEventListener('focus', () => {
-    if (searchInput.value.trim() !== '') {
-      performSearch();
-    }
+    if (searchInput.value.trim() !== '') performSearch();
   });
 
   // Card click handlers
@@ -754,27 +760,21 @@
     card.addEventListener('click', (e) => {
       const filePath = card.getAttribute('data-doc');
       const title = card.getAttribute('data-title');
-      if (filePath && title) {
-        openDocumentation(filePath, title);
-      }
+      if (filePath && title) openDocumentation(filePath, title);
     });
   });
 
-  // Close iframe
-  closeBtn.addEventListener('click', closeDocumentation);
+  // Close with minus sign button
+  minimizeBtn.addEventListener('click', closeDocumentation);
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && iframeContainer.style.display === 'flex') {
-      closeDocumentation();
-    }
+    if (e.key === 'Escape' && iframeContainer.style.display === 'flex') closeDocumentation();
   });
 
-  // Check if user has a theme preference from documentation pages
+  // Dark mode preference (no toggle on this page, but respects user preference)
   const savedTheme = localStorage.getItem('shiny-docs-theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark');
-  }
+  if (savedTheme === 'dark') document.body.classList.add('dark');
 
-  // Disclaimer auto-hide after 10 seconds
+  // Disclaimer auto-hide
   const disclaimerHidden = sessionStorage.getItem('disclaimerAutoHidden');
   if (disclaimerHidden === 'true') {
     disclaimerBox.style.display = 'none';
@@ -805,7 +805,7 @@
     });
   }
 
-  console.log('Documentation Hub — Search added after GitHub link');
+  console.log('Documentation Hub — Clean header, minus sign close button');
 </script>
 </body>
 </html>
