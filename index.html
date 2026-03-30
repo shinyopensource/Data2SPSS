@@ -28,7 +28,6 @@
       --warn-border: #f39c12;
       --code-bg: #f5f5f5;
       --header-h: 52px;
-      --back-btn-size: 44px;
     }
 
     body {
@@ -41,7 +40,6 @@
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
-    /* Fixed header (original) */
     header {
       position: fixed;
       top: 0;
@@ -94,7 +92,6 @@
       color: #fff;
     }
 
-    /* Search styles */
     .search-wrapper {
       display: flex;
       align-items: center;
@@ -195,7 +192,6 @@
       color: var(--muted);
     }
 
-    /* Main container */
     .container {
       padding-top: var(--header-h);
       min-height: 100vh;
@@ -283,6 +279,12 @@
       border-color: var(--accent);
     }
 
+    /* Hover underline for "Read Documentation" text */
+    .doc-card:hover .card-meta span {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .card-icon {
       width: 44px;
       height: 44px;
@@ -324,6 +326,10 @@
       color: var(--accent);
     }
 
+    .card-meta span {
+      transition: text-decoration 0.15s ease;
+    }
+
     .info-section {
       background: var(--accent-bg);
       border: 1px solid #bee3f8;
@@ -356,7 +362,6 @@
       text-decoration: none;
     }
 
-    /* Theme Toggle Button (footer) */
     .theme-toggle-btn {
       background: var(--accent);
       border: none;
@@ -381,7 +386,7 @@
       transform: scale(0.97);
     }
 
-    /* IFrame Overlay — fullscreen with back button matching header color */
+    /* Iframe Overlay & back button */
     .iframe-overlay {
       position: fixed;
       top: 0;
@@ -402,7 +407,7 @@
       display: block;
     }
 
-    /* BACK BUTTON — matches header color (accent) exactly */
+    /* Back button - matches header color (accent) */
     .back-home-btn {
       position: fixed;
       bottom: 28px;
@@ -455,7 +460,6 @@
       white-space: nowrap;
     }
 
-    /* Loading bar */
     .loading-bar-container {
       position: fixed;
       top: var(--header-h);
@@ -481,7 +485,7 @@
       transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* DARK THEME VARIABLES */
+    /* Dark theme overrides */
     body.dark {
       --white: #121826;
       --bg: #1a1f2c;
@@ -620,7 +624,7 @@
 </div>
 
 <footer>
-  <div>© 2025-<span id="currentYear"></span> Mudasir Mohammed Ibrahim · MIT License</div>
+  <div>© 2025-<span id="currentYear"></span> Site built by Mudasir Mohammed Ibrahim · MIT License</div>
   <div style="display: flex; align-items: center; gap: 16px;">
     <a href="https://github.com/mudassiribrahim30" target="_blank">GitHub</a> ·
     <a href="https://mudasiribrahim.vercel.app/" target="_blank">Portfolio</a> ·
@@ -631,7 +635,6 @@
   </div>
 </footer>
 
-<!-- Iframe Overlay: full-screen doc viewer, back button matching header -->
 <div id="iframeContainer" class="iframe-overlay">
   <iframe id="contentFrame" class="fullscreen-iframe" src="" title="Documentation Viewer"></iframe>
   <div id="floatingBackBtn" class="back-home-btn" aria-label="Go back to home">
@@ -646,7 +649,7 @@
 
 <script>
   (function() {
-    // Year
+    // Set current year
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 
     // DOM elements
@@ -658,7 +661,7 @@
     const backButton = document.getElementById('floatingBackBtn');
     const themeToggle = document.getElementById('darkModeToggle');
 
-    // Theme handling
+    // --- Theme handling: syncs across main page AND iframe content (if accessible)
     function setTheme(theme) {
       if (theme === 'dark') {
         document.body.classList.add('dark');
@@ -673,6 +676,22 @@
           themeToggle.innerHTML = '<i class="fas fa-moon"></i> <span>Dark</span>';
         }
       }
+      // Attempt to propagate theme to iframe if it's loaded and same origin (for demo documentation pages)
+      try {
+        const iframeDoc = contentFrame.contentDocument || contentFrame.contentWindow?.document;
+        if (iframeDoc && iframeDoc.body) {
+          if (theme === 'dark') {
+            iframeDoc.body.classList.add('dark');
+            // also try to set a data attribute or class for potential dark mode inside iframe
+            iframeDoc.body.style.backgroundColor = '#121826';
+            iframeDoc.body.style.color = '#eef2ff';
+          } else {
+            iframeDoc.body.classList.remove('dark');
+            iframeDoc.body.style.backgroundColor = '';
+            iframeDoc.body.style.color = '';
+          }
+        }
+      } catch(e) { /* cross-origin iframe cannot be styled, but theme toggle remains functional for main UI */ }
     }
 
     function toggleTheme() {
@@ -683,6 +702,7 @@
       }
     }
 
+    // Load saved theme
     const savedTheme = localStorage.getItem('shiny-docs-theme');
     if (savedTheme === 'dark') {
       setTheme('dark');
@@ -694,7 +714,7 @@
       themeToggle.addEventListener('click', toggleTheme);
     }
 
-    // Search elements and cards data
+    // --- Search and card logic
     const searchInput = document.getElementById('searchInput');
     const searchClear = document.getElementById('searchClear');
     const searchResults = document.getElementById('searchResults');
@@ -709,7 +729,6 @@
       docPath: card.getAttribute('data-doc')
     }));
 
-    // Loading simulation
     function animateLoading(duration = 4000) {
       return new Promise((resolve) => {
         loadingContainer.classList.add('active');
@@ -738,6 +757,27 @@
       await animateLoading(4000);
       iframeContainer.style.display = 'block';
       contentFrame.src = filePath;
+      
+      // When iframe loads, try to apply current theme to its content (if same origin)
+      contentFrame.onload = () => {
+        try {
+          const iframeDoc = contentFrame.contentDocument || contentFrame.contentWindow?.document;
+          if (iframeDoc && iframeDoc.body) {
+            const isDark = document.body.classList.contains('dark');
+            if (isDark) {
+              iframeDoc.body.classList.add('dark');
+              iframeDoc.body.style.backgroundColor = '#121826';
+              iframeDoc.body.style.color = '#eef2ff';
+              // optional: inject style for links
+            } else {
+              iframeDoc.body.classList.remove('dark');
+              iframeDoc.body.style.backgroundColor = '';
+              iframeDoc.body.style.color = '';
+            }
+          }
+        } catch(e) { /* cross-origin: silent */ }
+      };
+      
       contentFrame.onerror = () => {
         alert(`Could not load documentation: "${filePath}". Please ensure the file exists.`);
         closeDocumentation();
@@ -756,7 +796,7 @@
       });
     }
 
-    // Card click handlers
+    // Card click handler
     document.querySelectorAll('.doc-card').forEach(card => {
       card.addEventListener('click', (e) => {
         const filePath = card.getAttribute('data-doc');
@@ -764,7 +804,7 @@
       });
     });
 
-    // Search logic
+    // Search functionality
     function performSearch() {
       const query = searchInput.value.toLowerCase().trim();
       if (query === '') {
@@ -831,14 +871,14 @@
       if (searchInput.value.trim() !== '') performSearch();
     });
 
-    // ESC key to close documentation
+    // ESC key closes documentation overlay
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && iframeContainer.style.display === 'block') {
         closeDocumentation();
       }
     });
 
-    // Disclaimer auto-hide
+    // Disclaimer auto-hide (preserved)
     const disclaimerHidden = sessionStorage.getItem('disclaimerAutoHidden');
     if (disclaimerHidden === 'true') {
       if (disclaimerBox) disclaimerBox.style.display = 'none';
