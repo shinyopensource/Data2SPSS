@@ -32,6 +32,7 @@
     <meta name="googlebot" content="index, follow">
     
     <meta name="google-site-verification" content="wziTcVA66OowBWGGGHsar8ky99roP427M_3ZTu8x1sI" />
+
   <style>
     * {
       margin: 0;
@@ -52,8 +53,7 @@
       --accent-bg: #eaf4fb;
       --warn-bg: #fef9e7;
       --warn-border: #f39c12;
-      --code-bg: #f5f5f5;
-      --header-h: 52px;
+      --header-h: 56px;
     }
 
     body {
@@ -66,6 +66,7 @@
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
+    /* HEADER - DEFAULT BLUE */
     header {
       position: fixed;
       top: 0;
@@ -88,9 +89,12 @@
       font-size: 1.1rem;
       color: #fff;
       text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
     }
 
-    .header-right {
+    /* Desktop navigation (visible on large screens) */
+    .desktop-nav {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -170,54 +174,88 @@
       font-family: inherit;
     }
 
-    .search-clear:hover {
-      color: #fff;
-    }
-
-    .search-input:not(:placeholder-shown)~.search-clear {
-      display: block;
-    }
-
-    .search-results {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      margin-top: 8px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      min-width: 280px;
-      max-width: 320px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      z-index: 200;
+    /* Hamburger menu (mobile) */
+    .hamburger {
       display: none;
-      overflow: hidden;
-    }
-
-    .search-result-item {
-      padding: 10px 14px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
       cursor: pointer;
-      transition: background 0.15s;
-      border-bottom: 1px solid var(--border-light);
+      padding: 6px;
+      margin-left: auto;
+      z-index: 110;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      width: 100%;
+      background: var(--accent);
+      z-index: 99;
+      transform: translateY(-120%);
+      transition: transform 0.3s ease-in-out;
+      padding: 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .mobile-menu.open {
+      transform: translateY(0);
+    }
+
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .mobile-nav-links a {
       font-family: 'Lato', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.95);
+      text-decoration: none;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
     }
 
-    .search-result-item:hover {
-      background: var(--accent-bg);
+    .mobile-search {
+      width: 100%;
+      position: relative;
     }
 
-    .search-result-title {
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: var(--text);
-      margin-bottom: 2px;
+    .mobile-search .search-input {
+      width: 100%;
+      background: rgba(255,255,255,0.15);
     }
 
-    .search-result-desc {
-      font-size: 0.7rem;
-      color: var(--muted);
+    /* Hide desktop elements on mobile */
+    @media (max-width: 680px) {
+      .desktop-nav {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo {
+        font-size: 0.95rem;
+        white-space: normal;
+        line-height: 1.2;
+        max-width: 60%;
+      }
+      header {
+        padding: 0 16px;
+      }
     }
 
+    /* Main container and cards */
     .container {
       padding-top: var(--header-h);
       min-height: 100vh;
@@ -230,25 +268,22 @@
 
     .hero {
       text-align: center;
-      padding: 2.5rem 1rem 1.5rem;
+      padding: 2rem 1rem 1.5rem;
       border-bottom: 2px solid var(--border);
       margin-bottom: 2rem;
-      transition: border-color 0.2s;
     }
 
     .hero h1 {
       font-family: 'Lato', sans-serif;
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 700;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.2px;
       margin-bottom: 0.5rem;
     }
 
     .hero p {
       color: var(--muted);
-      font-size: 1rem;
-      max-width: 550px;
-      margin: 0 auto;
+      font-size: 0.95rem;
     }
 
     .badges {
@@ -267,21 +302,9 @@
       border-radius: 3px;
       text-transform: uppercase;
     }
-
-    .badge-blue {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .badge-green {
-      background: #27ae60;
-      color: #fff;
-    }
-
-    .badge-gray {
-      background: #666;
-      color: #fff;
-    }
+    .badge-blue { background: var(--accent); color: #fff; }
+    .badge-green { background: #27ae60; color: #fff; }
+    .badge-gray { background: #666; color: #fff; }
 
     .cards-grid {
       display: grid;
@@ -298,18 +321,11 @@
       transition: all 0.2s ease;
       cursor: pointer;
     }
-
     .doc-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
       border-color: var(--accent);
     }
-
-    .doc-card:hover .card-meta span {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
     .card-icon {
       width: 44px;
       height: 44px;
@@ -319,45 +335,15 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 0.9rem;
-      transition: background 0.2s;
     }
-
-    .card-icon i {
-      font-size: 22px;
-      color: var(--accent);
-    }
-
-    .doc-card h3 {
-      font-family: 'Lato', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-    }
-
-    .doc-card p {
-      color: var(--muted);
-      font-size: 0.8rem;
-      line-height: 1.5;
-      margin-bottom: 0.9rem;
-    }
-
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: 'Lato', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .card-meta span {
-      transition: text-decoration 0.15s ease;
-    }
+    .card-icon i { font-size: 22px; color: var(--accent); }
+    .doc-card h3 { font-family: 'Lato', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .doc-card p { color: var(--muted); font-size: 0.8rem; line-height: 1.5; margin-bottom: 0.9rem; }
+    .card-meta { display: flex; align-items: center; gap: 0.4rem; font-family: 'Lato', sans-serif; font-size: 0.72rem; font-weight: 700; color: var(--accent); }
+    .doc-card:hover .card-meta span { text-decoration: underline; }
 
     .info-section {
       background: var(--accent-bg);
-      border: 1px solid #bee3f8;
       border-left: 4px solid var(--accent);
       border-radius: 6px;
       padding: 1rem 1.25rem;
@@ -365,10 +351,9 @@
       display: flex;
       align-items: flex-start;
       gap: 0.75rem;
-      transition: background 0.2s, border-color 0.2s;
     }
 
-    /* Disclaimer section (outside footer, above footer) */
+    /* Disclaimer outside footer */
     .disclaimer-wrapper {
       max-width: 1000px;
       margin: 0 auto 1rem auto;
@@ -386,26 +371,11 @@
       font-size: 0.78rem;
       color: #ad7a1a;
       transition: all 0.2s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
-    body.dark .disclaimer-box {
-      background: #2e2a1f;
-      color: #f3cd81;
-    }
-    .disclaimer-box i {
-      font-size: 1.1rem;
-      color: var(--warn-border);
-      flex-shrink: 0;
-    }
-    .disclaimer-box strong {
-      font-weight: 700;
-      margin-right: 0.3rem;
-    }
-    .disclaimer-text {
-      line-height: 1.45;
-    }
+    .disclaimer-box i { font-size: 1.1rem; color: var(--warn-border); flex-shrink: 0; }
+    .disclaimer-text { line-height: 1.45; }
 
-    /* Footer with 3 columns */
+    /* Footer three columns */
     footer {
       background: var(--bg);
       border-top: 1px solid var(--border);
@@ -413,7 +383,6 @@
       font-family: 'Lato', sans-serif;
       font-size: 0.75rem;
       color: var(--light);
-      transition: background 0.2s, border-color 0.2s;
     }
     .footer-container {
       max-width: 1000px;
@@ -424,47 +393,16 @@
       flex-wrap: wrap;
       gap: 0.8rem 1rem;
     }
-    .footer-left {
-      flex: 1;
-      text-align: left;
-      font-weight: 500;
-    }
-    .footer-center {
-      flex: 1;
-      text-align: center;
-      font-weight: 500;
-      letter-spacing: 0.2px;
-    }
-    .footer-right {
-      flex: 1;
-      text-align: right;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .footer-links {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-    }
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-      transition: opacity 0.2s;
-    }
-    footer a:hover {
-      text-decoration: underline;
-      opacity: 0.85;
-    }
+    .footer-left { flex: 1; text-align: left; font-weight: 500; }
+    .footer-center { flex: 1; text-align: center; font-weight: 500; }
+    .footer-right { flex: 1; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 1rem; flex-wrap: wrap; }
+    .footer-links { display: flex; align-items: center; gap: 0.8rem; }
+    footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
     .theme-toggle-btn {
       background: var(--accent);
       border: none;
       color: white;
       font-size: 0.7rem;
-      font-family: 'Lato', sans-serif;
       font-weight: 600;
       padding: 4px 12px;
       border-radius: 30px;
@@ -472,18 +410,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    .theme-toggle-btn i {
-      font-size: 0.7rem;
-    }
-    .theme-toggle-btn:hover {
-      opacity: 0.9;
-      transform: scale(0.96);
     }
 
-    /* Iframe Overlay & back button */
+    /* Iframe overlay */
     .iframe-overlay {
       position: fixed;
       top: 0;
@@ -495,15 +424,7 @@
       display: none;
       overflow: hidden;
     }
-
-    .fullscreen-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: var(--white);
-      display: block;
-    }
-
+    .fullscreen-iframe { width: 100%; height: 100%; border: none; background: var(--white); }
     .back-home-btn {
       position: fixed;
       bottom: 28px;
@@ -520,40 +441,14 @@
       width: 44px;
       height: 44px;
       border: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      font-family: 'Lato', sans-serif;
-      font-weight: 500;
-      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       color: white;
     }
-
-    .back-home-btn i {
-      font-size: 1.35rem;
-      margin-right: 0;
-    }
-
-    .back-home-btn span {
-      display: none;
-    }
-
-    .back-home-btn:hover {
-      background: var(--accent-dark);
-      width: auto;
-      padding: 0 18px 0 14px;
-      gap: 8px;
-      transform: scale(1.02);
-    }
-
-    .back-home-btn:hover i {
-      margin-right: 6px;
-    }
-
-    .back-home-btn:hover span {
-      display: inline-block;
-      font-size: 0.85rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
+    .back-home-btn i { font-size: 1.35rem; }
+    .back-home-btn span { display: none; }
+    .back-home-btn:hover { background: var(--accent-dark); width: auto; padding: 0 18px 0 14px; gap: 8px; }
+    .back-home-btn:hover i { margin-right: 6px; }
+    .back-home-btn:hover span { display: inline-block; font-size: 0.85rem; white-space: nowrap; }
 
     .loading-bar-container {
       position: fixed;
@@ -567,25 +462,14 @@
       opacity: 0;
       transition: visibility 0s, opacity 0.2s ease;
     }
+    .loading-bar-container.active { visibility: visible; opacity: 1; }
+    .loading-bar { width: 0%; height: 100%; background: var(--accent); transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 
-    .loading-bar-container.active {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .loading-bar {
-      width: 0%;
-      height: 100%;
-      background: var(--accent);
-      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Dark theme overrides */
+    /* Dark mode overrides */
     body.dark {
       --white: #121826;
       --bg: #1a1f2c;
       --border: #2d3748;
-      --border-light: #2a2f3c;
       --text: #eef2ff;
       --muted: #b9c7d9;
       --light: #8d9bb0;
@@ -595,75 +479,19 @@
       --warn-bg: #2e2a1f;
       --warn-border: #e6b450;
     }
+    body.dark .doc-card { background: var(--bg); }
+    body.dark .card-icon { background: #2a3146; }
+    body.dark .search-results { background: var(--bg); border-color: var(--border); }
+    body.dark header { background: #1f6392; } /* slightly darker blue for dark mode but still blue family */
+    body.dark .mobile-menu { background: #1f6392; }
 
-    body.dark .doc-card {
-      background: var(--bg);
-      border-color: var(--border);
-    }
-    body.dark .card-icon {
-      background: #2a3146;
-    }
-    body.dark .info-section {
-      background: var(--accent-bg);
-      border-color: #2f405c;
-    }
-    body.dark .search-results {
-      background: var(--bg);
-      border-color: var(--border);
-    }
-    body.dark .iframe-overlay {
-      background: var(--white);
-    }
-    body.dark .back-home-btn {
-      background: var(--accent);
-      color: white;
-    }
-    body.dark .back-home-btn:hover {
-      background: var(--accent-dark);
-    }
-
-    @media (max-width: 900px) {
-      .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 720px) {
-      .footer-container {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.6rem;
-      }
-      .footer-left, .footer-center, .footer-right {
-        text-align: center;
-        justify-content: center;
-      }
-      .footer-right {
-        justify-content: center;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-      .back-home-btn {
-        bottom: 20px;
-        left: 20px;
-        width: 40px;
-        height: 40px;
-      }
-      .back-home-btn:hover {
-        width: auto;
-        padding: 0 14px 0 12px;
-      }
-      .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-      .disclaimer-wrapper {
-        padding: 0 1rem;
-      }
+    @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { 
+      .cards-grid { grid-template-columns: 1fr; }
+      .container { padding-left: 1rem; padding-right: 1rem; }
+      .disclaimer-wrapper { padding: 0 1rem; }
+      .footer-container { flex-direction: column; text-align: center; }
+      .footer-left, .footer-center, .footer-right { text-align: center; justify-content: center; }
     }
   </style>
 </head>
@@ -671,18 +499,36 @@
 
 <header>
   <a class="logo" href="#">Shiny Open Source</a>
-  <div class="header-right">
+  <!-- Desktop navigation -->
+  <div class="desktop-nav">
     <div class="header-nav">
       <a href="https://github.com/mudassiribrahim12" target="_blank">GitHub</a>
     </div>
     <div class="search-wrapper">
       <i class="fas fa-search search-icon"></i>
-      <input type="text" id="searchInput" class="search-input" placeholder="Search docs..." autocomplete="off">
-      <button id="searchClear" class="search-clear" aria-label="Clear search">✕</button>
-      <div id="searchResults" class="search-results"></div>
+      <input type="text" id="desktopSearchInput" class="search-input" placeholder="Search docs..." autocomplete="off">
+      <button class="search-clear desktop-clear" aria-label="Clear search">✕</button>
+      <div id="desktopSearchResults" class="search-results"></div>
     </div>
   </div>
+  <!-- Hamburger button (mobile) -->
+  <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+    <i class="fas fa-bars"></i>
+  </button>
 </header>
+
+<!-- Mobile Menu Panel -->
+<div id="mobileMenu" class="mobile-menu">
+  <div class="mobile-nav-links">
+    <a href="https://github.com/mudassiribrahim12" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+  </div>
+  <div class="mobile-search">
+    <i class="fas fa-search search-icon" style="left: 12px;"></i>
+    <input type="text" id="mobileSearchInput" class="search-input" placeholder="Search documentation..." autocomplete="off" style="width:100%; padding-left: 32px;">
+    <button class="search-clear mobile-clear" aria-label="Clear">✕</button>
+    <div id="mobileSearchResults" class="search-results" style="width:100%; max-width:100%;"></div>
+  </div>
+</div>
 
 <div class="container">
   <div class="hero">
@@ -702,14 +548,12 @@
       <p>Convert data to SPSS with automatic value label preservation, variable cleaning, and encoding resolution.</p>
       <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
     </div>
-
     <div class="doc-card" data-doc="MedModr.html" data-title="MedModr Documentation" data-name="MedModr" data-keywords="mediation moderation serial conditional process lavaan path diagram">
       <div class="card-icon"><i class="fas fa-chart-line"></i></div>
       <h3>MedModr</h3>
       <p>Mediation, moderation, serial mediation, and conditional process analysis with path diagrams.</p>
       <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
     </div>
-
     <div class="doc-card" data-doc="CATrend Analyzer.html" data-title="CATrend Analyzer Documentation" data-name="CATrend Analyzer" data-keywords="cochran armitage trend test dose response crosstabulation">
       <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
       <h3>CATrend Analyzer</h3>
@@ -727,9 +571,9 @@
   </div>
 </div>
 
-<!-- DISCLAIMER SECTION (outside footer, centered style but full-width wrapper) -->
+<!-- Disclaimer outside footer -->
 <div class="disclaimer-wrapper">
-  <div class="disclaimer-box" id="mainDisclaimer">
+  <div class="disclaimer-box">
     <i class="fas fa-database"></i>
     <div class="disclaimer-text">
       <strong>📊 Dataset disclaimer:</strong> Example datasets provided are for practice and demonstration purposes only. They do not represent real-world data and are not from any organization or entity. All sample data is synthetic and used solely to illustrate tool functionality.
@@ -737,111 +581,96 @@
   </div>
 </div>
 
-<!-- FOOTER: left (year) + center (Site built by Mudasir) + right (links + theme toggle) -->
+<!-- Footer with three columns -->
 <footer>
   <div class="footer-container">
-    <div class="footer-left">
-      © 2025-<span id="currentYear"></span>
-    </div>
-    <div class="footer-center">
-      Site built by Mudasir Mohammed Ibrahim
-    </div>
+    <div class="footer-left">© 2025-<span id="currentYear"></span></div>
+    <div class="footer-center">Site built by Mudasir Mohammed Ibrahim</div>
     <div class="footer-right">
       <div class="footer-links">
-        <a href="https://mudasiribrahim.vercel.app/" target="_blank">Developer website</a>
+        <a href="https://mudasiribrahim.vercel.app/" target="_blank">Portfolio</a>
         <a href="mailto:mudassiribrahim30@gmail.com">Contact</a>
       </div>
-      <button id="darkModeToggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
-        <i class="fas fa-moon"></i> <span>Dark</span>
-      </button>
+      <button id="darkModeToggle" class="theme-toggle-btn"><i class="fas fa-moon"></i> <span>Dark</span></button>
     </div>
   </div>
 </footer>
 
 <div id="iframeContainer" class="iframe-overlay">
   <iframe id="contentFrame" class="fullscreen-iframe" src="" title="Documentation Viewer"></iframe>
-  <div id="floatingBackBtn" class="back-home-btn" aria-label="Go back to home">
-    <i class="fas fa-arrow-left"></i>
-    <span>Home</span>
-  </div>
+  <div id="floatingBackBtn" class="back-home-btn"><i class="fas fa-arrow-left"></i><span>Home</span></div>
 </div>
-
-<div id="loadingBarContainer" class="loading-bar-container">
-  <div id="loadingBar" class="loading-bar"></div>
-</div>
+<div id="loadingBarContainer" class="loading-bar-container"><div id="loadingBar" class="loading-bar"></div></div>
 
 <script>
   (function() {
-    // Set current year in footer-left
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-    // DOM elements
+    // Shared state
     const loadingContainer = document.getElementById('loadingBarContainer');
     const loadingBar = document.getElementById('loadingBar');
     const iframeContainer = document.getElementById('iframeContainer');
     const contentFrame = document.getElementById('contentFrame');
     const backButton = document.getElementById('floatingBackBtn');
     const themeToggle = document.getElementById('darkModeToggle');
-
-    // Theme handling
-    function setTheme(theme) {
-      if (theme === 'dark') {
-        document.body.classList.add('dark');
-        localStorage.setItem('shiny-docs-theme', 'dark');
-        if (themeToggle) {
-          themeToggle.innerHTML = '<i class="fas fa-sun"></i> <span>Light</span>';
-        }
-      } else {
-        document.body.classList.remove('dark');
-        localStorage.setItem('shiny-docs-theme', 'light');
-        if (themeToggle) {
-          themeToggle.innerHTML = '<i class="fas fa-moon"></i> <span>Dark</span>';
-        }
-      }
-      try {
-        const iframeDoc = contentFrame.contentDocument || contentFrame.contentWindow?.document;
-        if (iframeDoc && iframeDoc.body) {
-          if (theme === 'dark') {
-            iframeDoc.body.classList.add('dark');
-            iframeDoc.body.style.backgroundColor = '#121826';
-            iframeDoc.body.style.color = '#eef2ff';
-          } else {
-            iframeDoc.body.classList.remove('dark');
-            iframeDoc.body.style.backgroundColor = '';
-            iframeDoc.body.style.color = '';
-          }
-        }
-      } catch(e) { /* cross-origin */ }
-    }
-
-    function toggleTheme() {
-      if (document.body.classList.contains('dark')) {
-        setTheme('light');
-      } else {
-        setTheme('dark');
-      }
-    }
-
-    const savedTheme = localStorage.getItem('shiny-docs-theme');
-    if (savedTheme === 'dark') setTheme('dark');
-    else setTheme('light');
-
-    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-
-    // Search and cards logic
-    const searchInput = document.getElementById('searchInput');
-    const searchClear = document.getElementById('searchClear');
-    const searchResults = document.getElementById('searchResults');
     const cards = document.querySelectorAll('.doc-card');
-
+    
+    // Gather docs data
     const docsData = Array.from(cards).map(card => ({
       element: card,
       name: card.getAttribute('data-name'),
-      title: card.getAttribute('data-title'),
       description: card.querySelector('p').innerText,
       keywords: card.getAttribute('data-keywords'),
       docPath: card.getAttribute('data-doc')
     }));
+
+    // Helper: filter cards and return matches
+    function filterCardsAndGetMatches(query) {
+      const lowerQuery = query.toLowerCase().trim();
+      let matches = [];
+      cards.forEach(card => {
+        const name = card.getAttribute('data-name').toLowerCase();
+        const desc = card.querySelector('p').innerText.toLowerCase();
+        const keywords = card.getAttribute('data-keywords').toLowerCase();
+        const match = name.includes(lowerQuery) || desc.includes(lowerQuery) || keywords.includes(lowerQuery);
+        card.style.display = match ? 'block' : 'none';
+        if (match) matches.push(card);
+      });
+      return docsData.filter(doc => {
+        const searchable = `${doc.name} ${doc.description} ${doc.keywords}`.toLowerCase();
+        return searchable.includes(lowerQuery);
+      });
+    }
+
+    function renderSearchResults(resultsContainer, matches, isMobile = false) {
+      if (!resultsContainer) return;
+      if (matches.length === 0) {
+        resultsContainer.innerHTML = '<div class="search-no-results" style="padding:10px; text-align:center;">No matching documentation found</div>';
+      } else {
+        resultsContainer.innerHTML = matches.map(match => `
+          <div class="search-result-item" data-path="${escapeHtml(match.docPath)}">
+            <div class="search-result-title">${escapeHtml(match.name)}</div>
+            <div class="search-result-desc">${escapeHtml(match.description.substring(0, 80))}${match.description.length > 80 ? '...' : ''}</div>
+          </div>
+        `).join('');
+        resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const path = item.getAttribute('data-path');
+            openDocumentation(path);
+            if (isMobile) {
+              document.getElementById('mobileMenu').classList.remove('open');
+            }
+            // Clear search inputs
+            if (desktopSearchInput) desktopSearchInput.value = '';
+            if (mobileSearchInput) mobileSearchInput.value = '';
+            cards.forEach(c => c.style.display = 'block');
+            if (desktopSearchResults) desktopSearchResults.style.display = 'none';
+            if (mobileSearchResults) mobileSearchResults.style.display = 'none';
+          });
+        });
+      }
+      resultsContainer.style.display = 'block';
+    }
 
     function animateLoading(duration = 4000) {
       return new Promise((resolve) => {
@@ -853,9 +682,8 @@
           const progress = Math.min(1, elapsed / duration);
           const eased = 1 - Math.pow(1 - progress, 2);
           loadingBar.style.width = (eased * 100) + '%';
-          if (progress < 1) {
-            requestAnimationFrame(update);
-          } else {
+          if (progress < 1) requestAnimationFrame(update);
+          else {
             setTimeout(() => {
               loadingContainer.classList.remove('active');
               loadingBar.style.width = '0%';
@@ -886,107 +714,84 @@
               iframeDoc.body.style.color = '';
             }
           }
-        } catch(e) { }
+        } catch(e) {}
       };
-      contentFrame.onerror = () => {
-        alert(`Could not load documentation: "${filePath}". Please ensure the file exists.`);
-        closeDocumentation();
-      };
+      contentFrame.onerror = () => { alert(`Cannot load "${filePath}".`); closeDocumentation(); };
     }
 
     function closeDocumentation() {
       contentFrame.src = '';
       iframeContainer.style.display = 'none';
     }
+    if (backButton) backButton.addEventListener('click', closeDocumentation);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && iframeContainer.style.display === 'block') closeDocumentation(); });
+    cards.forEach(card => card.addEventListener('click', () => { const path = card.getAttribute('data-doc'); if (path) openDocumentation(path); }));
 
-    if (backButton) {
-      backButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeDocumentation();
-      });
-    }
-
-    document.querySelectorAll('.doc-card').forEach(card => {
-      card.addEventListener('click', (e) => {
-        const filePath = card.getAttribute('data-doc');
-        if (filePath) openDocumentation(filePath);
-      });
-    });
-
-    // Search
-    function performSearch() {
-      const query = searchInput.value.toLowerCase().trim();
-      if (query === '') {
-        searchResults.style.display = 'none';
-        cards.forEach(card => card.style.display = 'block');
-        return;
-      }
-      cards.forEach(card => {
-        const cardName = card.getAttribute('data-name').toLowerCase();
-        const cardDesc = card.querySelector('p').innerText.toLowerCase();
-        const cardKeywords = card.getAttribute('data-keywords').toLowerCase();
-        const matches = cardName.includes(query) || cardDesc.includes(query) || cardKeywords.includes(query);
-        card.style.display = matches ? 'block' : 'none';
-      });
-      const matches = docsData.filter(doc => {
-        const searchableText = `${doc.name} ${doc.description} ${doc.keywords}`.toLowerCase();
-        return searchableText.includes(query);
-      });
-      if (matches.length === 0) {
-        searchResults.innerHTML = '<div class="search-no-results" style="padding:10px; text-align:center;">No matching documentation found</div>';
+    // Theme handling (default blue header, keep accent)
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+        localStorage.setItem('shiny-docs-theme', 'dark');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i> <span>Light</span>';
       } else {
-        searchResults.innerHTML = matches.map(match => `
-          <div class="search-result-item" data-path="${escapeHtml(match.docPath)}">
-            <div class="search-result-title">${escapeHtml(match.name)}</div>
-            <div class="search-result-desc">${escapeHtml(match.description.substring(0, 80))}${match.description.length > 80 ? '...' : ''}</div>
-          </div>
-        `).join('');
-        document.querySelectorAll('.search-result-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const path = item.getAttribute('data-path');
-            openDocumentation(path);
-            searchResults.style.display = 'none';
-            searchInput.value = '';
-            cards.forEach(card => card.style.display = 'block');
-          });
-        });
+        document.body.classList.remove('dark');
+        localStorage.setItem('shiny-docs-theme', 'light');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i> <span>Dark</span>';
       }
-      searchResults.style.display = 'block';
+      try {
+        const iframeDoc = contentFrame.contentDocument || contentFrame.contentWindow?.document;
+        if (iframeDoc?.body) {
+          if (theme === 'dark') { iframeDoc.body.classList.add('dark'); iframeDoc.body.style.backgroundColor = '#121826'; iframeDoc.body.style.color = '#eef2ff'; }
+          else { iframeDoc.body.classList.remove('dark'); iframeDoc.body.style.backgroundColor = ''; iframeDoc.body.style.color = ''; }
+        }
+      } catch(e) {}
     }
+    const savedTheme = localStorage.getItem('shiny-docs-theme');
+    setTheme(savedTheme === 'dark' ? 'dark' : 'light');
+    themeToggle.addEventListener('click', () => setTheme(document.body.classList.contains('dark') ? 'light' : 'dark'));
 
-    function clearSearch() {
-      searchInput.value = '';
-      searchResults.style.display = 'none';
-      cards.forEach(card => card.style.display = 'block');
-      searchInput.focus();
+    // Desktop search
+    const desktopSearchInput = document.getElementById('desktopSearchInput');
+    const desktopSearchResults = document.getElementById('desktopSearchResults');
+    const desktopClear = document.querySelector('.desktop-clear');
+    function performDesktopSearch() {
+      const query = desktopSearchInput.value;
+      if (!query.trim()) { desktopSearchResults.style.display = 'none'; cards.forEach(c => c.style.display = 'block'); return; }
+      const matches = filterCardsAndGetMatches(query);
+      renderSearchResults(desktopSearchResults, matches, false);
     }
+    desktopSearchInput.addEventListener('input', performDesktopSearch);
+    if (desktopClear) desktopClear.addEventListener('click', () => { desktopSearchInput.value = ''; cards.forEach(c => c.style.display = 'block'); desktopSearchResults.style.display = 'none'; desktopSearchInput.focus(); });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.search-wrapper') && desktopSearchResults) desktopSearchResults.style.display = 'none'; });
 
-    function escapeHtml(str) {
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
+    // Mobile search
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const mobileSearchResults = document.getElementById('mobileSearchResults');
+    const mobileClear = document.querySelector('.mobile-clear');
+    function performMobileSearch() {
+      const query = mobileSearchInput.value;
+      if (!query.trim()) { mobileSearchResults.style.display = 'none'; cards.forEach(c => c.style.display = 'block'); return; }
+      const matches = filterCardsAndGetMatches(query);
+      renderSearchResults(mobileSearchResults, matches, true);
     }
+    mobileSearchInput.addEventListener('input', performMobileSearch);
+    if (mobileClear) mobileClear.addEventListener('click', () => { mobileSearchInput.value = ''; cards.forEach(c => c.style.display = 'block'); mobileSearchResults.style.display = 'none'; mobileSearchInput.focus(); });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.mobile-search') && mobileSearchResults) mobileSearchResults.style.display = 'none'; });
 
-    const searchWrapper = document.querySelector('.search-wrapper');
+    // Hamburger toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburgerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mobileMenu.classList.toggle('open');
+    });
     document.addEventListener('click', (e) => {
-      if (!searchWrapper.contains(e.target)) searchResults.style.display = 'none';
-    });
-    searchInput.addEventListener('input', performSearch);
-    searchClear.addEventListener('click', clearSearch);
-    searchInput.addEventListener('focus', () => {
-      if (searchInput.value.trim() !== '') performSearch();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && iframeContainer.style.display === 'block') {
-        closeDocumentation();
+      if (!mobileMenu.contains(e.target) && !hamburgerBtn.contains(e.target) && mobileMenu.classList.contains('open')) {
+        mobileMenu.classList.remove('open');
       }
     });
-
-    // Optional auto-fade for disclaimer? not needed, stays visible.
+    
+    function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
   })();
 </script>
 </body>
