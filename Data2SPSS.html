@@ -478,31 +478,35 @@
       <p>The app opens in the RStudio viewer pane. Click <strong>Open in Browser</strong> for the best experience.</p>
     </section>
 
-    <section id="deployment">
-      <h2>Deployment</h2>
-      <p>Deploy your own instance to shinyapps.io or any compatible hosting platform using the <code>rsconnect</code> package.</p>
-      <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this, 'code-deploy')">Copy</button>
-<pre id="code-deploy"><code><span class="cc"># Install rsconnect</span>
+ <section id="deployment">
+    <h2>Deployment</h2>
+    <p>Deploy your own instance to shinyapps.io or any compatible hosting platform using the <code>rsconnect</code> package.</p>
+<pre><code><span class="cc"># Install rsconnect</span>
 <span class="cf">install.packages</span>(<span class="cs">"rsconnect"</span>)
 
 <span class="cc"># Deploy — replace with actual path to your app folder</span>
 rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/Data2SPSS"</span>)</code></pre>
-      </div>
-    </section>
+    <div class="callout warn">
+      <div class="callout-title">⚠️ Note</div>
+      <p>Replace <code>"path/to/Data2SPSS"</code> with the actual folder path containing your <code>app.R</code> file, e.g. <code>"C:/Users/YourName/Desktop/Data2SPSS"</code>.</p>
+    </div>
+  </section>
 
-    <hr class="section-hr" />
+   <hr class="section-hr" />
 
-    <section id="workflow">
-      <h2>Basic Workflow</h2>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Open the application</strong><p>Launch via the live URL or local instance.</p></div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Navigate to the Data Converter tab</strong><p>This is the main conversion workspace.</p></div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Upload your data file</strong><p>Click <strong>Choose Data File</strong> and select your source file.</p></div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Click "Convert to SPSS format"</strong><p>The app processes and transforms your data automatically.</p></div></div>
-        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Download your SPSS file</strong><p>Enter a filename and click <strong>Download SPSS File</strong>.</p></div></div>
-      </div>
-    </section>
+  <section id="workflow">
+    <h2>Basic Workflow</h2>
+    <p>Follow these steps inside the Data2SPSS application to convert your data to SPSS format.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Open the application</strong><p>Launch via the live URL or your local RStudio instance.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Navigate to the Data Converter tab</strong><p>This is the main conversion workspace.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Upload your data file</strong><p>Click <strong>Choose Data File</strong> and select any supported input format.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Review the preview panels</strong><p><strong>Data Preview</strong> — first rows of the dataset. <strong>Data Structure</strong> — variable types and unique values. <strong>Variable Analysis</strong> — how each variable will be processed.</p></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Click "Convert to SPSS format"</strong><p>The app processes and transforms your data automatically.</p></div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Review the SPSS Metadata panel</strong><p>Confirm variable names, labels, and value labels look correct.</p></div></div>
+      <div class="step"><div class="step-num">7</div><div class="step-body"><strong>Download your SPSS file</strong><p>Enter a filename and click <strong>Download SPSS File</strong>.</p></div></div>
+    </div>
+  </section>
 
     <section id="spss-steps">
       <h2>Final Steps in SPSS</h2>
@@ -510,7 +514,7 @@ rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/Data2SPSS
       
       <div class="callout warn">
         <div class="callout-title">⚠️ Important</div>
-        <p>Data2SPSS cannot automatically distinguish <strong>nominal</strong> from <strong>ordinal</strong> variables. You must adjust the Measure type manually in SPSS Variable View — otherwise SPSS may treat categorical variables as continuous numbers, producing incorrect results.</p>
+        <p>Data2SPSS automatically sets categorical variables’ measure to <strong>scale</strong>. You must adjust the measure type manually to nominal or ordinal in SPSS Variable View — otherwise SPSS may treat categorical variables as continuous numbers, producing incorrect results.</p>
       </div>
 
       <h3>How to Set the Measure Type</h3>
@@ -528,43 +532,58 @@ rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/Data2SPSS
       </div>
     </section>
 
-    <section id="export">
-      <h2>Export to Other Formats</h2>
-      <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Load your data</strong><p>Upload your file in the <strong>Data Converter</strong> tab.</p></div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Go to the Export tab</strong><p>Navigate to <strong>Export to Other Formats</strong>.</p></div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Download</strong><p>Select format (Stata, SAS, Excel, etc.) and click <strong>Download Converted File</strong>.</p></div></div>
-      </div>
-    </section>
+  <section id="export">
+    <h2>Export to Other Formats</h2>
+    <p>Beyond SPSS, Data2SPSS can convert your data into many other statistical formats from the same interface.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Load your data</strong><p>Upload your file in the <strong>Data Converter</strong> tab.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Go to the Export tab</strong><p>Navigate to <strong>Export to Other Formats</strong>.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Select your output format</strong><p>Choose from CSV, Excel, Stata, RData, SAS (<code>.sas7bdat</code>, <code>.xpt</code>), TSV, or TXT.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Download</strong><p>Preview the conversion, enter a filename, and click <strong>Download Converted File</strong>.</p></div></div>
+    </div>
+  </section>
 
     <hr class="section-hr" />
 
     <section id="how-it-works">
-      <h2>How It Works</h2>
-      <h3>Variable Name Cleaning</h3>
-      <table>
-        <thead><tr><th>Issue</th><th>Action Taken</th></tr></thead>
-        <tbody>
-          <tr><td>Spaces</td><td>Removed entirely</td></tr>
-          <tr><td>Special characters</td><td>Eliminated</td></tr>
-          <tr><td>Starts with number</td><td>Prefixed with a letter</td></tr>
-        </tbody>
-      </table>
-      <h3>Built With</h3>
-      <div class="pkg-grid">
-        <span class="pkg">shiny</span><span class="pkg">haven</span><span class="pkg">rio</span><span class="pkg">dplyr</span><span class="pkg">labelled</span>
-      </div>
-    </section>
+    <h2>How It Works</h2>
+    <h3>Variable Name Cleaning</h3>
+    <p>Variable names are automatically cleaned to comply with SPSS naming requirements:</p>
+    <table>
+      <thead><tr><th>Issue</th><th>Action Taken</th></tr></thead>
+      <tbody>
+        <tr><td>Spaces</td><td>Removed entirely</td></tr>
+        <tr><td>Special characters</td><td>Eliminated</td></tr>
+        <tr><td>Names longer than 64 characters</td><td>Truncated</td></tr>
+        <tr><td>Names starting with a number</td><td>Prefixed with a letter</td></tr>
+        <tr><td>Duplicate variable names</td><td>Made unique by appending numbers</td></tr>
+      </tbody>
+    </table>
+    <h3>Value Label Assignment</h3>
+    <p>The application automatically detects categorical variables and generates value labels, preserving the semantic meaning of coded values when the file is opened in SPSS.</p>
+    <h3>Built With</h3>
+    <p>Data2SPSS is built on the following R packages. Special thanks to the developers and maintainers of these packages for making data conversion in R robust and accessible.</p>
+    <div class="pkg-grid">
+      <span class="pkg">shiny</span><span class="pkg">shinythemes</span><span class="pkg">readxl</span>
+      <span class="pkg">readr</span><span class="pkg">haven</span><span class="pkg">foreign</span>
+      <span class="pkg">rio</span><span class="pkg">DT</span><span class="pkg">dplyr</span>
+      <span class="pkg">labelled</span><span class="pkg">purrr</span><span class="pkg">shinyjs</span>
+      <span class="pkg">writexl</span>
+    </div>
+  </section>
 
-    <hr class="section-hr" />
+   <hr class="section-hr" />
 
-    <section id="limitations">
-      <h2>Limitations</h2>
-      <div class="limit-list">
-        <div class="limit-item"><div class="licon">📏</div><div><strong>Nominal vs. Ordinal Not Distinguished</strong><p>User must adjust measure types manually in SPSS after import.</p></div></div>
-        <div class="limit-item"><div class="licon">❓</div><div><strong>Missing Value Definitions</strong><p>User-defined missing value codes are not carried over.</p></div></div>
-      </div>
-    </section>
+  <section id="limitations">
+    <h2>Limitations</h2>
+    <p>The following known limitations apply to the current version of Data2SPSS:</p>
+    <div class="limit-list">
+      <div class="limit-item"><div class="licon">📏</div><div><strong>Nominal vs. Ordinal Not Distinguished</strong><p>The tool does not automatically distinguish nominal from ordinal categorical variables. Users must adjust measure types manually in SPSS Variable View after import.</p></div></div>
+      <div class="limit-item"><div class="licon">❓</div><div><strong>Missing Value Definitions Not Propagated</strong><p>User-defined missing value codes from source files are not carried over. These should be defined in SPSS after import.</p></div></div>
+      <div class="limit-item"><div class="licon">⚡</div><div><strong>Performance Depends on System Resources</strong><p>Very large datasets may require longer processing times depending on available memory and CPU.</p></div></div>
+      <div class="limit-item"><div class="licon">🌐</div><div><strong>Internet Required for Web Version</strong><p>The hosted version requires an active internet connection. For offline use, install and run the app locally.</p></div></div>
+    </div>
+  </section>
 
     <hr class="section-hr" />
 
@@ -589,20 +608,23 @@ rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/Data2SPSS
       </div>
     </section>
 
-    <hr class="section-hr" />
+  <hr class="section-hr" />
 
-    <section id="citation">
-      <h2>Citation</h2>
-      <div class="citation-block" id="cite-block">@software{Ibrahim_Data2SPSS_2025,
+  <section id="citation">
+    <h2>Citation</h2>
+    <p>If you use Data2SPSS in your research, please cite it as follows:</p>
+    <div class="citation-block" id="cite-block">@software{Ibrahim_Data2SPSS_2025,
   author = {Ibrahim, Mudasir Mohammed},
-  title  = {Data2SPSS: An interactive R-Shiny web application},
+  title  = {Data2SPSS: An interactive R-Shiny web
+            application for converting data files
+            to SPSS and other formats},
   year   = {2025},
   url    = {https://github.com/mudassiribrahim12/Data2SPSS}
-}<button class="copy-btn" onclick="copyCode(this, 'cite-block')">Copy</button></div>
-    </section>
+}<button class="copy-btn" onclick="copyCite()">Copy</button></div>
+  </section>
 
 <section id="contact">
-      <h2>Contact &amp; Author</h2>
+      <h2>Developer Information</h2>
       <div class="author-card">
         <div class="author-avatar">MI</div>
         <div class="author-info">
@@ -623,9 +645,9 @@ rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/Data2SPSS
 </div>
 
 <footer>
-  <div>© 2025 Mudasir Mohammed Ibrahim · MIT License</div>
+  <div>© 2025-Present Mudasir Mohammed Ibrahim · MIT License</div>
   <div>
-    <a href="https://github.com/mudassiribrahim12/Data2SPSS" target="_blank">GitHub</a> ·
+    <a href="https://github.com/mudassiribrahim30" target="_blank">GitHub</a> ·
     <a href="mailto:mudassiribrahim30@gmail.com">Contact</a>
   </div>
 </footer>
