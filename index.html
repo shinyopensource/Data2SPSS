@@ -3,9 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Shiny Open Source | Documentation Hub</title>
+  <title>Shiny Open Source - Documentation Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <meta name="title" content="Shiny Open Source Documentation">
+    <meta name="description" content="Comprehensive documentation hub for Shiny open-source applications developed by Mudasir Mohammed Ibrahim">
+    <meta name="theme-color" content="#1a56db">
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <link rel="icon" href="https://raw.githubusercontent.com/shinyopensource/documentation/main/favicon-32x32.png" type="image/png">
+    <link itemprop="image" href="https://raw.githubusercontent.com/shinyopensource/documentation/main/favicon-32x32.png">
+    <meta property="og:logo" content="https://raw.githubusercontent.com/shinyopensource/documentation/main/favicon-32x32.png">
+    <meta name="twitter:logo" content="https://raw.githubusercontent.com/shinyopensource/documentation/main/favicon-32x32.png">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/shinyopensource/documentation/main/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/shinyopensource/documentation/main/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/shinyopensource/documentation/main/favicon-16x16.png">
+    <link rel="manifest" href="https://raw.githubusercontent.com/shinyopensource/documentation/main/site.webmanifest">
+    
+    <link rel="canonical" href="https://shinyopensource.github.io/documentation/">
+    
+    <meta name="author" content="Shiny Open Source Documentation">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    
+    <meta name="google-site-verification" content="wziTcVA66OowBWGGGHsar8ky99roP427M_3ZTu8x1sI" />
   <style>
     * {
       margin: 0;
@@ -199,7 +225,7 @@
       margin: 0 auto;
       padding-left: 2rem;
       padding-right: 2rem;
-      padding-bottom: 3rem;
+      padding-bottom: 2rem;
     }
 
     .hero {
@@ -279,7 +305,6 @@
       border-color: var(--accent);
     }
 
-    /* Hover underline for "Read Documentation" text */
     .doc-card:hover .card-meta span {
       text-decoration: underline;
       text-underline-offset: 3px;
@@ -343,47 +368,119 @@
       transition: background 0.2s, border-color 0.2s;
     }
 
+    /* Disclaimer section (outside footer, above footer) */
+    .disclaimer-wrapper {
+      max-width: 1000px;
+      margin: 0 auto 1rem auto;
+      padding: 0 2rem;
+    }
+    .disclaimer-box {
+      background: var(--warn-bg);
+      border-left: 4px solid var(--warn-border);
+      border-radius: 10px;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.78rem;
+      color: #ad7a1a;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    body.dark .disclaimer-box {
+      background: #2e2a1f;
+      color: #f3cd81;
+    }
+    .disclaimer-box i {
+      font-size: 1.1rem;
+      color: var(--warn-border);
+      flex-shrink: 0;
+    }
+    .disclaimer-box strong {
+      font-weight: 700;
+      margin-right: 0.3rem;
+    }
+    .disclaimer-text {
+      line-height: 1.45;
+    }
+
+    /* Footer with 3 columns */
     footer {
       background: var(--bg);
       border-top: 1px solid var(--border);
-      padding: 1.25rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      padding: 1rem 2rem;
       font-family: 'Lato', sans-serif;
       font-size: 0.75rem;
       color: var(--light);
       transition: background 0.2s, border-color 0.2s;
     }
-
+    .footer-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem 1rem;
+    }
+    .footer-left {
+      flex: 1;
+      text-align: left;
+      font-weight: 500;
+    }
+    .footer-center {
+      flex: 1;
+      text-align: center;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    .footer-right {
+      flex: 1;
+      text-align: right;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
     footer a {
       color: var(--accent);
       text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
     }
-
+    footer a:hover {
+      text-decoration: underline;
+      opacity: 0.85;
+    }
     .theme-toggle-btn {
       background: var(--accent);
       border: none;
       color: white;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-family: 'Lato', sans-serif;
       font-weight: 600;
-      padding: 5px 12px;
+      padding: 4px 12px;
       border-radius: 30px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       transition: all 0.2s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
     .theme-toggle-btn i {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
     .theme-toggle-btn:hover {
       opacity: 0.9;
-      transform: scale(0.97);
+      transform: scale(0.96);
     }
 
     /* Iframe Overlay & back button */
@@ -407,7 +504,6 @@
       display: block;
     }
 
-    /* Back button - matches header color (accent) */
     .back-home-btn {
       position: fixed;
       bottom: 28px;
@@ -456,7 +552,6 @@
       display: inline-block;
       font-size: 0.85rem;
       font-weight: 500;
-      letter-spacing: 0.3px;
       white-space: nowrap;
     }
 
@@ -533,6 +628,21 @@
       }
     }
 
+    @media (max-width: 720px) {
+      .footer-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.6rem;
+      }
+      .footer-left, .footer-center, .footer-right {
+        text-align: center;
+        justify-content: center;
+      }
+      .footer-right {
+        justify-content: center;
+      }
+    }
+
     @media (max-width: 640px) {
       .cards-grid {
         grid-template-columns: 1fr;
@@ -547,10 +657,12 @@
         width: auto;
         padding: 0 14px 0 12px;
       }
-      footer {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .disclaimer-wrapper {
+        padding: 0 1rem;
       }
     }
   </style>
@@ -613,25 +725,36 @@
       <p>All applications are built with R-Shiny and are completely free to use. Each tool includes detailed documentation, installation guides, video tutorials, and example datasets. Click any card above to view the full documentation.</p>
     </div>
   </div>
+</div>
 
-  <div class="info-section" id="disclaimerBox" style="background: var(--warn-bg); border-left-color: var(--warn-border); cursor: pointer;">
-    <div class="info-icon" style="color: var(--warn-border);"><i class="fas fa-exclamation-triangle"></i></div>
-    <div class="info-content">
-      <h4 style="color: #b7770d;">Disclaimer</h4>
-      <p>Example datasets provided are for practice and demonstration purposes only. They do not represent real-world data and are not from any organization or entity.</p>
+<!-- DISCLAIMER SECTION (outside footer, centered style but full-width wrapper) -->
+<div class="disclaimer-wrapper">
+  <div class="disclaimer-box" id="mainDisclaimer">
+    <i class="fas fa-database"></i>
+    <div class="disclaimer-text">
+      <strong>📊 Dataset disclaimer:</strong> Example datasets provided are for practice and demonstration purposes only. They do not represent real-world data and are not from any organization or entity. All sample data is synthetic and used solely to illustrate tool functionality.
     </div>
   </div>
 </div>
 
+<!-- FOOTER: left (year) + center (Site built by Mudasir) + right (links + theme toggle) -->
 <footer>
-  <div>© 2025-<span id="currentYear"></span> Site built by Mudasir Mohammed Ibrahim · MIT License</div>
-  <div style="display: flex; align-items: center; gap: 16px;">
-    <a href="https://github.com/mudassiribrahim30" target="_blank">GitHub</a> ·
-    <a href="https://mudasiribrahim.vercel.app/" target="_blank">Portfolio</a> ·
-    <a href="mailto:mudassiribrahim30@gmail.com">Contact</a>
-    <button id="darkModeToggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
-      <i class="fas fa-moon"></i> <span>Dark</span>
-    </button>
+  <div class="footer-container">
+    <div class="footer-left">
+      © 2025-<span id="currentYear"></span>
+    </div>
+    <div class="footer-center">
+      Site built by Mudasir Mohammed Ibrahim
+    </div>
+    <div class="footer-right">
+      <div class="footer-links">
+        <a href="https://mudasiribrahim.vercel.app/" target="_blank">Developer website</a>
+        <a href="mailto:mudassiribrahim30@gmail.com">Contact</a>
+      </div>
+      <button id="darkModeToggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i> <span>Dark</span>
+      </button>
+    </div>
   </div>
 </footer>
 
@@ -649,7 +772,7 @@
 
 <script>
   (function() {
-    // Set current year
+    // Set current year in footer-left
     document.getElementById('currentYear').textContent = new Date().getFullYear();
 
     // DOM elements
@@ -657,11 +780,10 @@
     const loadingBar = document.getElementById('loadingBar');
     const iframeContainer = document.getElementById('iframeContainer');
     const contentFrame = document.getElementById('contentFrame');
-    const disclaimerBox = document.getElementById('disclaimerBox');
     const backButton = document.getElementById('floatingBackBtn');
     const themeToggle = document.getElementById('darkModeToggle');
 
-    // --- Theme handling: syncs across main page AND iframe content (if accessible)
+    // Theme handling
     function setTheme(theme) {
       if (theme === 'dark') {
         document.body.classList.add('dark');
@@ -676,13 +798,11 @@
           themeToggle.innerHTML = '<i class="fas fa-moon"></i> <span>Dark</span>';
         }
       }
-      // Attempt to propagate theme to iframe if it's loaded and same origin (for demo documentation pages)
       try {
         const iframeDoc = contentFrame.contentDocument || contentFrame.contentWindow?.document;
         if (iframeDoc && iframeDoc.body) {
           if (theme === 'dark') {
             iframeDoc.body.classList.add('dark');
-            // also try to set a data attribute or class for potential dark mode inside iframe
             iframeDoc.body.style.backgroundColor = '#121826';
             iframeDoc.body.style.color = '#eef2ff';
           } else {
@@ -691,7 +811,7 @@
             iframeDoc.body.style.color = '';
           }
         }
-      } catch(e) { /* cross-origin iframe cannot be styled, but theme toggle remains functional for main UI */ }
+      } catch(e) { /* cross-origin */ }
     }
 
     function toggleTheme() {
@@ -702,19 +822,13 @@
       }
     }
 
-    // Load saved theme
     const savedTheme = localStorage.getItem('shiny-docs-theme');
-    if (savedTheme === 'dark') {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
+    if (savedTheme === 'dark') setTheme('dark');
+    else setTheme('light');
 
-    if (themeToggle) {
-      themeToggle.addEventListener('click', toggleTheme);
-    }
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
 
-    // --- Search and card logic
+    // Search and cards logic
     const searchInput = document.getElementById('searchInput');
     const searchClear = document.getElementById('searchClear');
     const searchResults = document.getElementById('searchResults');
@@ -757,8 +871,6 @@
       await animateLoading(4000);
       iframeContainer.style.display = 'block';
       contentFrame.src = filePath;
-      
-      // When iframe loads, try to apply current theme to its content (if same origin)
       contentFrame.onload = () => {
         try {
           const iframeDoc = contentFrame.contentDocument || contentFrame.contentWindow?.document;
@@ -768,16 +880,14 @@
               iframeDoc.body.classList.add('dark');
               iframeDoc.body.style.backgroundColor = '#121826';
               iframeDoc.body.style.color = '#eef2ff';
-              // optional: inject style for links
             } else {
               iframeDoc.body.classList.remove('dark');
               iframeDoc.body.style.backgroundColor = '';
               iframeDoc.body.style.color = '';
             }
           }
-        } catch(e) { /* cross-origin: silent */ }
+        } catch(e) { }
       };
-      
       contentFrame.onerror = () => {
         alert(`Could not load documentation: "${filePath}". Please ensure the file exists.`);
         closeDocumentation();
@@ -796,7 +906,6 @@
       });
     }
 
-    // Card click handler
     document.querySelectorAll('.doc-card').forEach(card => {
       card.addEventListener('click', (e) => {
         const filePath = card.getAttribute('data-doc');
@@ -804,7 +913,7 @@
       });
     });
 
-    // Search functionality
+    // Search
     function performSearch() {
       const query = searchInput.value.toLowerCase().trim();
       if (query === '') {
@@ -816,15 +925,15 @@
         const cardName = card.getAttribute('data-name').toLowerCase();
         const cardDesc = card.querySelector('p').innerText.toLowerCase();
         const cardKeywords = card.getAttribute('data-keywords').toLowerCase();
-        const matchesCard = cardName.includes(query) || cardDesc.includes(query) || cardKeywords.includes(query);
-        card.style.display = matchesCard ? 'block' : 'none';
+        const matches = cardName.includes(query) || cardDesc.includes(query) || cardKeywords.includes(query);
+        card.style.display = matches ? 'block' : 'none';
       });
       const matches = docsData.filter(doc => {
         const searchableText = `${doc.name} ${doc.description} ${doc.keywords}`.toLowerCase();
         return searchableText.includes(query);
       });
       if (matches.length === 0) {
-        searchResults.innerHTML = '<div class="search-no-results">No matching documentation found</div>';
+        searchResults.innerHTML = '<div class="search-no-results" style="padding:10px; text-align:center;">No matching documentation found</div>';
       } else {
         searchResults.innerHTML = matches.map(match => `
           <div class="search-result-item" data-path="${escapeHtml(match.docPath)}">
@@ -871,43 +980,13 @@
       if (searchInput.value.trim() !== '') performSearch();
     });
 
-    // ESC key closes documentation overlay
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && iframeContainer.style.display === 'block') {
         closeDocumentation();
       }
     });
 
-    // Disclaimer auto-hide (preserved)
-    const disclaimerHidden = sessionStorage.getItem('disclaimerAutoHidden');
-    if (disclaimerHidden === 'true') {
-      if (disclaimerBox) disclaimerBox.style.display = 'none';
-    } else {
-      setTimeout(() => {
-        if (disclaimerBox) {
-          disclaimerBox.style.transition = 'opacity 0.4s ease';
-          disclaimerBox.style.opacity = '0';
-          setTimeout(() => {
-            if (disclaimerBox) {
-              disclaimerBox.style.display = 'none';
-              sessionStorage.setItem('disclaimerAutoHidden', 'true');
-            }
-          }, 400);
-        }
-      }, 10000);
-    }
-
-    if (disclaimerBox) {
-      disclaimerBox.addEventListener('click', () => {
-        if (disclaimerBox.style.display !== 'none') {
-          disclaimerBox.style.opacity = '0';
-          setTimeout(() => {
-            disclaimerBox.style.display = 'none';
-            sessionStorage.setItem('disclaimerAutoHidden', 'true');
-          }, 300);
-        }
-      });
-    }
+    // Optional auto-fade for disclaimer? not needed, stays visible.
   })();
 </script>
 </body>
