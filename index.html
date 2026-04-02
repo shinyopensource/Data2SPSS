@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- CRITICAL: viewport settings to prevent horizontal overflow and ensure fixed positioning -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover" />
   <title>Shiny Open Source - Documentation Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
@@ -35,9 +34,8 @@
       box-sizing: border-box;
     }
 
-    /* CRITICAL FIX: Prevent body overflow and unwanted horizontal scroll on mobile */
     html, body {
-      overflow-x: hidden;        /* Kill horizontal scroll at root level */
+      overflow-x: hidden;
       width: 100%;
       position: relative;
     }
@@ -48,13 +46,12 @@
       color: var(--text);
       font-size: 15.5px;
       line-height: 1.85;
-      overflow-x: hidden;        /* enforce no horizontal scroll */
+      overflow-x: hidden;
       transition: background-color 0.2s ease, color 0.2s ease;
       width: 100%;
       max-width: 100vw;
     }
 
-    /* All major containers must respect viewport width */
     .container, .disclaimer-wrapper, footer, .footer-container, .hero, .info-section {
       max-width: 100%;
       overflow-x: hidden;
@@ -76,7 +73,6 @@
       --header-h: 56px;
     }
 
-    /* HEADER - fixed and no overflow */
     header {
       position: fixed;
       top: 0;
@@ -106,7 +102,6 @@
       letter-spacing: 0.3px;
     }
 
-    /* Desktop navigation */
     .desktop-nav {
       display: flex;
       align-items: center;
@@ -187,7 +182,6 @@
       font-family: inherit;
     }
 
-    /* Hamburger menu (mobile) */
     .hamburger {
       display: none;
       background: none;
@@ -249,33 +243,14 @@
       background: rgba(255,255,255,0.15);
     }
 
-    /* Responsive adjustments: ensure no element exceeds viewport */
     @media (max-width: 680px) {
-      .desktop-nav {
-        display: none;
-      }
-      .hamburger {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .logo {
-        font-size: 0.9rem;
-        white-space: nowrap;
-        max-width: 65%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      header {
-        padding: 0 16px;
-      }
-      .container {
-        padding-left: 1.2rem;
-        padding-right: 1.2rem;
-      }
+      .desktop-nav { display: none; }
+      .hamburger { display: flex; align-items: center; justify-content: center; }
+      .logo { font-size: 0.9rem; white-space: nowrap; max-width: 65%; overflow: hidden; text-overflow: ellipsis; }
+      header { padding: 0 16px; }
+      .container { padding-left: 1.2rem; padding-right: 1.2rem; }
     }
 
-    /* Main container and carousel section */
     .container {
       padding-top: var(--header-h);
       min-height: 100vh;
@@ -329,10 +304,10 @@
     .badge-green { background: #27ae60; color: #fff; }
     .badge-gray { background: #666; color: #fff; }
 
-    /* ----- INFINITE CAROUSEL - NO SCROLLBAR, NO ARROWS, CONTINUOUS SLIDING ----- */
+    /* Infinite Carousel */
     .carousel-wrapper {
       position: relative;
-      margin: 1.5rem 0 2rem;
+      margin: 1.5rem 0 1rem;
       width: 100%;
       overflow: hidden;
     }
@@ -392,6 +367,209 @@
     .doc-card p { color: var(--muted); font-size: 0.8rem; line-height: 1.5; margin-bottom: 0.9rem; flex: 1; }
     .card-meta { display: flex; align-items: center; gap: 0.4rem; font-family: 'Lato', sans-serif; font-size: 0.72rem; font-weight: 700; color: var(--accent); flex-wrap: wrap; margin-top: auto; }
 
+    /* View All Apps Button - bottom center of cards section */
+    .view-all-btn-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 0.5rem 0 1.5rem 0;
+    }
+    
+    .view-all-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .view-all-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    }
+    
+    .view-all-btn i {
+      font-size: 1rem;
+    }
+
+    /* Modal Overlay - Blur Background + Table of Contents (LIST VIEW) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    
+    .modal-container {
+      background: var(--white);
+      border-radius: 24px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      animation: modalSlideIn 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .modal-header {
+      padding: 1.5rem 1.8rem;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .modal-header h2 {
+      font-family: 'Lato', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-close:hover {
+      background: rgba(255,255,255,0.35);
+    }
+    
+    .modal-body {
+      padding: 1.5rem 1.8rem;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+    
+    /* LIST VIEW - vertical list instead of grid */
+    .apps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .app-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .app-item:hover {
+      transform: translateX(8px);
+      border-color: var(--accent);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+    }
+    
+    .app-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--accent-bg);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .app-icon i {
+      font-size: 24px;
+      color: var(--accent);
+    }
+    
+    .app-info {
+      flex: 1;
+    }
+    
+    .app-info h4 {
+      font-family: 'Lato', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    
+    .app-info p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    
+    .app-badge {
+      font-size: 0.7rem;
+      background: var(--accent);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+    
+    .app-arrow {
+      color: var(--accent);
+      font-size: 1rem;
+      opacity: 0.6;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    
+    .app-item:hover .app-arrow {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+
     .info-section {
       background: var(--accent-bg);
       border-left: 4px solid var(--accent);
@@ -404,7 +582,6 @@
       overflow-x: hidden;
     }
 
-    /* Disclaimer wrapper */
     .disclaimer-wrapper {
       max-width: 1200px;
       margin: 0 auto 1rem auto;
@@ -429,7 +606,6 @@
     .disclaimer-box i { font-size: 1.1rem; color: var(--warn-border); flex-shrink: 0; }
     .disclaimer-text { line-height: 1.45; }
 
-    /* Footer - no overflow, flexible */
     footer {
       background: var(--bg);
       border-top: 1px solid var(--border);
@@ -469,7 +645,6 @@
       gap: 6px;
     }
 
-    /* Iframe overlay - full viewport but no scroll issues */
     .iframe-overlay {
       position: fixed;
       top: 0;
@@ -481,13 +656,7 @@
       display: none;
       overflow: hidden;
     }
-    .fullscreen-iframe { 
-      width: 100%; 
-      height: 100%; 
-      border: none; 
-      background: var(--white);
-      display: block;
-    }
+    .fullscreen-iframe { width: 100%; height: 100%; border: none; background: var(--white); display: block; }
     .back-home-btn {
       position: fixed;
       bottom: 28px;
@@ -528,7 +697,6 @@
     .loading-bar-container.active { visibility: visible; opacity: 1; }
     .loading-bar { width: 0%; height: 100%; background: var(--accent); transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 
-    /* Dark mode overrides */
     body.dark {
       --white: #121826;
       --bg: #1a1f2c;
@@ -544,11 +712,9 @@
     }
     body.dark .doc-card { background: var(--bg); }
     body.dark .card-icon { background: #2a3146; }
-    body.dark .search-results { background: var(--bg); border-color: var(--border); }
-    body.dark header { background: #1f6392; }
-    body.dark .mobile-menu { background: #1f6392; }
+    body.dark .modal-container { background: var(--white); }
+    body.dark .app-item { background: var(--bg); }
 
-    /* Search results dropdown style (no overflow) */
     .search-results {
       position: absolute;
       top: 40px;
@@ -563,31 +729,19 @@
       display: none;
       box-shadow: 0 6px 16px rgba(0,0,0,0.1);
     }
-    .search-result-item {
-      padding: 12px 14px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border-light);
-      transition: background 0.1s;
-    }
+    .search-result-item { padding: 12px 14px; cursor: pointer; border-bottom: 1px solid var(--border-light); }
     .search-result-item:last-child { border-bottom: none; }
     .search-result-item:hover { background: var(--accent-bg); }
     .search-result-title { font-weight: 700; font-family: 'Lato', sans-serif; font-size: 0.85rem; color: var(--accent); }
     .search-result-desc { font-size: 0.7rem; color: var(--muted); margin-top: 4px; line-height: 1.3; }
-    .search-no-results { padding: 12px; text-align: center; color: var(--muted); font-size: 0.75rem; }
 
-    @media (max-width: 900px) { 
-      .doc-card { width: 260px; }
-    }
-    @media (max-width: 640px) { 
+    @media (max-width: 640px) {
       .container { padding-left: 1rem; padding-right: 1rem; }
-      .disclaimer-wrapper { padding: 0 1rem; }
-      .footer-container { flex-direction: column; text-align: center; }
-      .footer-left, .footer-center, .footer-right { text-align: center; justify-content: center; }
-      .search-results { width: calc(100vw - 32px); left: 16px; right: 16px; max-width: calc(100% - 32px); }
-      .doc-card { width: 240px; }
+      .modal-body { padding: 1rem; }
+      .app-item { padding: 0.8rem 1rem; }
+      .app-icon { width: 40px; height: 40px; }
+      .app-icon i { font-size: 20px; }
     }
-    img, iframe, video, svg { max-width: 100%; height: auto; }
-    input, button, textarea { max-width: 100%; }
   </style>
 </head>
 <body>
@@ -633,11 +787,10 @@
     </div>
   </div>
 
-  <!-- INFINITE CAROUSEL - continuous sliding left, no scrollbar, no arrows -->
+  <!-- Infinite Carousel -->
   <div class="carousel-wrapper">
     <div class="infinite-carousel-container" id="infiniteCarouselContainer">
       <div class="infinite-track" id="infiniteTrack">
-        <!-- Original 5 cards + TagSelect card -->
         <div class="doc-card" data-doc="Data2SPSS.html" data-title="Data2SPSS Documentation" data-name="Data2SPSS" data-keywords="spss conversion data convert statistics">
           <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
           <h3>Data2SPSS</h3>
@@ -668,7 +821,6 @@
           <p>Build and visualize ROC curves, compute AUC, optimal cutoffs, and sensitivity/specificity analysis.</p>
           <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
         </div>
-        <!-- ADDED: TagSelect.html card -->
         <div class="doc-card" data-doc="TagSelect.html" data-title="TagSelect Documentation" data-name="TagSelect" data-keywords="tag selection interactive tagging metadata shiny module">
           <div class="card-icon"><i class="fas fa-tags"></i></div>
           <h3>TagSelect</h3>
@@ -678,12 +830,35 @@
       </div>
     </div>
   </div>
+  
+  <!-- View All Apps Button - bottom center -->
+  <div class="view-all-btn-wrapper">
+    <button class="view-all-btn" id="viewAllAppsBtn">
+      <i class="fas fa-list-ul"></i> View All Applications
+      <i class="fas fa-arrow-right"></i>
+    </button>
+  </div>
 
   <div class="info-section">
     <div class="info-icon"><i class="fas fa-info-circle"></i></div>
     <div class="info-content">
       <h4>About These Tools</h4>
       <p>All applications are built with R-Shiny and are completely free to use. Each tool includes detailed documentation, installation guides, video tutorials, and example datasets. Click any card above to view the full documentation. Cards scroll infinitely to the left — hover to stop and click.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Overlay with Table of Contents - LIST VIEW -->
+<div class="modal-overlay" id="appsModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2><i class="fas fa-apps"></i> All Applications</h2>
+      <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="apps-list" id="appsList">
+        <!-- Populated dynamically as vertical list -->
+      </div>
     </div>
   </div>
 </div>
@@ -727,49 +902,94 @@
     const backButton = document.getElementById('floatingBackBtn');
     const themeToggle = document.getElementById('darkModeToggle');
     
+    // App data for modal (vertical list)
+    const appsData = [
+      { name: "Data2SPSS", doc: "Data2SPSS.html", icon: "fas fa-exchange-alt", desc: "Convert data to SPSS with automatic value label preservation, variable cleaning, and encoding resolution." },
+      { name: "MedModr", doc: "MedModr.html", icon: "fas fa-chart-line", desc: "Mediation, moderation, serial mediation, and conditional process analysis with path diagrams." },
+      { name: "CATrend Analyzer", doc: "CATrend Analyzer.html", icon: "fas fa-chart-bar", desc: "Cochran-Armitage trend test for dose-response relationships with raw data and crosstabulation modes." },
+      { name: "CalcuStats", doc: "CalcuStats.html", icon: "fas fa-calculator", desc: "Interactive statistical calculator: descriptive stats, probability distributions, and quick summary metrics." },
+      { name: "ROC Curve Builder", doc: "ROC Curve Builder.html", icon: "fas fa-chart-area", desc: "Build and visualize ROC curves, compute AUC, optimal cutoffs, and sensitivity/specificity analysis." },
+      { name: "TagSelect", doc: "TagSelect.html", icon: "fas fa-tags", desc: "Interactive tag selection and metadata management module for Shiny applications with advanced filtering." }
+    ];
+    
+    // Populate modal as VERTICAL LIST
+    const appsList = document.getElementById('appsList');
+    function populateAppsList() {
+      appsList.innerHTML = '';
+      appsData.forEach(app => {
+        const appItem = document.createElement('div');
+        appItem.className = 'app-item';
+        appItem.setAttribute('data-doc', app.doc);
+        appItem.innerHTML = `
+          <div class="app-icon"><i class="${app.icon}"></i></div>
+          <div class="app-info">
+            <h4>${app.name}</h4>
+            <p>${app.desc}</p>
+            <span class="app-badge">View Documentation →</span>
+          </div>
+          <div class="app-arrow"><i class="fas fa-chevron-right"></i></div>
+        `;
+        appItem.addEventListener('click', () => {
+          closeModal();
+          openDocumentation(app.doc);
+        });
+        appsList.appendChild(appItem);
+      });
+    }
+    
+    // Modal functions
+    const modal = document.getElementById('appsModal');
+    const viewAllBtn = document.getElementById('viewAllAppsBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    
+    function openModal() {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    
+    viewAllBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+    });
+    
+    populateAppsList();
+    
     // INFINITE CAROUSEL LOGIC
     const track = document.getElementById('infiniteTrack');
     const container = document.getElementById('infiniteCarouselContainer');
     let animationId = null;
     let isHovering = false;
     let position = 0;
-    let speed = 0.8; // pixels per frame - slow continuous sliding
+    let speed = 0.7;
     let cardWidth = 0;
-    let gap = 24; // 1.5rem = 24px
-    let totalCardWidth = 0;
-    let cloneCount = 0;
+    let gap = 24;
+    let originalCards = [];
     
-    // Get all original cards
-    const originalCards = Array.from(track.querySelectorAll('.doc-card'));
-    const originalCardsData = originalCards.map(card => card.cloneNode(true));
-    
-    // Clone cards to create infinite loop effect
     function setupInfiniteCarousel() {
-      // Calculate card width including gap
-      const firstCard = originalCards[0];
+      const cards = Array.from(document.querySelectorAll('.doc-card'));
+      if (cards.length === 0) return;
+      originalCards = cards;
+      const firstCard = cards[0];
       const cardRect = firstCard.getBoundingClientRect();
       cardWidth = cardRect.width;
       
-      // Clone cards multiple times to ensure seamless infinite loop
-      // We need enough copies to fill the viewport plus extra for smooth transition
       const clonesNeeded = Math.ceil(container.clientWidth / (cardWidth + gap)) + 2;
+      const singleSetWidth = originalCards.length * (cardWidth + gap);
       
-      // Clear track and rebuild with original + clones
       track.innerHTML = '';
-      
-      // Add original cards
-      originalCards.forEach(card => {
-        track.appendChild(card.cloneNode(true));
-      });
-      
-      // Add clones to the end
+      originalCards.forEach(card => track.appendChild(card.cloneNode(true)));
       for (let i = 0; i < clonesNeeded; i++) {
-        originalCards.forEach(card => {
-          track.appendChild(card.cloneNode(true));
-        });
+        originalCards.forEach(card => track.appendChild(card.cloneNode(true)));
       }
-      
-      // Also add clones to the beginning for smooth loop
       for (let i = 0; i < clonesNeeded; i++) {
         [...originalCards].reverse().forEach(card => {
           const clone = card.cloneNode(true);
@@ -777,26 +997,29 @@
         });
       }
       
-      // Calculate total width of one set
-      const singleSetWidth = originalCards.length * (cardWidth + gap);
-      totalCardWidth = track.scrollWidth;
-      
-      // Set initial position to start of original set
       const startPosition = clonesNeeded * singleSetWidth;
       position = startPosition;
       track.style.transform = `translateX(-${position}px)`;
-      
-      // Re-attach click events to all cards
-      attachCardClickEvents();
-      attachHoverEvents();
+      attachCardEvents();
     }
     
-    function attachCardClickEvents() {
+    function attachCardEvents() {
       const allCards = document.querySelectorAll('.doc-card');
       allCards.forEach(card => {
         card.removeEventListener('click', handleCardClick);
         card.addEventListener('click', handleCardClick);
+        card.removeEventListener('mouseenter', pauseScroll);
+        card.removeEventListener('mouseleave', resumeScroll);
+        card.addEventListener('mouseenter', pauseScroll);
+        card.addEventListener('mouseleave', resumeScroll);
       });
+      const carouselContainer = document.getElementById('infiniteCarouselContainer');
+      if (carouselContainer) {
+        carouselContainer.removeEventListener('mouseenter', pauseScroll);
+        carouselContainer.removeEventListener('mouseleave', resumeScroll);
+        carouselContainer.addEventListener('mouseenter', pauseScroll);
+        carouselContainer.addEventListener('mouseleave', resumeScroll);
+      }
     }
     
     function handleCardClick(e) {
@@ -805,44 +1028,18 @@
       if (path) openDocumentation(path);
     }
     
-    function attachHoverEvents() {
-      const allCards = document.querySelectorAll('.doc-card');
-      const carouselContainer = document.getElementById('infiniteCarouselContainer');
-      
-      const pauseAnimation = () => { isHovering = true; };
-      const resumeAnimation = () => { isHovering = false; };
-      
-      allCards.forEach(card => {
-        card.addEventListener('mouseenter', pauseAnimation);
-        card.addEventListener('mouseleave', resumeAnimation);
-        card.addEventListener('touchstart', pauseAnimation);
-        card.addEventListener('touchend', resumeAnimation);
-      });
-      
-      if (carouselContainer) {
-        carouselContainer.addEventListener('mouseenter', pauseAnimation);
-        carouselContainer.addEventListener('mouseleave', resumeAnimation);
-      }
-    }
+    function pauseScroll() { isHovering = true; }
+    function resumeScroll() { isHovering = false; }
     
     function animate() {
       if (!isHovering && track) {
-        // Move left
         position += speed;
-        
-        // Get width of one complete set of original cards
         const singleSetWidth = originalCards.length * (cardWidth + gap);
-        // Get total width including clones
         const totalWidth = track.scrollWidth;
-        
-        // Reset position when we've scrolled past the clones to create infinite loop
-        // We want to loop back to the start of the original set
         if (position >= totalWidth - (singleSetWidth * 2)) {
-          // Jump back to the beginning of the original set
           const startPosition = Math.ceil(totalWidth / 2) - singleSetWidth;
           position = startPosition;
         }
-        
         track.style.transform = `translateX(-${position}px)`;
       }
       animationId = requestAnimationFrame(animate);
@@ -853,87 +1050,23 @@
       animate();
     }
     
-    function stopAnimation() {
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-      }
-    }
-    
-    // Handle resize - recalculate dimensions
     let resizeTimeout;
     function handleResize() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        stopAnimation();
+        cancelAnimationFrame(animationId);
         setupInfiniteCarousel();
         startAnimation();
       }, 200);
     }
     
-    // Initialize carousel after DOM is ready
     setTimeout(() => {
       setupInfiniteCarousel();
       startAnimation();
     }, 100);
-    
     window.addEventListener('resize', handleResize);
     
-    // Search and documentation functions (preserved from original)
-    const docsData = Array.from(document.querySelectorAll('.doc-card')).map(card => ({
-      element: card,
-      name: card.getAttribute('data-name'),
-      description: card.querySelector('p')?.innerText || '',
-      keywords: card.getAttribute('data-keywords'),
-      docPath: card.getAttribute('data-doc')
-    }));
-
-    function filterCardsAndGetMatches(query) {
-      const lowerQuery = query.toLowerCase().trim();
-      let matches = [];
-      const allCards = document.querySelectorAll('.doc-card');
-      allCards.forEach(card => {
-        const name = card.getAttribute('data-name')?.toLowerCase() || '';
-        const desc = card.querySelector('p')?.innerText.toLowerCase() || '';
-        const keywords = card.getAttribute('data-keywords')?.toLowerCase() || '';
-        const match = name.includes(lowerQuery) || desc.includes(lowerQuery) || keywords.includes(lowerQuery);
-        card.style.display = match ? 'flex' : 'none';
-        if (match) matches.push(card);
-      });
-      return docsData.filter(doc => {
-        const searchable = `${doc.name} ${doc.description} ${doc.keywords}`.toLowerCase();
-        return searchable.includes(lowerQuery);
-      });
-    }
-
-    function renderSearchResults(resultsContainer, matches, isMobile = false) {
-      if (!resultsContainer) return;
-      if (matches.length === 0) {
-        resultsContainer.innerHTML = '<div class="search-no-results">No matching documentation found</div>';
-      } else {
-        resultsContainer.innerHTML = matches.map(match => `
-          <div class="search-result-item" data-path="${escapeHtml(match.docPath)}">
-            <div class="search-result-title">${escapeHtml(match.name)}</div>
-            <div class="search-result-desc">${escapeHtml(match.description.substring(0, 80))}${match.description.length > 80 ? '...' : ''}</div>
-          </div>
-        `).join('');
-        resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const path = item.getAttribute('data-path');
-            openDocumentation(path);
-            if (isMobile) document.getElementById('mobileMenu').classList.remove('open');
-            if (desktopSearchInput) desktopSearchInput.value = '';
-            if (mobileSearchInput) mobileSearchInput.value = '';
-            const allCards = document.querySelectorAll('.doc-card');
-            allCards.forEach(c => c.style.display = 'flex');
-            if (desktopSearchResults) desktopSearchResults.style.display = 'none';
-            if (mobileSearchResults) mobileSearchResults.style.display = 'none';
-          });
-        });
-      }
-      resultsContainer.style.display = 'block';
-    }
-
+    // Documentation functions
     function animateLoading(duration = 4000) {
       return new Promise((resolve) => {
         loadingContainer.classList.add('active');
@@ -956,10 +1089,8 @@
         requestAnimationFrame(update);
       });
     }
-
+    
     async function openDocumentation(filePath) {
-      // Pause animation while documentation is open
-      const wasHovering = isHovering;
       isHovering = true;
       await animateLoading(4000);
       iframeContainer.style.display = 'block';
@@ -973,27 +1104,22 @@
               iframeDoc.body.classList.add('dark');
               iframeDoc.body.style.backgroundColor = '#121826';
               iframeDoc.body.style.color = '#eef2ff';
-            } else {
-              iframeDoc.body.classList.remove('dark');
-              iframeDoc.body.style.backgroundColor = '';
-              iframeDoc.body.style.color = '';
             }
           }
         } catch(e) {}
       };
       contentFrame.onerror = () => { alert(`Cannot load "${filePath}".`); closeDocumentation(); };
     }
-
+    
     function closeDocumentation() {
       contentFrame.src = '';
       iframeContainer.style.display = 'none';
-      // Resume animation
       isHovering = false;
     }
     
-    if (backButton) backButton.addEventListener('click', closeDocumentation);
+    backButton.addEventListener('click', closeDocumentation);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && iframeContainer.style.display === 'block') closeDocumentation(); });
-
+    
     function setTheme(theme) {
       if (theme === 'dark') {
         document.body.classList.add('dark');
@@ -1004,45 +1130,33 @@
         localStorage.setItem('shiny-docs-theme', 'light');
         themeToggle.innerHTML = '<i class="fas fa-moon"></i> <span>Dark</span>';
       }
-      try {
-        const iframeDoc = contentFrame.contentDocument || contentFrame.contentWindow?.document;
-        if (iframeDoc?.body) {
-          if (theme === 'dark') { iframeDoc.body.classList.add('dark'); iframeDoc.body.style.backgroundColor = '#121826'; iframeDoc.body.style.color = '#eef2ff'; }
-          else { iframeDoc.body.classList.remove('dark'); iframeDoc.body.style.backgroundColor = ''; iframeDoc.body.style.color = ''; }
-        }
-      } catch(e) {}
     }
     
     const savedTheme = localStorage.getItem('shiny-docs-theme');
     setTheme(savedTheme === 'dark' ? 'dark' : 'light');
     themeToggle.addEventListener('click', () => setTheme(document.body.classList.contains('dark') ? 'light' : 'dark'));
-
+    
+    // Search functionality
     const desktopSearchInput = document.getElementById('desktopSearchInput');
     const desktopSearchResults = document.getElementById('desktopSearchResults');
-    const desktopClear = document.querySelector('.desktop-clear');
-    function performDesktopSearch() {
-      const query = desktopSearchInput.value;
-      if (!query.trim()) { desktopSearchResults.style.display = 'none'; const allCards = document.querySelectorAll('.doc-card'); allCards.forEach(c => c.style.display = 'flex'); return; }
-      const matches = filterCardsAndGetMatches(query);
-      renderSearchResults(desktopSearchResults, matches, false);
-    }
-    desktopSearchInput.addEventListener('input', performDesktopSearch);
-    if (desktopClear) desktopClear.addEventListener('click', () => { desktopSearchInput.value = ''; const allCards = document.querySelectorAll('.doc-card'); allCards.forEach(c => c.style.display = 'flex'); desktopSearchResults.style.display = 'none'; desktopSearchInput.focus(); });
-    document.addEventListener('click', (e) => { if (!e.target.closest('.search-wrapper') && desktopSearchResults) desktopSearchResults.style.display = 'none'; });
-
     const mobileSearchInput = document.getElementById('mobileSearchInput');
     const mobileSearchResults = document.getElementById('mobileSearchResults');
-    const mobileClear = document.querySelector('.mobile-clear');
-    function performMobileSearch() {
-      const query = mobileSearchInput.value;
-      if (!query.trim()) { mobileSearchResults.style.display = 'none'; const allCards = document.querySelectorAll('.doc-card'); allCards.forEach(c => c.style.display = 'flex'); return; }
-      const matches = filterCardsAndGetMatches(query);
-      renderSearchResults(mobileSearchResults, matches, true);
+    
+    function filterCards(query) {
+      const lowerQuery = query.toLowerCase().trim();
+      const allCards = document.querySelectorAll('.doc-card');
+      allCards.forEach(card => {
+        const name = card.getAttribute('data-name')?.toLowerCase() || '';
+        const desc = card.querySelector('p')?.innerText.toLowerCase() || '';
+        const keywords = card.getAttribute('data-keywords')?.toLowerCase() || '';
+        const match = name.includes(lowerQuery) || desc.includes(lowerQuery) || keywords.includes(lowerQuery);
+        card.style.display = match ? 'flex' : 'none';
+      });
     }
-    mobileSearchInput.addEventListener('input', performMobileSearch);
-    if (mobileClear) mobileClear.addEventListener('click', () => { mobileSearchInput.value = ''; const allCards = document.querySelectorAll('.doc-card'); allCards.forEach(c => c.style.display = 'flex'); mobileSearchResults.style.display = 'none'; mobileSearchInput.focus(); });
-    document.addEventListener('click', (e) => { if (!e.target.closest('.mobile-search') && mobileSearchResults) mobileSearchResults.style.display = 'none'; });
-
+    
+    desktopSearchInput.addEventListener('input', (e) => filterCards(e.target.value));
+    mobileSearchInput.addEventListener('input', (e) => filterCards(e.target.value));
+    
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     hamburgerBtn.addEventListener('click', (e) => {
@@ -1054,8 +1168,6 @@
         mobileMenu.classList.remove('open');
       }
     });
-    
-    function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
   })();
 </script>
 </body>
