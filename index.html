@@ -329,41 +329,32 @@
     .badge-green { background: #27ae60; color: #fff; }
     .badge-gray { background: #666; color: #fff; }
 
-    /* ----- Horizontal Carousel Styles ----- */
+    /* ----- INFINITE CAROUSEL - NO SCROLLBAR, NO ARROWS, CONTINUOUS SLIDING ----- */
     .carousel-wrapper {
       position: relative;
       margin: 1.5rem 0 2rem;
       width: 100%;
       overflow: hidden;
     }
-    .cards-scroll-container {
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      -webkit-overflow-scrolling: touch;
-      scroll-snap-type: x mandatory;
+    
+    .infinite-carousel-container {
+      overflow: hidden;
       width: 100%;
-      padding: 0.5rem 0 1rem 0;
-      cursor: grab;
-      scrollbar-color: var(--accent) var(--border);
+      position: relative;
     }
-    .cards-scroll-container::-webkit-scrollbar {
-      height: 6px;
-    }
-    .cards-scroll-container::-webkit-scrollbar-track {
-      background: var(--border);
-      border-radius: 8px;
-    }
-    .cards-scroll-container::-webkit-scrollbar-thumb {
-      background: var(--accent);
-      border-radius: 8px;
-    }
-    .cards-grid-horizontal {
+    
+    .infinite-track {
       display: flex;
       gap: 1.5rem;
       width: max-content;
-      padding: 0.25rem 0.5rem;
+      will-change: transform;
+      cursor: grab;
     }
+    
+    .infinite-track:active {
+      cursor: grabbing;
+    }
+    
     .doc-card {
       width: 280px;
       flex-shrink: 0;
@@ -375,16 +366,17 @@
       cursor: pointer;
       overflow-x: hidden;
       word-wrap: break-word;
-      scroll-snap-align: start;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s, box-shadow 0.2s;
+      user-select: none;
     }
+    
     .doc-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
       border-color: var(--accent);
     }
+    
     .card-icon {
       width: 44px;
       height: 44px;
@@ -399,55 +391,6 @@
     .doc-card h3 { font-family: 'Lato', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; }
     .doc-card p { color: var(--muted); font-size: 0.8rem; line-height: 1.5; margin-bottom: 0.9rem; flex: 1; }
     .card-meta { display: flex; align-items: center; gap: 0.4rem; font-family: 'Lato', sans-serif; font-size: 0.72rem; font-weight: 700; color: var(--accent); flex-wrap: wrap; margin-top: auto; }
-    
-    /* Navigation arrows */
-    .carousel-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--accent);
-      color: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      transition: background 0.2s, opacity 0.2s;
-      opacity: 0.8;
-      font-size: 1.2rem;
-    }
-    .carousel-arrow:hover {
-      background: var(--accent-dark);
-      opacity: 1;
-    }
-    .arrow-left {
-      left: -10px;
-    }
-    .arrow-right {
-      right: -10px;
-    }
-    @media (max-width: 768px) {
-      .carousel-arrow {
-        width: 32px;
-        height: 32px;
-        font-size: 1rem;
-      }
-      .arrow-left { left: -6px; }
-      .arrow-right { right: -6px; }
-      .doc-card { width: 260px; }
-      .container { padding-left: 1rem; padding-right: 1rem; }
-    }
-    @media (max-width: 560px) {
-      .carousel-arrow { width: 28px; height: 28px; }
-      .arrow-left { left: -4px; }
-      .arrow-right { right: -4px; }
-      .doc-card { width: 240px; }
-    }
 
     .info-section {
       background: var(--accent-bg);
@@ -633,7 +576,7 @@
     .search-no-results { padding: 12px; text-align: center; color: var(--muted); font-size: 0.75rem; }
 
     @media (max-width: 900px) { 
-      .carousel-arrow { width: 36px; height: 36px; }
+      .doc-card { width: 260px; }
     }
     @media (max-width: 640px) { 
       .container { padding-left: 1rem; padding-right: 1rem; }
@@ -641,6 +584,7 @@
       .footer-container { flex-direction: column; text-align: center; }
       .footer-left, .footer-center, .footer-right { text-align: center; justify-content: center; }
       .search-results { width: calc(100vw - 32px); left: 16px; right: 16px; max-width: calc(100% - 32px); }
+      .doc-card { width: 240px; }
     }
     img, iframe, video, svg { max-width: 100%; height: auto; }
     input, button, textarea { max-width: 100%; }
@@ -689,11 +633,11 @@
     </div>
   </div>
 
-  <!-- Horizontal carousel cards section with 5 tools -->
+  <!-- INFINITE CAROUSEL - continuous sliding left, no scrollbar, no arrows -->
   <div class="carousel-wrapper">
-    <button class="carousel-arrow arrow-left" id="scrollLeftBtn" aria-label="Scroll left"><i class="fas fa-chevron-left"></i></button>
-    <div class="cards-scroll-container" id="cardsScrollContainer">
-      <div class="cards-grid-horizontal" id="cardsGridHorizontal">
+    <div class="infinite-carousel-container" id="infiniteCarouselContainer">
+      <div class="infinite-track" id="infiniteTrack">
+        <!-- Original 5 cards + TagSelect card -->
         <div class="doc-card" data-doc="Data2SPSS.html" data-title="Data2SPSS Documentation" data-name="Data2SPSS" data-keywords="spss conversion data convert statistics">
           <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
           <h3>Data2SPSS</h3>
@@ -724,16 +668,22 @@
           <p>Build and visualize ROC curves, compute AUC, optimal cutoffs, and sensitivity/specificity analysis.</p>
           <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
         </div>
+        <!-- ADDED: TagSelect.html card -->
+        <div class="doc-card" data-doc="TagSelect.html" data-title="TagSelect Documentation" data-name="TagSelect" data-keywords="tag selection interactive tagging metadata shiny module">
+          <div class="card-icon"><i class="fas fa-tags"></i></div>
+          <h3>TagSelect</h3>
+          <p>Interactive tag selection and metadata management module for Shiny applications with advanced filtering.</p>
+          <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
     </div>
-    <button class="carousel-arrow arrow-right" id="scrollRightBtn" aria-label="Scroll right"><i class="fas fa-chevron-right"></i></button>
   </div>
 
   <div class="info-section">
     <div class="info-icon"><i class="fas fa-info-circle"></i></div>
     <div class="info-content">
       <h4>About These Tools</h4>
-      <p>All applications are built with R-Shiny and are completely free to use. Each tool includes detailed documentation, installation guides, video tutorials, and example datasets. Click any card above to view the full documentation. Use arrows to browse horizontally.</p>
+      <p>All applications are built with R-Shiny and are completely free to use. Each tool includes detailed documentation, installation guides, video tutorials, and example datasets. Click any card above to view the full documentation. Cards scroll infinitely to the left — hover to stop and click.</p>
     </div>
   </div>
 </div>
@@ -776,29 +726,164 @@
     const contentFrame = document.getElementById('contentFrame');
     const backButton = document.getElementById('floatingBackBtn');
     const themeToggle = document.getElementById('darkModeToggle');
-    const scrollContainer = document.getElementById('cardsScrollContainer');
-    const leftBtn = document.getElementById('scrollLeftBtn');
-    const rightBtn = document.getElementById('scrollRightBtn');
-    const cards = document.querySelectorAll('.doc-card');
     
-    // Carousel scroll logic with continuous sliding
-    function scrollLeft() {
-      if (scrollContainer) {
-        scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+    // INFINITE CAROUSEL LOGIC
+    const track = document.getElementById('infiniteTrack');
+    const container = document.getElementById('infiniteCarouselContainer');
+    let animationId = null;
+    let isHovering = false;
+    let position = 0;
+    let speed = 0.8; // pixels per frame - slow continuous sliding
+    let cardWidth = 0;
+    let gap = 24; // 1.5rem = 24px
+    let totalCardWidth = 0;
+    let cloneCount = 0;
+    
+    // Get all original cards
+    const originalCards = Array.from(track.querySelectorAll('.doc-card'));
+    const originalCardsData = originalCards.map(card => card.cloneNode(true));
+    
+    // Clone cards to create infinite loop effect
+    function setupInfiniteCarousel() {
+      // Calculate card width including gap
+      const firstCard = originalCards[0];
+      const cardRect = firstCard.getBoundingClientRect();
+      cardWidth = cardRect.width;
+      
+      // Clone cards multiple times to ensure seamless infinite loop
+      // We need enough copies to fill the viewport plus extra for smooth transition
+      const clonesNeeded = Math.ceil(container.clientWidth / (cardWidth + gap)) + 2;
+      
+      // Clear track and rebuild with original + clones
+      track.innerHTML = '';
+      
+      // Add original cards
+      originalCards.forEach(card => {
+        track.appendChild(card.cloneNode(true));
+      });
+      
+      // Add clones to the end
+      for (let i = 0; i < clonesNeeded; i++) {
+        originalCards.forEach(card => {
+          track.appendChild(card.cloneNode(true));
+        });
+      }
+      
+      // Also add clones to the beginning for smooth loop
+      for (let i = 0; i < clonesNeeded; i++) {
+        [...originalCards].reverse().forEach(card => {
+          const clone = card.cloneNode(true);
+          track.insertBefore(clone, track.firstChild);
+        });
+      }
+      
+      // Calculate total width of one set
+      const singleSetWidth = originalCards.length * (cardWidth + gap);
+      totalCardWidth = track.scrollWidth;
+      
+      // Set initial position to start of original set
+      const startPosition = clonesNeeded * singleSetWidth;
+      position = startPosition;
+      track.style.transform = `translateX(-${position}px)`;
+      
+      // Re-attach click events to all cards
+      attachCardClickEvents();
+      attachHoverEvents();
+    }
+    
+    function attachCardClickEvents() {
+      const allCards = document.querySelectorAll('.doc-card');
+      allCards.forEach(card => {
+        card.removeEventListener('click', handleCardClick);
+        card.addEventListener('click', handleCardClick);
+      });
+    }
+    
+    function handleCardClick(e) {
+      e.stopPropagation();
+      const path = this.getAttribute('data-doc');
+      if (path) openDocumentation(path);
+    }
+    
+    function attachHoverEvents() {
+      const allCards = document.querySelectorAll('.doc-card');
+      const carouselContainer = document.getElementById('infiniteCarouselContainer');
+      
+      const pauseAnimation = () => { isHovering = true; };
+      const resumeAnimation = () => { isHovering = false; };
+      
+      allCards.forEach(card => {
+        card.addEventListener('mouseenter', pauseAnimation);
+        card.addEventListener('mouseleave', resumeAnimation);
+        card.addEventListener('touchstart', pauseAnimation);
+        card.addEventListener('touchend', resumeAnimation);
+      });
+      
+      if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', pauseAnimation);
+        carouselContainer.addEventListener('mouseleave', resumeAnimation);
       }
     }
-    function scrollRight() {
-      if (scrollContainer) {
-        scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+    
+    function animate() {
+      if (!isHovering && track) {
+        // Move left
+        position += speed;
+        
+        // Get width of one complete set of original cards
+        const singleSetWidth = originalCards.length * (cardWidth + gap);
+        // Get total width including clones
+        const totalWidth = track.scrollWidth;
+        
+        // Reset position when we've scrolled past the clones to create infinite loop
+        // We want to loop back to the start of the original set
+        if (position >= totalWidth - (singleSetWidth * 2)) {
+          // Jump back to the beginning of the original set
+          const startPosition = Math.ceil(totalWidth / 2) - singleSetWidth;
+          position = startPosition;
+        }
+        
+        track.style.transform = `translateX(-${position}px)`;
+      }
+      animationId = requestAnimationFrame(animate);
+    }
+    
+    function startAnimation() {
+      if (animationId) cancelAnimationFrame(animationId);
+      animate();
+    }
+    
+    function stopAnimation() {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
       }
     }
-    if (leftBtn) leftBtn.addEventListener('click', scrollLeft);
-    if (rightBtn) rightBtn.addEventListener('click', scrollRight);
     
-    const docsData = Array.from(cards).map(card => ({
+    // Handle resize - recalculate dimensions
+    let resizeTimeout;
+    function handleResize() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        stopAnimation();
+        setupInfiniteCarousel();
+        startAnimation();
+      }, 200);
+    }
+    
+    // Initialize carousel after DOM is ready
+    setTimeout(() => {
+      setupInfiniteCarousel();
+      startAnimation();
+    }, 100);
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Search and documentation functions (preserved from original)
+    const docsData = Array.from(document.querySelectorAll('.doc-card')).map(card => ({
       element: card,
       name: card.getAttribute('data-name'),
-      description: card.querySelector('p').innerText,
+      description: card.querySelector('p')?.innerText || '',
       keywords: card.getAttribute('data-keywords'),
       docPath: card.getAttribute('data-doc')
     }));
@@ -806,10 +891,11 @@
     function filterCardsAndGetMatches(query) {
       const lowerQuery = query.toLowerCase().trim();
       let matches = [];
-      cards.forEach(card => {
-        const name = card.getAttribute('data-name').toLowerCase();
-        const desc = card.querySelector('p').innerText.toLowerCase();
-        const keywords = card.getAttribute('data-keywords').toLowerCase();
+      const allCards = document.querySelectorAll('.doc-card');
+      allCards.forEach(card => {
+        const name = card.getAttribute('data-name')?.toLowerCase() || '';
+        const desc = card.querySelector('p')?.innerText.toLowerCase() || '';
+        const keywords = card.getAttribute('data-keywords')?.toLowerCase() || '';
         const match = name.includes(lowerQuery) || desc.includes(lowerQuery) || keywords.includes(lowerQuery);
         card.style.display = match ? 'flex' : 'none';
         if (match) matches.push(card);
@@ -838,7 +924,8 @@
             if (isMobile) document.getElementById('mobileMenu').classList.remove('open');
             if (desktopSearchInput) desktopSearchInput.value = '';
             if (mobileSearchInput) mobileSearchInput.value = '';
-            cards.forEach(c => c.style.display = 'flex');
+            const allCards = document.querySelectorAll('.doc-card');
+            allCards.forEach(c => c.style.display = 'flex');
             if (desktopSearchResults) desktopSearchResults.style.display = 'none';
             if (mobileSearchResults) mobileSearchResults.style.display = 'none';
           });
@@ -871,6 +958,9 @@
     }
 
     async function openDocumentation(filePath) {
+      // Pause animation while documentation is open
+      const wasHovering = isHovering;
+      isHovering = true;
       await animateLoading(4000);
       iframeContainer.style.display = 'block';
       contentFrame.src = filePath;
@@ -897,10 +987,12 @@
     function closeDocumentation() {
       contentFrame.src = '';
       iframeContainer.style.display = 'none';
+      // Resume animation
+      isHovering = false;
     }
+    
     if (backButton) backButton.addEventListener('click', closeDocumentation);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && iframeContainer.style.display === 'block') closeDocumentation(); });
-    cards.forEach(card => card.addEventListener('click', () => { const path = card.getAttribute('data-doc'); if (path) openDocumentation(path); }));
 
     function setTheme(theme) {
       if (theme === 'dark') {
@@ -920,6 +1012,7 @@
         }
       } catch(e) {}
     }
+    
     const savedTheme = localStorage.getItem('shiny-docs-theme');
     setTheme(savedTheme === 'dark' ? 'dark' : 'light');
     themeToggle.addEventListener('click', () => setTheme(document.body.classList.contains('dark') ? 'light' : 'dark'));
@@ -929,12 +1022,12 @@
     const desktopClear = document.querySelector('.desktop-clear');
     function performDesktopSearch() {
       const query = desktopSearchInput.value;
-      if (!query.trim()) { desktopSearchResults.style.display = 'none'; cards.forEach(c => c.style.display = 'flex'); return; }
+      if (!query.trim()) { desktopSearchResults.style.display = 'none'; const allCards = document.querySelectorAll('.doc-card'); allCards.forEach(c => c.style.display = 'flex'); return; }
       const matches = filterCardsAndGetMatches(query);
       renderSearchResults(desktopSearchResults, matches, false);
     }
     desktopSearchInput.addEventListener('input', performDesktopSearch);
-    if (desktopClear) desktopClear.addEventListener('click', () => { desktopSearchInput.value = ''; cards.forEach(c => c.style.display = 'flex'); desktopSearchResults.style.display = 'none'; desktopSearchInput.focus(); });
+    if (desktopClear) desktopClear.addEventListener('click', () => { desktopSearchInput.value = ''; const allCards = document.querySelectorAll('.doc-card'); allCards.forEach(c => c.style.display = 'flex'); desktopSearchResults.style.display = 'none'; desktopSearchInput.focus(); });
     document.addEventListener('click', (e) => { if (!e.target.closest('.search-wrapper') && desktopSearchResults) desktopSearchResults.style.display = 'none'; });
 
     const mobileSearchInput = document.getElementById('mobileSearchInput');
@@ -942,12 +1035,12 @@
     const mobileClear = document.querySelector('.mobile-clear');
     function performMobileSearch() {
       const query = mobileSearchInput.value;
-      if (!query.trim()) { mobileSearchResults.style.display = 'none'; cards.forEach(c => c.style.display = 'flex'); return; }
+      if (!query.trim()) { mobileSearchResults.style.display = 'none'; const allCards = document.querySelectorAll('.doc-card'); allCards.forEach(c => c.style.display = 'flex'); return; }
       const matches = filterCardsAndGetMatches(query);
       renderSearchResults(mobileSearchResults, matches, true);
     }
     mobileSearchInput.addEventListener('input', performMobileSearch);
-    if (mobileClear) mobileClear.addEventListener('click', () => { mobileSearchInput.value = ''; cards.forEach(c => c.style.display = 'flex'); mobileSearchResults.style.display = 'none'; mobileSearchInput.focus(); });
+    if (mobileClear) mobileClear.addEventListener('click', () => { mobileSearchInput.value = ''; const allCards = document.querySelectorAll('.doc-card'); allCards.forEach(c => c.style.display = 'flex'); mobileSearchResults.style.display = 'none'; mobileSearchInput.focus(); });
     document.addEventListener('click', (e) => { if (!e.target.closest('.mobile-search') && mobileSearchResults) mobileSearchResults.style.display = 'none'; });
 
     const hamburgerBtn = document.getElementById('hamburgerBtn');
