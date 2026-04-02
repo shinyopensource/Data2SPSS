@@ -15,8 +15,8 @@
       --text: #212121;
       --muted: #555555;
       --light: #888888;
-      --accent: #3498db;
-      --accent-dark: #2980b9;
+      --accent: #2980b9;
+      --accent-dark: #1a5f8a;
       --accent-bg: #eaf4fb;
       --warn-bg: #fef9e7;
       --warn-border: #f39c12;
@@ -39,7 +39,7 @@
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       height: var(--header-h);
-      background: #3498db;
+      background: #2980b9;
       display: flex; align-items: center;
       padding: 0 20px; gap: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
@@ -96,8 +96,8 @@
       border-left: 3px solid transparent;
       transition: all .12s; line-height: 1.5;
     }
-    aside a:hover { color: var(--accent); background: rgba(52,152,219,0.06); }
-    aside a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(52,152,219,0.07); font-weight: 700; }
+    aside a:hover { color: var(--accent); background: rgba(41,128,185,0.06); }
+    aside a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(41,128,185,0.07); font-weight: 700; }
     main { flex: 1; min-width: 0; padding: 40px 60px 80px 52px; max-width: 860px; }
     section { margin-bottom: 52px; }
     .page-title { border-bottom: 2px solid var(--border); padding-bottom: 18px; margin-bottom: 32px; }
@@ -185,7 +185,7 @@
     }
     code { font-family: 'Source Code Pro', monospace; font-size: 0.85em; color: #c0392b; }
     pre code { color: var(--text); font-size: 0.84rem; line-height: 1.7; }
-    .ck { color: #3498db; }
+    .ck { color: #2980b9; }
     .cs { color: #27ae60; }
     .cc { color: #999; font-style: italic; }
     .cf { color: #8e44ad; }
@@ -236,7 +236,7 @@
     }
     .author-avatar {
       width: 52px; height: 52px; border-radius: 50%;
-      background: #3498db;
+      background: #2980b9;
       display: flex; align-items: center; justify-content: center;
       font-family: 'Lato', sans-serif; font-weight: 700; font-size: 1.1rem; color: #fff; flex-shrink: 0;
     }
@@ -300,8 +300,8 @@
       --text: #eef2ff;
       --muted: #b9c7d9;
       --light: #8d9bb0;
-      --accent: #5ab8e0;
-      --accent-dark: #3f9fc4;
+      --accent: #5a9fd4;
+      --accent-dark: #3f7fb0;
       --accent-bg: #20273a;
       --warn-bg: #2e2a1f;
       --warn-border: #e6b450;
@@ -343,6 +343,8 @@
     footer a:hover { text-decoration: underline; }
     ul { color: var(--muted); padding-left: 1.4em; margin-bottom: 14px; }
     li { margin-bottom: 4px; }
+    .video-embed { margin: 24px 0 12px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .video-embed iframe { width: 100%; aspect-ratio: 16 / 9; border: none; display: block; }
   </style>
 </head>
 <body>
@@ -669,9 +671,8 @@ rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/ROC-Curve
       <h2>Assumptions</h2>
       <div class="limit-list">
         <div class="limit-item"><div class="licon">⚖️</div><div><strong>Binary Outcome</strong><p>The outcome variable must have exactly two classes (0 = negative, 1 = positive). Multi-class outcomes are not supported.</p></div></div>
-        <div class="limit-item"><div class="licon">📊</div><div><strong>Numeric Predictors</strong><p>Predictor variables should be numeric. Categorical predictors require manual dummy coding before upload.</p></div></div>
-        <div class="limit-item"><div class="licon">🔗</div><div><strong>Independent Observations</strong><p>Logistic regression assumes observations are independent. Clustered or longitudinal data requires more advanced methods.</p></div></div>
-        <div class="limit-item"><div class="licon">📈</div><div><strong>Both Classes Present</strong><p>The dataset must contain observations from both class 0 and class 1 after removing missing values.</p></div></div>
+        <div class="limit-item"><div class="licon">📊</div><div><strong>Numeric Predictors</strong><p>Predictor variables can be only numeric, categorical, or both. </p></div></div>
+        <div class="limit-item"><div class="licon">🔗</div><div><strong>Independent Observations</strong><p>Logistic regression assumes observations are independent.</p></div></div>
         <div class="limit-item"><div class="licon">🔢</div><div><strong>Adequate Sample Size</strong><p>Logistic regression and ROC analysis require sufficient events in both classes for reliable estimation.</p></div></div>
       </div>
     </section>
@@ -685,6 +686,7 @@ rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/ROC-Curve
         <div class="limit-item"><div class="licon">🧮</div><div><strong>No Confidence Intervals</strong><p>AUC confidence intervals and DeLong's test for comparing ROC curves are not displayed in the current version.</p></div></div>
         <div class="limit-item"><div class="licon">🌐</div><div><strong>Session-Based Only</strong><p>Results are not saved between sessions. Download your report before closing the browser.</p></div></div>
       </div>
+      <div class="video-embed"><iframe src="https://www.youtube.com/embed/5VccIZjcUCo?si=G8NSiUjqZHECmvn5" title="ROC Curve Builder Tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
     </section>
 
     <hr class="section-hr" />
