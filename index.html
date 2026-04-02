@@ -689,7 +689,7 @@
     </div>
   </div>
 
-  <!-- Horizontal carousel cards section -->
+  <!-- Horizontal carousel cards section with 5 tools -->
   <div class="carousel-wrapper">
     <button class="carousel-arrow arrow-left" id="scrollLeftBtn" aria-label="Scroll left"><i class="fas fa-chevron-left"></i></button>
     <div class="cards-scroll-container" id="cardsScrollContainer">
@@ -716,6 +716,12 @@
           <div class="card-icon"><i class="fas fa-calculator"></i></div>
           <h3>CalcuStats</h3>
           <p>Interactive statistical calculator: descriptive stats, probability distributions, and quick summary metrics.</p>
+          <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="doc-card" data-doc="ROC Curve Builder.html" data-title="ROC Curve Builder Documentation" data-name="ROC Curve Builder" data-keywords="roc curve auc sensitivity specificity binary classification diagnostic">
+          <div class="card-icon"><i class="fas fa-chart-area"></i></div>
+          <h3>ROC Curve Builder</h3>
+          <p>Build and visualize ROC curves, compute AUC, optimal cutoffs, and sensitivity/specificity analysis.</p>
           <div class="card-meta"><span>Read Documentation</span><i class="fas fa-arrow-right"></i></div>
         </div>
       </div>
@@ -775,15 +781,15 @@
     const rightBtn = document.getElementById('scrollRightBtn');
     const cards = document.querySelectorAll('.doc-card');
     
-    // Carousel scroll logic
+    // Carousel scroll logic with continuous sliding
     function scrollLeft() {
       if (scrollContainer) {
-        scrollContainer.scrollBy({ left: -320, behavior: 'smooth' });
+        scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
       }
     }
     function scrollRight() {
       if (scrollContainer) {
-        scrollContainer.scrollBy({ left: 320, behavior: 'smooth' });
+        scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
       }
     }
     if (leftBtn) leftBtn.addEventListener('click', scrollLeft);
