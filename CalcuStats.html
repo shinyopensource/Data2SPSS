@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CalcuStats: Sample Size Calculator Suite Documentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Source+Code+Pro:wght@400;500&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --white: #ffffff;
+      --bg: #f8f8f8;
+      --border: #e0e0e0;
+      --border-light: #eeeeee;
+      --text: #212121;
+      --muted: #555555;
+      --light: #888888;
+      --accent: #0092D0;
+      --accent-dark: #00689D;
+      --accent-bg: #e8f4fb;
+      --warn-bg: #fef9e7;
+      --warn-border: #f39c12;
+      --success-bg: #eafaf1;
+      --success-border: #27ae60;
+      --code-bg: #f5f5f5;
+      --sidebar-w: 240px;
+      --header-h: 52px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--white);
+      color: var(--text);
+      font-size: 15.5px;
+      line-height: 1.85;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: linear-gradient(135deg, #00689D 0%, #0092D0 100%);
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .logo {
+      font-family: 'Lato', sans-serif;
+      font-weight: 700; font-size: 1.1rem;
+      color: #fff; text-decoration: none; white-space: nowrap;
+    }
+    .header-nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+    .header-nav a {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      color: rgba(255,255,255,0.85); text-decoration: none;
+      padding: 5px 12px; border-radius: 4px;
+      transition: background .15s, color .15s;
+    }
+    .header-nav a:hover { background: rgba(255,255,255,0.18); color: #fff; }
+    .header-nav .btn-app {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35); color: #fff;
+    }
+    .header-nav .btn-app:hover { background: rgba(255,255,255,0.32); }
+    .shell { display: flex; padding-top: var(--header-h); min-height: 100vh; }
+    aside {
+      width: var(--sidebar-w); flex-shrink: 0;
+      position: sticky; top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      background: var(--bg); padding: 20px 0 40px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    aside::-webkit-scrollbar { width: 3px; }
+    aside::-webkit-scrollbar-thumb { background: var(--border); }
+    .toc-title {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--light); text-transform: uppercase; letter-spacing: 1.2px;
+      padding: 0 18px 10px;
+      border-bottom: 1px solid var(--border-light); margin-bottom: 10px;
+    }
+    .toc-group { margin-bottom: 6px; }
+    .toc-group-label {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.7rem; font-weight: 700;
+      color: var(--light); text-transform: uppercase; letter-spacing: 1px;
+      padding: 10px 18px 4px;
+    }
+    aside a {
+      display: block; font-family: 'Lato', sans-serif;
+      font-size: 0.84rem; color: var(--muted); text-decoration: none;
+      padding: 4px 18px 4px 22px;
+      border-left: 3px solid transparent;
+      transition: all .12s; line-height: 1.5;
+    }
+    aside a:hover { color: var(--accent); background: rgba(0,146,208,0.06); }
+    aside a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,146,208,0.07); font-weight: 700; }
+    main { flex: 1; min-width: 0; padding: 40px 60px 80px 52px; max-width: 860px; }
+    section { margin-bottom: 52px; }
+    .page-title { border-bottom: 2px solid var(--border); padding-bottom: 18px; margin-bottom: 32px; }
+    .page-title h1 {
+      font-family: 'Lato', sans-serif; font-size: 2.2rem; font-weight: 700;
+      color: var(--text); letter-spacing: -0.3px; margin-bottom: 8px;
+    }
+    .page-title p { color: var(--muted); font-size: 1rem; font-style: italic; margin: 0; }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .badge {
+      font-family: 'Lato', sans-serif; font-size: 0.72rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-blue { background: var(--accent); color: #fff; }
+    .badge-gray { background: #666; color: #fff; }
+    .badge-green { background: #27ae60; color: #fff; }
+    .badge-gold { background: #d4af37; color: #fff; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+    .btn {
+      font-family: 'Lato', sans-serif; font-size: 0.85rem; font-weight: 700;
+      padding: 8px 18px; border-radius: 4px; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all .15s; border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-dark); }
+    .btn-outline { background: #fff; color: var(--accent); border-color: var(--accent); }
+    .btn-outline:hover { background: var(--accent-bg); }
+    h2 {
+      font-family: 'Lato', sans-serif; font-size: 1.5rem; font-weight: 700;
+      color: var(--text); border-bottom: 1px solid var(--border);
+      padding-bottom: 10px; margin-bottom: 16px;
+    }
+    h3 { font-family: 'Lato', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 24px 0 10px; }
+    p { color: var(--muted); margin-bottom: 14px; }
+    a { color: var(--accent); }
+    .callout {
+      border: 1px solid #bee3f8; border-left: 4px solid var(--accent);
+      background: var(--accent-bg); border-radius: 4px;
+      padding: 12px 16px; font-size: 0.9rem; color: var(--text); margin: 16px 0;
+    }
+    .callout.warn { background: var(--warn-bg); border-color: #f9d78e; border-left-color: var(--warn-border); }
+    .callout.success { background: var(--success-bg); border-color: #a9dfbf; border-left-color: var(--success-border); }
+    .callout p { margin: 0; color: inherit; }
+    .callout-title {
+      font-family: 'Lato', sans-serif; font-weight: 700; font-size: 0.82rem;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; color: var(--accent);
+    }
+    .callout.warn .callout-title { color: #b7770d; }
+    .callout.success .callout-title { color: #1e8449; }
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .feature-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 14px 16px; font-size: 0.88rem; color: var(--muted); display: flex; gap: 10px;
+    }
+    .feature-card .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .feature-card strong { font-family: 'Lato', sans-serif; display: block; color: var(--text); margin-bottom: 2px; }
+    .format-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .format-box { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 16px; }
+    .format-box h4 {
+      font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: 700;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;
+    }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-family: 'Source Code Pro', monospace; font-size: 0.78rem;
+      background: #fff; border: 1px solid var(--border); color: var(--text);
+      padding: 2px 8px; border-radius: 3px;
+    }
+    .steps { counter-reset: step; margin-top: 16px; }
+    .step { display: flex; gap: 14px; margin-bottom: 18px; }
+    .step-num {
+      font-family: 'Lato', sans-serif; font-weight: 700; font-size: 0.78rem;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 3px;
+    }
+    .step-body strong { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 0.92rem; color: var(--text); display: block; margin-bottom: 4px; }
+    .step-body p { margin: 0; font-size: 0.9rem; }
+    .code-container { position: relative; margin: 14px 0; }
+    pre {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 16px 18px; overflow-x: auto; font-size: 0.84rem;
+    }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.85em; color: #c0392b; }
+    pre code { color: var(--text); font-size: 0.84rem; line-height: 1.7; }
+    .ck { color: #0092D0; }
+    .cs { color: #27ae60; }
+    .cc { color: #999; font-style: italic; }
+    .cf { color: #8e44ad; }
+    p code, li code {
+      font-family: 'Source Code Pro', monospace; font-size: 0.82em;
+      background: var(--code-bg); border: 1px solid var(--border);
+      padding: 1px 5px; border-radius: 3px; color: #c0392b;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88rem; border: 1px solid var(--border); }
+    thead { background: var(--bg); }
+    th {
+      font-family: 'Lato', sans-serif; font-size: 0.82rem; font-weight: 700;
+      color: var(--text); text-align: left; padding: 10px 14px;
+      border-bottom: 2px solid var(--border); border-right: 1px solid var(--border-light);
+    }
+    td {
+      padding: 9px 14px; border-bottom: 1px solid var(--border-light);
+      border-right: 1px solid var(--border-light); color: var(--muted); vertical-align: top;
+    }
+    td:first-child { font-family: 'Source Code Pro', monospace; font-size: 0.83rem; color: var(--text); }
+    tbody tr:nth-child(even) td { background: #fafafa; }
+    tbody tr:hover td { background: var(--accent-bg); }
+    .limit-list { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .limit-item {
+      display: flex; gap: 12px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 12px 16px; font-size: 0.88rem;
+    }
+    .limit-item .licon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    .limit-item strong { font-family: 'Lato', sans-serif; color: var(--text); display: block; margin-bottom: 2px; font-size: 0.86rem; }
+    .limit-item p { margin: 0; }
+    .formula-block {
+      background: var(--code-bg); border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 4px; padding: 16px 18px; margin: 14px 0;
+      font-family: 'Source Code Pro', monospace; font-size: 0.9rem;
+      color: var(--text); line-height: 1.85;
+    }
+    .citation-block {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 16px 18px; font-family: 'Source Code Pro', monospace;
+      font-size: 0.82rem; color: var(--muted); line-height: 1.85;
+      white-space: pre-wrap; position: relative;
+    }
+    .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      font-family: 'Lato', sans-serif; font-size: 0.72rem; font-weight: 700;
+      background: #fff; border: 1px solid var(--border); color: var(--muted);
+      padding: 4px 10px; border-radius: 3px; cursor: pointer; transition: all .15s;
+      z-index: 5;
+    }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .author-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 22px; display: flex; gap: 20px; align-items: flex-start; margin-top: 16px;
+    }
+    .author-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, #0092D0, #00689D);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Lato', sans-serif; font-weight: 700; font-size: 1.1rem; color: #fff; flex-shrink: 0;
+    }
+    .author-info h4 { font-family: 'Lato', sans-serif; font-weight: 700; color: var(--text); margin-bottom: 2px; font-size: 1rem; }
+    .author-info p { margin: 0 0 12px; font-size: 0.88rem; }
+    .author-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .author-links a {
+      font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: 700;
+      color: var(--accent); text-decoration: none;
+      border: 1px solid var(--accent); padding: 4px 12px; border-radius: 3px; transition: all .15s;
+    }
+    .author-links a:hover { background: var(--accent); color: #fff; }
+    .pkg-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+    .pkg {
+      font-family: 'Source Code Pro', monospace; font-size: 0.8rem;
+      background: var(--code-bg); border: 1px solid var(--border);
+      color: #8e44ad; padding: 3px 10px; border-radius: 3px;
+    }
+    .section-hr { border: none; border-top: 1px solid var(--border); margin: 0 0 52px; }
+    .formula-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .formula-tab {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 18px;
+    }
+    .formula-tab h4 {
+      font-family: 'Lato', sans-serif; font-size: 0.85rem; font-weight: 700;
+      color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .formula-tab .math {
+      font-family: 'Source Code Pro', monospace; font-size: 0.88rem;
+      color: var(--text); margin-bottom: 8px; padding: 8px 10px;
+      background: #fff; border: 1px solid var(--border-light); border-radius: 3px;
+    }
+    .formula-tab p { font-size: 0.84rem; margin: 0; }
+  .theme-toggle-btn {
+  background: var(--accent);
+  border: none;
+  color: white;
+  font-size: 0.75rem;
+  font-family: 'Lato', sans-serif;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 30px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  line-height: 1;
+}
+.theme-toggle-btn i {
+  font-size: 0.8rem;
+  display: inline-block;
+}
+.theme-toggle-btn span {
+  display: inline-block;
+  margin-left: 0;
+}
+.theme-toggle-btn:hover {
+  opacity: 0.9;
+  transform: scale(0.97);
+  background: var(--accent-dark);
+}    
+    /* Dark theme */
+    body.dark {
+      --white: #121826;
+      --bg: #1a1f2c;
+      --border: #2d3748;
+      --border-light: #2a2f3c;
+      --text: #eef2ff;
+      --muted: #b9c7d9;
+      --light: #8d9bb0;
+      --accent: #5ab8e0;
+      --accent-dark: #3f9fc4;
+      --accent-bg: #20273a;
+      --warn-bg: #2e2a1f;
+      --warn-border: #e6b450;
+      --success-bg: #1e3a2a;
+      --code-bg: #252b36;
+    }
+    body.dark .feature-card,
+    body.dark .format-box,
+    body.dark .limit-item,
+    body.dark .author-card,
+    body.dark .formula-tab { background: var(--bg); border-color: var(--border); }
+    body.dark .tag, body.dark .formula-tab .math { background: #2d3748; border-color: #3a4558; color: #eef2ff; }
+    body.dark tbody tr:nth-child(even) td { background: #1e2432; }
+    body.dark tbody tr:hover td { background: var(--accent-bg); }
+    body.dark .btn-outline { background: transparent; color: var(--accent); }
+    body.dark .copy-btn { background: var(--bg); color: var(--muted); border-color: var(--border); }
+    body.dark .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+    body.dark ::-webkit-scrollbar-thumb { background: #4a5568; }
+
+    @media (max-width: 768px) {
+      aside { display: none; }
+      main { padding: 24px 20px 60px; }
+      .format-grid, .feature-grid, .formula-tabs { grid-template-columns: 1fr; }
+      footer { padding: 18px 20px; }
+    }
+
+    footer {
+      background: var(--bg); border-top: 1px solid var(--border);
+      padding: 22px 52px; display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+      font-family: 'Lato', sans-serif; font-size: 0.8rem; color: var(--light);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    ul { color: var(--muted); padding-left: 1.4em; margin-bottom: 14px; }
+    li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">CalcuStats</a>
+  <nav class="header-nav">
+    <a href="#overview">Docs</a>
+    <a href="https://github.com/mudassiribrahim12" target="_blank">GitHub</a>
+    <a href="https://mudassiribrahim2025.shinyapps.io/CalcuStats/" target="_blank" class="btn-app">▶ Launch App</a>
+  </nav>
+</header>
+
+<div class="shell">
+  <aside id="sidebar">
+    <div class="toc-title">Table of Contents</div>
+    <div class="toc-group">
+      <div class="toc-group-label">Getting Started</div>
+      <a href="#overview" class="active">Overview</a>
+      <a href="#features">Modules &amp; Features</a>
+      <a href="#live-app">Live Applications</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">Installation</div>
+      <a href="#prerequisites">Prerequisites</a>
+      <a href="#local-setup">Local Setup</a>
+      <a href="#deployment">Deployment</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">Usage</div>
+      <a href="#workflow">Analysis Workflow</a>
+      <a href="#formulas">Statistical Formulas</a>
+      <a href="#power-analysis">Power Analysis</a>
+      <a href="#descriptive">Descriptive Statistics</a>
+      <a href="#flowcharts">Flowchart Generation</a>
+    </div>
+    <div class="toc-group">
+      <div class="toc-group-label">Reference</div>
+      <a href="#input-formats">Input Formats</a>
+      <a href="#limitations">Limitations</a>
+      <a href="#citation">Citation</a>
+      <a href="#contact">Contact &amp; Author</a>
+      <a href="#acknowledgments">Acknowledgments</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- HERO -->
+    <div class="page-title" id="overview">
+      <h1>CalcuStats</h1>
+      <p>A Comprehensive Sample Size Calculation, Power Analysis &amp; Descriptive Statistics Suite</p>
+      <div class="badges">
+        <span class="badge badge-blue">R-Shiny</span>
+        <span class="badge badge-green">MIT License</span>
+        <span class="badge badge-gray">Free to Use</span>
+      </div>
+      <div class="hero-actions">
+        <a href="https://mudassiribrahim2025.shinyapps.io/CalcuStats/" target="_blank" class="btn btn-primary">▶ Launch Full App</a>
+        <a href="https://calcustats-lite.vercel.app/" target="_blank" class="btn btn-outline">⚡ Lite Version</a>
+        <a href="https://github.com/mudassiribrahim12/Calcustats/tree/main" target="_blank" class="btn btn-outline">View on GitHub</a>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section>
+      <h2>Overview</h2>
+      <p>CalcuStats is a free, web-based R-Shiny application that provides researchers, healthcare professionals, and students with reliable, validated methods for sample size determination, power analysis, and descriptive statistics. The tool supports multiple sample size formulas, stratified proportional allocation with flowchart generation, downloadable Word reports.</p>
+
+      <h3>Problems CalcuStats Solves</h3>
+      <div class="feature-grid">
+        <div class="feature-card"><div class="icon">📐</div><div><strong>Sample Size Determination</strong>Calculates sample sizes for diverse study designs — from simple proportions to cohort and case-control studies.</div></div>
+        <div class="feature-card"><div class="icon">⚡</div><div><strong>Power Analysis</strong>Determines required sample size across t-tests, ANOVA, correlation, regression, and chi-squared tests.</div></div>
+        <div class="feature-card"><div class="icon">🔄</div><div><strong>Proportional Allocation</strong>Distributes sample sizes across strata with non-response adjustment and step-by-step calculations.</div></div>
+        <div class="feature-card"><div class="icon">📄</div><div><strong>Professional Reporting</strong>Generates downloadable Word documents and stratification flowcharts in PNG, SVG, and PDF.</div></div>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <!-- FEATURES -->
+    <section id="features">
+      <h2>Modules &amp; Features</h2>
+      <p>CalcuStats is organized into six functional modules, each with independent parameter inputs, stratification support, and export options.</p>
+
+      <div class="format-grid">
+        <div class="format-box">
+          <h4>🧮 Calculation Modules</h4>
+          <div class="tag-list">
+            <span class="tag">Proportional Allocation</span>
+            <span class="tag">Taro Yamane</span>
+            <span class="tag">Cochran Formula</span>
+            <span class="tag">Single Population Proportion</span>
+            <span class="tag">Mean Estimation</span>
+            <span class="tag">Case-Control Study</span>
+            <span class="tag">Cohort Study</span>
+            <span class="tag">Odds Ratio</span>
+            <span class="tag">Relative Risk</span>
+            <span class="tag">Prevalence Study</span>
+            <span class="tag">Correlation</span>
+            <span class="tag">Regression</span>
+          </div>
+        </div>
+        <div class="format-box">
+          <h4>⚙️ Core Capabilities</h4>
+          <div class="tag-list">
+            <span class="tag">Power Analysis</span>
+            <span class="tag">Descriptive Statistics</span>
+            <span class="tag">Stratified Allocation</span>
+            <span class="tag">Non-Response Adjustment</span>
+            <span class="tag">Flowchart Diagrams</span>
+            <span class="tag">Word Report Export</span>
+            <span class="tag">PNG / SVG / PDF Download</span>
+            <span class="tag">Percentage Input Support</span>
+            <span class="tag">Reset Controls</span>
+            <span class="tag">Histogram &amp; Boxplot</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <!-- LIVE APP -->
+    <section id="live-app">
+      <h2>Live Applications</h2>
+      <p>CalcuStats is available in two hosted versions — a full-featured R-Shiny application and a lightweight HTML/JavaScript version.</p>
+
+      <div class="callout success">
+        <div class="callout-title">🌐 Full R-Shiny App</div>
+        <p><a href="https://mudassiribrahim2025.shinyapps.io/CalcuStats/" target="_blank">https://mudassiribrahim2025.shinyapps.io/CalcuStats/</a><br>
+        Includes all modules: sample size calculators, power analysis, descriptive statistics, flowchart generation, and Word report export.</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">⚡ CalcuStats Lite (HTML Version)</div>
+        <p>A lightweight browser-based version covering proportional allocation, Taro Yamane, Cochran's formula, and other formulas — no installation required:<br>
+        <a href="https://calcustats-lite.vercel.app/" target="_blank">https://calcustats-lite.vercel.app/</a></p>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-title">ℹ️ Version Differences</div>
+        <p>The Lite version does not include Power Analysis, Descriptive Statistics, or flowchart generation. For full functionality including Word report downloads and interactive flowcharts, use the full R-Shiny app.</p>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <!-- PREREQUISITES -->
+    <section id="prerequisites">
+      <h2>Prerequisites</h2>
+      <p>To run CalcuStats locally, the following software must be installed:</p>
+      <table>
+        <thead><tr><th>Requirement</th><th>Version</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>R</td><td>≥ 4.4</td><td>Core runtime for the Shiny application</td></tr>
+          <tr><td>RStudio</td><td>Any recent</td><td>Recommended IDE — optional but convenient</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- LOCAL SETUP -->
+    <section id="local-setup">
+      <h2>Local Installation</h2>
+
+      <h3>Step 1 — Download app.R</h3>
+      <p>Download the source file from the GitHub repository: <a href="https://github.com/mudassiribrahim12" target="_blank">github.com/mudassiribrahim12</a></p>
+
+      <h3>Step 2 — Install required packages</h3>
+      <p>Run the following in your R console:</p>
+      <div class="code-container">
+        <button class="copy-btn" onclick="copyCode(this, 'code-step2')">Copy</button>
+<pre id="code-step2"><code><span class="cf">install.packages</span>(<span class="cf">c</span>(
+  <span class="cs">"shiny"</span>, <span class="cs">"shinythemes"</span>, <span class="cs">"officer"</span>,
+  <span class="cs">"flextable"</span>, <span class="cs">"magrittr"</span>, <span class="cs">"pwr"</span>,
+  <span class="cs">"e1071"</span>, <span class="cs">"tidyverse"</span>, <span class="cs">"DiagrammeR"</span>,
+  <span class="cs">"rsvg"</span>, <span class="cs">"htmltools"</span>, <span class="cs">"shinyjs"</span>,
+  <span class="cs">"colourpicker"</span>, <span class="cs">"V8"</span>
+))</code></pre>
+      </div>
+
+      <h3>Step 3 — Load the libraries</h3>
+      <div class="code-container">
+        <button class="copy-btn" onclick="copyCode(this, 'code-step3')">Copy</button>
+<pre id="code-step3"><code><span class="ck">library</span>(shiny)
+<span class="ck">library</span>(shinythemes)
+<span class="ck">library</span>(officer)
+<span class="ck">library</span>(flextable)
+<span class="ck">library</span>(magrittr)
+<span class="ck">library</span>(pwr)
+<span class="ck">library</span>(e1071)
+<span class="ck">library</span>(tidyverse)
+<span class="ck">library</span>(DiagrammeR)
+<span class="ck">library</span>(rsvg)
+<span class="ck">library</span>(htmltools)
+<span class="ck">library</span>(shinyjs)
+<span class="ck">library</span>(colourpicker)
+<span class="ck">library</span>(V8)</code></pre>
+      </div>
+
+      <h3>Step 4 — Set working directory and run</h3>
+      <p>Replace the path below with the location of your saved <code>app.R</code> file:</p>
+      <div class="code-container">
+        <button class="copy-btn" onclick="copyCode(this, 'code-step4')">Copy</button>
+<pre id="code-step4"><code><span class="cc"># Windows</span>
+<span class="cf">setwd</span>(<span class="cs">"C:/Users/YourName/Desktop/"</span>)
+
+<span class="cc"># Linux / macOS</span>
+<span class="cf">setwd</span>(<span class="cs">"/home/yourname/Desktop/"</span>)
+
+<span class="cc"># Launch the app</span>
+<span class="ck">library</span>(shiny)
+<span class="cf">runApp</span>(<span class="cs">"app.R"</span>)</code></pre>
+      </div>
+
+      <h3>Step 5 — Open in browser</h3>
+      <p>The app opens in the RStudio viewer pane. Click <strong>Open in Browser</strong> for the best experience.</p>
+    </section>
+
+    <!-- DEPLOYMENT -->
+    <section id="deployment">
+      <h2>Deployment</h2>
+      <p>Deploy your own instance to shinyapps.io using the <code>rsconnect</code> package.</p>
+      <div class="code-container">
+        <button class="copy-btn" onclick="copyCode(this, 'code-deploy')">Copy</button>
+<pre id="code-deploy"><code><span class="cc"># Install rsconnect</span>
+<span class="cf">install.packages</span>(<span class="cs">"rsconnect"</span>)
+
+<span class="cc"># Deploy — replace with actual path to your app folder</span>
+rsconnect::<span class="cf">deployApp</span>(<span class="cs">"path/to/CalcuStats"</span>)</code></pre>
+      </div>
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Note</div>
+        <p>Replace <code>"path/to/CalcuStats"</code> with the actual folder path containing your <code>app.R</code> file.</p>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <!-- WORKFLOW -->
+    <section id="workflow">
+      <h2>Analysis Workflow</h2>
+      <p>Follow these steps inside the CalcuStats application to perform a complete sample size calculation with stratified allocation.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Select a Module</strong><p>Choose from the top navigation: <strong>Proportional Allocation</strong>, <strong>Taro Yamane</strong>, <strong>Cochran Formula</strong>, <strong>Other Formulas</strong>, <strong>Power Analysis</strong>, or <strong>Descriptive Statistics</strong>.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Enter Parameters</strong><p>Fill in the required inputs for your selected formula — population size, margin of error, proportion, confidence level, etc. Proportion inputs accept decimal (0.5), percentage without symbol (50), or percentage with symbol (50%).</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Set Non-Response Rate</strong><p>Enter the expected non-response rate (%). The app automatically adjusts the final sample size using: <code>n_adjusted = n / (1 − non-response rate)</code>.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Add Strata (Optional)</strong><p>Click <strong>Add Stratum</strong> to define sub-populations. Enter each stratum's name and population size. The app allocates the total sample proportionally across all strata.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Calculate</strong><p>The results panel updates automatically showing the required sample size, adjusted sample size, step-by-step formula derivation, and the proportional allocation table.</p></div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Generate Flowchart (Optional)</strong><p>Enable <strong>Generate Flow Chart Diagram</strong> to visualize the stratification. Customize node shapes, colors, fonts, and labels using the interactive editor.</p></div></div>
+        <div class="step"><div class="step-num">7</div><div class="step-body"><strong>Download Results</strong><p>Click <strong>Download as Word</strong> for a complete Word document report, or <strong>Download Calculation Steps</strong> for a plain-text derivation file. Flowcharts export as PNG, SVG, or PDF.</p></div></div>
+      </div>
+    </section>
+
+    <!-- FORMULAS -->
+    <section id="formulas">
+      <h2>Statistical Formulas</h2>
+      <p>CalcuStats implements the following validated sample size formulas. All formulas include step-by-step derivation output in the application.</p>
+
+      <h3>Proportional Allocation</h3>
+      <div class="formula-block">n<sub>i</sub> = (N<sub>i</sub> / N) × n</div>
+      <ul>
+        <li><strong>n<sub>i</sub></strong> = sample size for stratum i</li>
+        <li><strong>N<sub>i</sub></strong> = population of stratum i</li>
+        <li><strong>N</strong> = total population size</li>
+        <li><strong>n</strong> = total (adjusted) sample size</li>
+      </ul>
+
+      <h3>Taro Yamane Formula</h3>
+      <div class="formula-block">n = N / (1 + N × e²)</div>
+      <p>Assumes 95% confidence level. Suitable for finite populations. Non-response adjustment applied after: <code>n_adj = ⌈n / (1 − r)⌉</code>.</p>
+
+      <h3>Cochran's Formula</h3>
+      <div class="formula-block">n₀ = (Z² × p × (1−p)) / e²<br>
+Finite correction: n = n₀ / (1 + (n₀ − 1) / N)</div>
+      <p>Use when working with proportions. Z = 1.96 for 95% CI. Optional finite population correction when N is known.</p>
+
+      <h3>Other Study Design Formulas</h3>
+      <div class="formula-tabs">
+        <div class="formula-tab">
+          <h4>Single Population Proportion (EPI INFO)</h4>
+          <div class="math">n = Z² × p × (1−p) / d²</div>
+          <p>For estimating a proportion with specified precision. Accepts proportion or percentage input.</p>
+        </div>
+        <div class="formula-tab">
+          <h4>Mean Estimation (Known Variance)</h4>
+          <div class="math">n = (Z² × σ²) / d²</div>
+          <p>When population standard deviation σ is known from prior studies.</p>
+        </div>
+        <div class="formula-tab">
+          <h4>Case-Control Study</h4>
+          <div class="math">n = [Zα√(2p̄q̄) + Zβ√(p₁q₁ + p₂q₂)]² / (p₁−p₂)²</div>
+          <p>Where p₂ = p₁ × OR / (1 + p₁(OR−1)). Supports case:control ratio.</p>
+        </div>
+        <div class="formula-tab">
+          <h4>Cohort Study</h4>
+          <div class="math">n = [Zα√(2p̄q̄) + Zβ√(p₁q₁ + p₂q₂)]² / (p₁−p₂)²</div>
+          <p>Where p₂ = p₁ × RR. Supports exposed:unexposed ratio.</p>
+        </div>
+        <div class="formula-tab">
+          <h4>Correlation Coefficient</h4>
+          <div class="math">n = [(Zα + Zβ) / (0.5 × ln((1+r)/(1−r)))]² + 3</div>
+          <p>For testing significance of a Pearson correlation coefficient.</p>
+        </div>
+        <div class="formula-tab">
+          <h4>Prevalence Study</h4>
+          <div class="math">n = (Z² × p × (1−p)) / d²</div>
+          <p>For estimating disease prevalence with specified margin of error.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- POWER ANALYSIS -->
+    <section id="power-analysis">
+      <h2>Power Analysis</h2>
+      <p>The Power Analysis module calculates the required sample size to achieve a specified power for various inferential tests using the <code>pwr</code> R package.</p>
+
+      <table>
+        <thead><tr><th>Statistical Test</th><th>Effect Size Metric</th><th>Small / Medium / Large</th></tr></thead>
+        <tbody>
+          <tr><td>Independent t-test</td><td>Cohen's d</td><td>0.2 / 0.5 / 0.8</td></tr>
+          <tr><td>Paired t-test</td><td>Cohen's d</td><td>0.2 / 0.5 / 0.8</td></tr>
+          <tr><td>One-sample t-test</td><td>Cohen's d</td><td>0.2 / 0.5 / 0.8</td></tr>
+          <tr><td>One-Way ANOVA</td><td>Cohen's f</td><td>0.1 / 0.25 / 0.4</td></tr>
+          <tr><td>Two-Way ANOVA</td><td>Cohen's f</td><td>0.1 / 0.25 / 0.4</td></tr>
+          <tr><td>Correlation</td><td>r</td><td>0.1 / 0.3 / 0.5</td></tr>
+          <tr><td>Chi-squared</td><td>w</td><td>0.1 / 0.3 / 0.5</td></tr>
+          <tr><td>Simple Linear Regression</td><td>f² = R²/(1−R²)</td><td>0.02 / 0.15 / 0.35</td></tr>
+          <tr><td>Multiple Linear Regression</td><td>f²</td><td>0.02 / 0.15 / 0.35</td></tr>
+          <tr><td>Proportion</td><td>Cohen's h</td><td>0.2 / 0.5 / 0.8</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="callout-title">📐 Sample Size Formula (Regression)</div>
+        <p>For linear regression, total sample size is calculated as: <strong>n = v + u + 1</strong>, where v is the denominator degrees of freedom from <code>pwr.f2.test()</code>, u is the number of predictors, and +1 accounts for the intercept.</p>
+      </div>
+
+      <div class="callout success">
+        <div class="callout-title">📊 Recommended Power</div>
+        <p>A power of <strong>0.80 (80%)</strong> is generally considered acceptable in most research contexts. This means an 80% probability of correctly detecting a true effect at the specified significance level.</p>
+      </div>
+    </section>
+
+    <!-- DESCRIPTIVE STATISTICS -->
+    <section id="descriptive">
+      <h2>Descriptive Statistics</h2>
+      <p>The Descriptive Statistics module accepts pasted data (with or without a header row) and automatically detects the data type, or you can specify it manually.</p>
+
+      <table>
+        <thead><tr><th>Data Type</th><th>Statistics Computed</th><th>Visualizations</th></tr></thead>
+        <tbody>
+          <tr><td>Numerical / Continuous</td><td>Mean, Median, SD, Variance, Min, Max, Range, Q1, Q3, IQR, Skewness, Kurtosis</td><td>Histogram with density curve, Boxplot</td></tr>
+          <tr><td>Categorical (Nominal)</td><td>Frequency counts, Percentages, Mode, Number of categories</td><td>Bar plot, Pie chart</td></tr>
+          <tr><td>Ordinal</td><td>Frequency counts, Percentages, Mode</td><td>Bar plot</td></tr>
+          <tr><td>Mixed</td><td>Counts of numerical vs. categorical values</td><td>None (prompts separation)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <div class="callout-title">📋 Data Input Format</div>
+        <p>Paste data directly from Excel, SPSS, or any statistical software. One value per line. An optional header row is automatically detected. The full report (including frequency table or summary statistics) downloads as a Word document.</p>
+      </div>
+    </section>
+
+    <!-- FLOWCHART GENERATION -->
+    <section id="flowcharts">
+      <h2>Flowchart Generation</h2>
+      <p>All sample size modules (Proportional Allocation, Taro Yamane, Cochran, Other Formulas) support optional stratification flowchart diagrams generated using <code>DiagrammeR</code>.</p>
+
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Enable Flowchart</strong><p>Check <strong>"Generate Flow Chart Diagram"</strong> after adding 2 or more strata.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Customize Appearance</strong><p>Choose layout (dot, neato, twopi, circo, fdp), node shape, fill color, edge color, font sizes, node dimensions, and arrow size.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Customize Content</strong><p>Toggle whether to display population size and stratum sample size inside each node. Edit node and edge labels interactively by clicking on diagram elements.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Download Diagram</strong><p>Export as <strong>PNG</strong> (3000×2000px, high-quality raster), <strong>SVG</strong> (infinite-resolution vector), or <strong>PDF</strong> (print-ready vector).</p></div></div>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <!-- INPUT FORMATS -->
+    <section id="input-formats">
+      <h2>Input Formats &amp; Flexible Proportion Entry</h2>
+      <p>CalcuStats accepts proportion inputs in three equivalent formats across all relevant formula inputs:</p>
+
+      <table>
+        <thead><tr><th>Input Format</th><th>Example</th><th>Interpreted As</th></tr></thead>
+        <tbody>
+          <tr><td>Decimal proportion</td><td>0.35</td><td>35%</td></tr>
+          <tr><td>Percentage (no symbol)</td><td>35</td><td>35%</td></tr>
+          <tr><td>Percentage (with symbol)</td><td>35%</td><td>35%</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Boundary Handling</div>
+        <p>Proportions must be between 0 and 1 (exclusive). Values entered as integers between 1 and 100 are automatically interpreted as percentages. Proportions outside valid ranges are clamped to 0.01–0.99 where applicable (e.g., case-control and cohort study formulas).</p>
+      </div>
+    </section>
+
+    <!-- LIMITATIONS -->
+    <section id="limitations">
+      <h2>Limitations</h2>
+      <div class="limit-list">
+        <div class="limit-item"><div class="licon">📉</div><div><strong>Non-Monotonic Power Curves</strong><p>Power calculations assume standard two-sided tests. One-sided tests require manual adjustment of the alpha parameter.</p></div></div>
+        <div class="limit-item"><div class="licon">⚠️</div><div><strong>No Confounder Adjustment</strong><p>Sample size formulas do not adjust for covariates or confounders. Multivariate designs may require additional inflation.</p></div></div>
+        <div class="limit-item"><div class="licon">🔄</div><div><strong>Session State Not Persistent</strong><p>The hosted Shiny app does not save state between sessions. Download results before closing the browser.</p></div></div>
+        <div class="limit-item"><div class="licon">📊</div><div><strong>Descriptive Statistics</strong><p>The descriptive statistics module is designed for single-variable (univariate) analysis. Multi-column datasets should be analyzed one variable at a time.</p></div></div>
+        <div class="limit-item"><div class="licon">🌐</div><div><strong>Lite Version Scope</strong><p>The HTML Lite version covers only four calculators (Proportional Allocation, Taro Yamane, Cochran, and basic Other Formulas). Power analysis, descriptive statistics, and flowcharts require the full Shiny app.</p></div></div>
+      </div>
+    </section>
+
+    <hr class="section-hr" />
+
+    <!-- CITATION -->
+    <section id="citation">
+      <h2>Citation</h2>
+      <p>If you use CalcuStats in your research, please cite it as follows:</p>
+      <div class="citation-block" id="cite-block">@software{Ibrahim_CalcuStats_2025,
+  author = {Ibrahim, Mudasir Mohammed},
+  title  = {CalcuStats: A Comprehensive Sample Size Calculation,
+            Power Analysis and Descriptive Statistics Suite},
+  year   = {2025},
+  url    = {https://mudassiribrahim2025.shinyapps.io/CalcuStats/}
+}<button class="copy-btn" onclick="copyCite()">Copy</button></div>
+    </section>
+
+    <!-- ACKNOWLEDGMENTS -->
+    <section id="acknowledgments">
+      <h2>Acknowledgments</h2>
+      <p>CalcuStats was built using the following R packages. Special thanks to the developers and maintainers of these packages for making advanced statistical computation accessible.</p>
+      <div class="pkg-grid">
+        <span class="pkg">shiny</span>
+        <span class="pkg">shinythemes</span>
+        <span class="pkg">officer</span>
+        <span class="pkg">flextable</span>
+        <span class="pkg">magrittr</span>
+        <span class="pkg">pwr</span>
+        <span class="pkg">e1071</span>
+        <span class="pkg">tidyverse</span>
+        <span class="pkg">DiagrammeR</span>
+        <span class="pkg">htmltools</span>
+        <span class="pkg">rsvg</span>
+        <span class="pkg">shinyjs</span>
+        <span class="pkg">colourpicker</span>
+        <span class="pkg">V8</span>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <h2>Developer Information</h2>
+      <div class="author-card">
+        <div class="author-avatar">MI</div>
+        <div class="author-info">
+          <p>
+            Department of Internal Medicine (M3), Tamale Teaching Hospital, Tamale, Ghana<br />
+            <a href="mailto:mudassiribrahim30@gmail.com">mudassiribrahim30@gmail.com</a>
+          </p>
+          <p style="margin-top:8px; font-size:0.85rem;">
+            CalcuStats is continuously updated. Suggestions for new formulas, statistical methods, or bug reports are welcomed.
+          </p>
+          <div class="author-links" style="margin-top: 12px;">
+            <a href="https://www.researchgate.net/profile/Mudasir-Ibrahim" target="_blank">ResearchGate</a>
+            <a href="https://scholar.google.com/citations?user=xEFzAvgAAAAJ&hl=en" target="_blank">Google Scholar</a>
+            <a href="https://orcid.org/0000-0002-9049-8222" target="_blank">ORCID</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div>© 2025–Present Mudasir Mohammed Ibrahim · MIT License</div>
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <a href="https://github.com/mudassiribrahim30" target="_blank">GitHub</a> ·
+    <a href="mailto:mudassiribrahim30@gmail.com">Contact</a>
+    <button id="darkModeToggle" class="theme-toggle-btn" aria-label="Toggle dark mode" style="background: var(--accent); border: none; color: white; font-size: 0.75rem; font-family: 'Lato', sans-serif; font-weight: 600; padding: 6px 14px; border-radius: 30px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+      <i class="fas fa-moon" style="font-size: 0.8rem;"></i>
+      <span>Dark</span>
+    </button>
+  </div>
+</footer>
+
+<script>
+  function copyCode(btn, elementId) {
+    const element = document.getElementById(elementId);
+    let textToCopy = element.innerText || element.textContent;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      const originalText = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.style.color = 'var(--success-border)';
+      btn.style.borderColor = 'var(--success-border)';
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 2000);
+    });
+  }
+
+  function copyCite() {
+    const block = document.getElementById('cite-block');
+    let text = block.innerText || block.textContent;
+    text = text.replace('Copy', '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = block.querySelector('.copy-btn');
+      if (btn) {
+        btn.textContent = '✓ Copied';
+        btn.style.color = 'var(--success-border)';
+        btn.style.borderColor = 'var(--success-border)';
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 2000);
+      }
+    });
+  }
+
+  // Dark mode
+  const themeToggle = document.getElementById('darkModeToggle');
+function setTheme(theme) {
+    if (theme === 'dark') {
+      document.body.classList.add('dark');
+      localStorage.setItem('calcustats-theme', 'dark');
+      if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun" style="font-size: 0.85rem;"></i> <span style="margin-left: 4px;">Light</span>';
+    } else {
+      document.body.classList.remove('dark');
+      localStorage.setItem('calcustats-theme', 'light');
+      if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon" style="font-size: 0.85rem;"></i> <span style="margin-left: 4px;">Dark</span>';
+    }
+  }
+  
+  const savedTheme = localStorage.getItem('calcustats-theme');
+  setTheme(savedTheme === 'dark' ? 'dark' : 'light');
+  if (themeToggle) themeToggle.addEventListener('click', () => {
+    setTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
+  });
+
+  // Active sidebar link on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('aside a').forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`aside a[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -75% 0px' });
+  document.querySelectorAll('section[id], .page-title[id]').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
